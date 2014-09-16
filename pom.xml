@@ -753,6 +753,14 @@ module of int tests -->
                     <artifactId>xmlParserAPIs</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis-ext</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>xerces</groupId>
                     <artifactId>xercesImpl</artifactId>
                 </exclusion>
@@ -2075,7 +2083,7 @@ module of int tests -->
         <displaytag.version>1.2</displaytag.version>
         <drools.version>5.5.0.Final</drools.version>
         <dwr.version>3.0.RC2</dwr.version>
-        <fop.version>0.93</fop.version>
+        <fop.version>1.0</fop.version>
         <gg-application.version>1.0</gg-application.version>
         <gg-forms1.version>1.0</gg-forms1.version>
         <gg-forms2.version>1.0</gg-forms2.version>
