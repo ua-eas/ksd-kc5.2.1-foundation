@@ -8,7 +8,10 @@ public enum KimPersonFixture {
     	JTESTER("jtester", "1202", "10000000002"),
     	WOODS("woods", "1203", "10000000003"),
     	OPS_ADMIN("opsAdmin", "1204", "10000000004"),
-    	NEGOTIATOR("negotiator", "1205", "10000000005");
+    	NEGOTIATOR("negotiator", "1205", "10000000005"),
+    	BORST("borst", "1206", "10000000006"),
+    	IRB_ADMIN("irbAdmin", "1207", "10000000007"),
+    	IACUC_ADMIN("iacucAdmin", "1208", "10000000008");
     	
     	private String principalName;
     	private String entityId;

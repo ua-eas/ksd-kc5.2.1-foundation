@@ -8,6 +8,10 @@ import org.kuali.kra.infrastructure.RoleConstants;
 
 public enum KimRoleFixture {
 	
+	// ************************************************************************
+	// NEGOTIATION
+	//*************************************************************************
+	
 	// Can do everything
 	NEGOTIATION_ADMIN(RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiation Administrator", new HashMap<String, String>()),
 	
@@ -21,7 +25,17 @@ public enum KimRoleFixture {
 	NEGOTIATION_INVESTIGATORS(RoleConstants.NEGOTIATION_ROLE_TYPE, "Investigators", new HashMap<String, String>()), // Principle Investigator
 	NEGOTIATION_PI(RoleConstants.NEGOTIATION_ROLE_TYPE, "PI", new HashMap<String, String>()), // Principle Investigator
 	NEGOTIATION_COI(RoleConstants.NEGOTIATION_ROLE_TYPE, "COI", new HashMap<String, String>()), // Co-Investigator
-	NEGOTIATION_KP(RoleConstants.NEGOTIATION_ROLE_TYPE, "KP", new HashMap<String, String>()); // Key Personnel
+	NEGOTIATION_KP(RoleConstants.NEGOTIATION_ROLE_TYPE, "KP", new HashMap<String, String>()), // Key Personnel
+
+	
+	// ************************************************************************
+	// TIME AND MONEY
+	//*************************************************************************
+
+	TIME_AND_MONEY_VIEWER("KC-T", "Time And Money Viewer", new HashMap<String, String>()),
+	TIME_AND_MONEY_MODIFIER("KC-T", "Time And Money Modifier", new HashMap<String, String>());
+	
+	
 	
 
 	private String namespaceCode;
