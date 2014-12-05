@@ -35,10 +35,9 @@ import org.kuali.kra.negotiations.bo.NegotiationStatus;
 import org.kuali.kra.negotiations.bo.NegotiationUnassociatedDetail;
 import org.kuali.kra.negotiations.document.NegotiationDocument;
 import org.kuali.kra.service.TaskAuthorizationService;
-import org.kuali.kra.test.infrastructure.PersonAwareTestBase;
+import org.kuali.kra.test.infrastructure.PersonAndRoleAwareTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
-import org.kuali.rice.kim.api.role.RoleService;
 import org.kuali.rice.krad.service.BusinessObjectService;
 
 /*
@@ -50,7 +49,7 @@ import org.kuali.rice.krad.service.BusinessObjectService;
  * ospAdmin: view -- unrestricted
  * woods: none
  */
-public class TestNegotiationAuthorizersTest extends PersonAwareTestBase {
+public class TestNegotiationAuthorizersTest extends PersonAndRoleAwareTestBase {
     
     TaskAuthorizationService taskAuthorizationService;
     BusinessObjectService businessObjectService;  
@@ -259,14 +258,6 @@ public class TestNegotiationAuthorizersTest extends PersonAwareTestBase {
         
         this.businessObjectService.save(negotiation);
         return document;
-    }
-    
-    private void addPersonToRole(Person person, KimRoleFixture kimRole) {
-    	getService(RoleService.class).assignPrincipalToRole(
-    			person.getPrincipalId(),
-    			kimRole.getNamespaceCode(),
-    			kimRole.getRoleName(),
-    			kimRole.getQualifications());
     }
 
 }
