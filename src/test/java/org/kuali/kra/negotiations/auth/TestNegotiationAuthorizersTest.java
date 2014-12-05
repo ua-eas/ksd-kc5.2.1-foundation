@@ -77,6 +77,7 @@ public class TestNegotiationAuthorizersTest extends PersonAwareTestBase {
     	addPersonToRole(quickstart, KimRoleFixture.NEGOTIATION_ADMIN);
     	addPersonToRole(ospAdmin, KimRoleFixture.NEGOTIATION_INVESTIGATORS);
     	addPersonToRole(jtester, KimRoleFixture.NEGOTIATION_CREATOR);
+    	addPersonToRole(negotiator, KimRoleFixture.NEGOTIATION_NEGOTIATOR);
 
     }
 
@@ -207,7 +208,8 @@ public class TestNegotiationAuthorizersTest extends PersonAwareTestBase {
 
     }
     
-    private NegotiationDocument getNewNegotiationWithUnassociatedDetail() throws WorkflowException {
+    @SuppressWarnings({"rawtypes", "deprecation", "unchecked"})
+	private NegotiationDocument getNewNegotiationWithUnassociatedDetail() throws WorkflowException {
     	
         NegotiationDocument document = (NegotiationDocument) getDocumentService().getNewDocument(NegotiationDocument.class);
         Negotiation negotiation = document.getNegotiation();
