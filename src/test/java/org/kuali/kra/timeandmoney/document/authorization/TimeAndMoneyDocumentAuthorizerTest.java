@@ -15,18 +15,23 @@
  */
 package org.kuali.kra.timeandmoney.document.authorization;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.kuali.kra.bo.fixture.KimPersonFixture;
+import org.kuali.kra.bo.fixture.KimRoleFixture;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.kim.bo.KcKimAttributes;
-import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.kra.test.infrastructure.PersonAndRoleAwareTestBase;
 import org.kuali.kra.timeandmoney.document.TimeAndMoneyDocument;
 import org.kuali.rice.kim.api.group.Group;
 import org.kuali.rice.kim.api.group.GroupService;
 import org.kuali.rice.kim.api.identity.Person;
-import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.kim.api.role.Role;
 import org.kuali.rice.kim.api.role.RoleService;
 import org.kuali.rice.kim.impl.role.RoleMemberAttributeDataBo;
@@ -34,11 +39,8 @@ import org.kuali.rice.kim.impl.role.RoleMemberBo;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
+@SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
+public class TimeAndMoneyDocumentAuthorizerTest extends PersonAndRoleAwareTestBase {
     
     private TimeAndMoneyDocument timeAndMoneyDocument;
     private DocumentService documentService;
@@ -55,10 +57,13 @@ public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
         timeAndMoneyDocument = (TimeAndMoneyDocument) documentService.getNewDocument(TimeAndMoneyDocument.class);
         authorizer = new TimeAndMoneyDocumentAuthorizer();
-        quickstart = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("quickstart");
-        borst = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("borst");
-        irbAdmin = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("irbAdmin");
-        iacucAdmin = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("iacucAdmin");
+
+        quickstart = createPerson(KimPersonFixture.QUICKSTART);
+        borst = createPerson(KimPersonFixture.BORST);
+        irbAdmin = createPerson(KimPersonFixture.IRB_ADMIN);
+        iacucAdmin = createPerson(KimPersonFixture.IACUC_ADMIN);
+        
+        addPersonToRole(quickstart, KimRoleFixture.TIME_AND_MONEY_MODIFIER);
         addIrbAdminToAGroupWithTimeAndMoneyPerm();
         addIacucAdminToTimeAndMoneyRole();
     }
@@ -75,7 +80,8 @@ public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
         iacucAdmin = null;
     }
     
-    private void addIrbAdminToAGroupWithTimeAndMoneyPerm() {
+
+	private void addIrbAdminToAGroupWithTimeAndMoneyPerm() {
         RoleService rs = KraServiceLocator.getService(RoleService.class);
         Role timeAndMoneyModifier = rs.getRoleByNamespaceCodeAndName("KC-T", "Time And Money Modifier");
         
@@ -118,7 +124,8 @@ public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
         businessObjectService.save(attrDataTwo);
     }
     
-    private void addIacucAdminToTimeAndMoneyRole() {
+
+	private void addIacucAdminToTimeAndMoneyRole() {
         RoleService rs = KraServiceLocator.getService(RoleService.class);
         Role timeAndMoneyModifier = rs.getRoleByNamespaceCodeAndName("KC-T", "Time And Money Modifier");
         
@@ -198,32 +205,28 @@ public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
     }
 
 
-    @Test
+	@Test
     public void testCanAnnotate() {
         boolean canQuickstart = authorizer.canAnnotate(timeAndMoneyDocument, quickstart);
+        assertTrue(canQuickstart);
+
         boolean canBorst = authorizer.canAnnotate(timeAndMoneyDocument, borst);
-        boolean canIrbAdmin = authorizer.canAnnotate(timeAndMoneyDocument, irbAdmin);
-        boolean canIacucAdmin = authorizer.canAnnotate(timeAndMoneyDocument, iacucAdmin);
-        assertTrue(canQuickstart);
         assertFalse(canBorst);
+
+        boolean canIacucAdmin = authorizer.canAnnotate(timeAndMoneyDocument, iacucAdmin);
         assertTrue(canIacucAdmin);
-        assertTrue(canQuickstart);
     }
 
     @Test
     public void testCanReload() {
         boolean canQuickstart = authorizer.canReload(timeAndMoneyDocument, quickstart);
-        //boolean canBorst = authorizer.canReload(timeAndMoneyDocument, borst);
         assertTrue(canQuickstart);
-        //assertFalse(canBorst);
     }
 
     @Test
     public void testCanClose() {
         boolean canQuickstart = authorizer.canClose(timeAndMoneyDocument, quickstart);
-        //boolean canBorst = authorizer.canClose(timeAndMoneyDocument, borst);
         assertTrue(canQuickstart);
-        //assertFalse(canBorst);
     }
     
     @Test
@@ -236,7 +239,7 @@ public class TimeAndMoneyDocumentAuthorizerTest extends KcUnitTestBase {
         fieldValues.put("MBR_ID", quickstart.getPrincipalId());
         Collection roleMembers = businessObjectService.findMatching(RoleMemberBo.class, fieldValues);
         RoleMemberBo roleMember = (RoleMemberBo) roleMembers.iterator().next();
-        
+
         boolean foundUnit = false;
         boolean foundHierarchFlag = false;
         for (RoleMemberAttributeDataBo rmb : roleMember.getAttributeDetails()) {
