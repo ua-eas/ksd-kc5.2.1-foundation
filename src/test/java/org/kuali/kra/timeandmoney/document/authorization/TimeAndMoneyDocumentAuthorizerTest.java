@@ -48,13 +48,12 @@ public class TimeAndMoneyDocumentAuthorizerTest extends PersonAndRoleAwareTestBa
         iacucAdmin = createPerson(KimPersonFixture.IACUC_ADMIN);
 
         addPersonToRole(quickstart, KimRoleFixture.TIME_AND_MONEY_MODIFIER);
-        addPersonToRole(quickstart, KimRoleFixture.AWARD_MODIFIER);
 
         documentService = KraServiceLocator.getService(DocumentService.class);
         timeAndMoneyDocument = (TimeAndMoneyDocument) documentService.getNewDocument(TimeAndMoneyDocument.class);
         authorizer = new TimeAndMoneyDocumentAuthorizer();
     }
-    
+
     @After
     public void teardown() {
         documentService = null;
