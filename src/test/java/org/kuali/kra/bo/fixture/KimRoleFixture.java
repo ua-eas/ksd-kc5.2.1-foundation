@@ -33,7 +33,15 @@ public enum KimRoleFixture {
 	//*************************************************************************
 
 	TIME_AND_MONEY_VIEWER("KC-T", "Time And Money Viewer", new HashMap<String, String>()),
-	TIME_AND_MONEY_MODIFIER("KC-T", "Time And Money Modifier", new HashMap<String, String>());
+	TIME_AND_MONEY_MODIFIER("KC-T", "Time And Money Modifier", new HashMap<String, String>()),
+	
+	
+	// ************************************************************************
+	// MISC
+	//*************************************************************************
+
+	SUPER_USER("KC-SYS", "KC Superuser", new HashMap<String, String>());
+	
 	
 	
 	

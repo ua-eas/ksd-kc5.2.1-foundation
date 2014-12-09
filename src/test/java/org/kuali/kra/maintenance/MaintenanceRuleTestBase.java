@@ -15,11 +15,14 @@
  */
 package org.kuali.kra.maintenance;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.kuali.kra.bo.fixture.KimPersonFixture;
+import org.kuali.kra.bo.fixture.KimRoleFixture;
 import org.kuali.kra.infrastructure.KraServiceLocator;
-import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.kra.test.infrastructure.PersonAndRoleAwareTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
+import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kns.document.MaintenanceDocument;
 import org.kuali.rice.kns.maintenance.KualiMaintainableImpl;
 import org.kuali.rice.kns.maintenance.rules.MaintenanceDocumentRuleBase;
@@ -34,10 +37,25 @@ import org.kuali.rice.krad.util.GlobalVariables;
 /**
  *  Base class for testing <code>{@link MaintenanceDocument}</code> instances
  */
-public abstract class MaintenanceRuleTestBase extends KcUnitTestBase {
-    private static final Log LOG = LogFactory.getLog(MaintenanceRuleTestBase.class); 
-    private static final String DOCUMENT_ERRORS = "document.document*,document.explanation*,document.reversal*,document.selected*,document.header*";
-        
+@SuppressWarnings("deprecation")
+public abstract class MaintenanceRuleTestBase extends PersonAndRoleAwareTestBase {
+
+	private Person quickstart;
+    
+    @Before
+    public void setUp() throws Exception {
+    	// KcUnitTestBase sets quick start as session's user, the next two lines
+    	// create this user, persists it in the DB, and does the same for the 
+    	// super user role.
+    	quickstart = createPerson(KimPersonFixture.QUICKSTART);
+    	addPersonToRole(quickstart, KimRoleFixture.SUPER_USER);
+    }
+    
+    @After
+    public void tearDown() throws Exception {
+    	quickstart = null;
+    }
+    
     /**
      * This method creates a minimal MaintenanceDocument instance, and populates it with the provided businessObject for the
      * newMaintainable, and null for the oldMaintainable.
