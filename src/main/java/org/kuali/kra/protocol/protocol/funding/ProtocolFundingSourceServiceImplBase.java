@@ -54,6 +54,7 @@ import java.util.Properties;
 /**
  * Implements ProtocolFundingSourceBase.
  */
+@SuppressWarnings("deprecation")
 public abstract class ProtocolFundingSourceServiceImplBase implements ProtocolFundingSourceService {
 
     private static final String BO_SPONSOR_NAME = "sponsor.sponsorName";
@@ -383,8 +384,12 @@ public abstract class ProtocolFundingSourceServiceImplBase implements ProtocolFu
             String fundingSourceTitle = Constants.EMPTY_STRING;
             Award award  = getAward(fundingSourceNumber);
             if (award != null) {
-                fundingSourceName = award.getSponsorName();
-                fundingSourceTitle = award.getTitle();
+            	if(StringUtils.isNotBlank(award.getSponsorName())) {
+            		fundingSourceName = award.getSponsorName();
+            	}
+            	if(StringUtils.isNotBlank(award.getTitle())) {
+            		fundingSourceTitle = award.getTitle();
+            	}
             }
             fundingSource = creatNewProtocolFundingSourceInstanceHook(fundingSourceNumber, FundingSourceType.AWARD, fundingSourceName, fundingSourceTitle); 
         }
