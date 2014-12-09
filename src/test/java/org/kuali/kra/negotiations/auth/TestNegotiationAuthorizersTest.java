@@ -181,7 +181,11 @@ public class TestNegotiationAuthorizersTest extends PersonAndRoleAwareTestBase {
         retVal = taskAuthorizationService.isAuthorized(woods.getPrincipalId(), task);
         assertFalse(retVal);
 
-        // UofA does not have a role with just permission 1272
+        /*
+         * FIXME: UofA does not have a role with just permission 1272, we would need to
+         *        implement a Permission fixture to insert this, and then add permission to
+         *        a new role and insert that, and finally add new role to role fixture
+         */
         //retVal = taskAuthorizationService.isAuthorized(ospAdmin.getPrincipalId(), task);
         //assertTrue(retVal);
 
