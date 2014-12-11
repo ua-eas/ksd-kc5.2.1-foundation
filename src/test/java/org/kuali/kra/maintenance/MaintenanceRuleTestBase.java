@@ -17,10 +17,12 @@ package org.kuali.kra.maintenance;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kuali.kra.bo.fixture.KimPersonFixture;
-import org.kuali.kra.bo.fixture.KimRoleFixture;
 import org.kuali.kra.infrastructure.KraServiceLocator;
-import org.kuali.kra.test.infrastructure.PersonAndRoleAwareTestBase;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kns.document.MaintenanceDocument;
@@ -38,17 +40,19 @@ import org.kuali.rice.krad.util.GlobalVariables;
  *  Base class for testing <code>{@link MaintenanceDocument}</code> instances
  */
 @SuppressWarnings("deprecation")
-public abstract class MaintenanceRuleTestBase extends PersonAndRoleAwareTestBase {
+public abstract class MaintenanceRuleTestBase extends KcUnitTestBase {
 
 	private Person quickstart;
+
     
     @Before
     public void setUp() throws Exception {
-    	// KcUnitTestBase sets quick start as session's user, the next two lines
-    	// create this user, persists it in the DB, and does the same for the 
-    	// super user role.
-    	quickstart = createPerson(KimPersonFixture.QUICKSTART);
-    	addPersonToRole(quickstart, KimRoleFixture.SUPER_USER);
+
+    	PersonTestHelper personHelper = new PersonTestHelper();
+    	quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+
+    	RoleTestHelper roleHelper = new RoleTestHelper(); 
+    	roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
     }
     
     @After

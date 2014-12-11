@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.authorization.ApplicationTask;
 import org.kuali.kra.bo.Unit;
-import org.kuali.kra.bo.fixture.KimPersonFixture;
-import org.kuali.kra.bo.fixture.KimRoleFixture;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.infrastructure.TaskName;
 import org.kuali.kra.negotiations.bo.Negotiation;
@@ -35,7 +33,11 @@ import org.kuali.kra.negotiations.bo.NegotiationStatus;
 import org.kuali.kra.negotiations.bo.NegotiationUnassociatedDetail;
 import org.kuali.kra.negotiations.document.NegotiationDocument;
 import org.kuali.kra.service.TaskAuthorizationService;
-import org.kuali.kra.test.infrastructure.PersonAndRoleAwareTestBase;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.service.BusinessObjectService;
@@ -49,7 +51,7 @@ import org.kuali.rice.krad.service.BusinessObjectService;
  * ospAdmin: view -- unrestricted
  * woods: none
  */
-public class TestNegotiationAuthorizersTest extends PersonAndRoleAwareTestBase {
+public class TestNegotiationAuthorizersTest extends KcUnitTestBase {
     
     TaskAuthorizationService taskAuthorizationService;
     BusinessObjectService businessObjectService;  
@@ -66,17 +68,19 @@ public class TestNegotiationAuthorizersTest extends PersonAndRoleAwareTestBase {
     	taskAuthorizationService = KraServiceLocator.getService(TaskAuthorizationService.class);
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
 
-        quickstart = createPerson(KimPersonFixture.QUICKSTART);
-        jtester = createPerson(KimPersonFixture.JTESTER);
-        woods = createPerson(KimPersonFixture.WOODS);
-        ospAdmin = createPerson(KimPersonFixture.OPS_ADMIN);
-        negotiator = createPerson(KimPersonFixture.NEGOTIATOR);
-        
+        PersonTestHelper personHelper = new PersonTestHelper();
+        quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        jtester = personHelper.createPerson(PersonFixture.JTESTER);
+        woods = personHelper.createPerson(PersonFixture.WOODS);
+        ospAdmin = personHelper.createPerson(PersonFixture.OPS_ADMIN);
+        negotiator = personHelper.createPerson(PersonFixture.NEGOTIATOR);
+
     	// Set permissions
-    	addPersonToRole(quickstart, KimRoleFixture.NEGOTIATION_ADMIN);
-    	addPersonToRole(ospAdmin, KimRoleFixture.NEGOTIATION_INVESTIGATORS);
-    	addPersonToRole(jtester, KimRoleFixture.NEGOTIATION_CREATOR);
-    	addPersonToRole(negotiator, KimRoleFixture.NEGOTIATION_NEGOTIATOR);
+        RoleTestHelper roleHelper = new RoleTestHelper();
+    	roleHelper.addPersonToRole(quickstart, RoleFixture.NEGOTIATION_ADMIN);
+    	roleHelper.addPersonToRole(ospAdmin, RoleFixture.NEGOTIATION_INVESTIGATORS);
+    	roleHelper.addPersonToRole(jtester, RoleFixture.NEGOTIATION_CREATOR);
+    	roleHelper.addPersonToRole(negotiator, RoleFixture.NEGOTIATION_NEGOTIATOR);
 
     }
 

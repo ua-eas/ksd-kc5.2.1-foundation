@@ -1,8 +1,8 @@
-package org.kuali.kra.bo.fixture;
+package org.kuali.kra.test.fixtures;
 
 
 
-public enum KimPersonFixture {
+public enum PersonFixture {
 
     	QUICKSTART("quickstart", "1201", "10000000001"),
     	JTESTER("jtester", "1202", "10000000002"),
@@ -18,7 +18,7 @@ public enum KimPersonFixture {
     	private String principalId;
 
 
-    	private KimPersonFixture(String principalName, String entityId, String principalId) {
+    	private PersonFixture(String principalName, String entityId, String principalId) {
     		this.principalName = principalName;
     		this.entityId = entityId;
     		this.principalId = principalId;

@@ -1,4 +1,4 @@
-package org.kuali.kra.bo.fixture;
+package org.kuali.kra.test.fixtures;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.kuali.kra.infrastructure.RoleConstants;
 
 
-public enum KimRoleFixture {
+public enum RoleFixture {
 	
 	// ************************************************************************
 	// NEGOTIATION
@@ -51,7 +51,7 @@ public enum KimRoleFixture {
 	private Map<String, String> qualifications;
 
 
-	private KimRoleFixture(String namespaceCode, String roleName, Map<String, String> qualifications) {
+	private RoleFixture(String namespaceCode, String roleName, Map<String, String> qualifications) {
 		this.namespaceCode = namespaceCode;
 		this.roleName = roleName;
 		this.qualifications = qualifications;
