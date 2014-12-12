@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.committee.rules;
 
+import java.sql.Date;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,6 @@ import org.kuali.kra.common.committee.rule.event.AddCommitteeMembershipEvent;
 import org.kuali.kra.common.committee.rule.event.AddCommitteeMembershipRoleEvent;
 import org.kuali.kra.infrastructure.Constants;
 import org.kuali.kra.infrastructure.KeyConstants;
-
-import java.sql.Date;
 
 /**
  * Test the Committee Membership Add Rules

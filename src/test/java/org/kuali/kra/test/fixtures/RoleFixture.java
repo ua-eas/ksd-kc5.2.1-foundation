@@ -40,17 +40,23 @@ public enum RoleFixture {
 
 	TIME_AND_MONEY_VIEWER("KC-T", "Time And Money Viewer", new HashMap<String, String>()),
 	TIME_AND_MONEY_MODIFIER("KC-T", "Time And Money Modifier", new HashMap<String, String>()),
+
 	
+	// ************************************************************************
+	// TIME AND MONEY
+	//*************************************************************************
 	
+	COMMITTEE_ADMIN("KC-COMMITTEE", "Committee Administrator", new HashMap<String, String>()),
+
+
 	// ************************************************************************
 	// MISC
 	//*************************************************************************
+	
+	// Protocol Unit Hierarchy requires these qualifications
+	@SuppressWarnings("serial")
+	SUPER_USER("KC-SYS", "KC Superuser", new HashMap<String, String>(){{put("unitNumber","*"); put("subunits","*");}});
 
-	SUPER_USER("KC-SYS", "KC Superuser", new HashMap<String, String>());
-	
-	
-	
-	
 
 	private String namespaceCode;
 	private String roleName;
