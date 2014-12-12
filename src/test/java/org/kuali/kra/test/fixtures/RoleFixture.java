@@ -27,6 +27,12 @@ public enum RoleFixture {
 	NEGOTIATION_COI(RoleConstants.NEGOTIATION_ROLE_TYPE, "COI", new HashMap<String, String>()), // Co-Investigator
 	NEGOTIATION_KP(RoleConstants.NEGOTIATION_ROLE_TYPE, "KP", new HashMap<String, String>()), // Key Personnel
 
+
+	// ************************************************************************
+	// TIME AND MONEY
+	//*************************************************************************
+	PROTOCOL_PI(RoleConstants.PROTOCOL_ROLE_TYPE, "PI", new HashMap<String, String>()), // Principle Investigator
+	
 	
 	// ************************************************************************
 	// TIME AND MONEY

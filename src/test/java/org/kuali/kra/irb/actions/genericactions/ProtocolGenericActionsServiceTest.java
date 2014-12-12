@@ -46,8 +46,10 @@ import org.kuali.kra.irb.onlinereview.ProtocolOnlineReviewService;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
 import org.kuali.kra.test.helpers.PersonTestHelper;
 import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.bo.AdHocRouteRecipient;
@@ -80,6 +82,9 @@ public class ProtocolGenericActionsServiceTest extends KcUnitTestBase {
         
         RoleTestHelper roleHelper = new RoleTestHelper();
         roleHelper.addPersonToRole(person, RoleFixture.SUPER_USER);
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.TEST);
     }
 
     @Override
