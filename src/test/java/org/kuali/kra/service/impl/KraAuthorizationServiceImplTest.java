@@ -15,23 +15,33 @@
  */
 package org.kuali.kra.service.impl;
 
+import java.sql.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.bo.KcPerson;
 import org.kuali.kra.bo.RolePersons;
+import org.kuali.kra.bo.Sponsor;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.infrastructure.PermissionConstants;
 import org.kuali.kra.infrastructure.RoleConstants;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
 import org.kuali.kra.service.KraAuthorizationService;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kim.api.identity.IdentityService;
+import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kim.api.identity.principal.PrincipalContract;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.sql.Date;
-import java.util.List;
 
 /**
  * Test the Kra Authorization Service Impl.  Mocks are used
@@ -53,6 +63,17 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        PersonTestHelper personHelper = new PersonTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        Person chew = personHelper.createPerson(PersonFixture.CHEW);
+
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+
+        UnitTestHelper unitHelper = new UnitTestHelper();
+        unitHelper.createUnit(UnitFixture.TEST);
+
         kraAuthService = KraServiceLocator.getService(KraAuthorizationService.class);
         proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
         identityManagementService = KraServiceLocator.getService(IdentityService.class);
@@ -104,12 +125,12 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
     
     @Test
     public void testRemoveNarrativeWriterRole() throws Exception {
-        PrincipalContract userChew = identityManagementService.getPrincipalByPrincipalName("chew");
+        PrincipalContract userChew = identityManagementService.getPrincipalByPrincipalName(PersonFixture.CHEW.getPrincipalName());
         ProposalDevelopmentDocument  currentDoc = createProposal("Proposal-3", "000001");
         kraAuthService.addRole(userChew.getPrincipalId(), RoleConstants.NARRATIVE_WRITER, currentDoc);
         List<String> usernames = kraAuthService.getUserNames(currentDoc, RoleConstants.NARRATIVE_WRITER);
         assertTrue(usernames.size() == 1);
-        assertTrue(usernames.contains("chew"));
+        assertTrue(usernames.contains(PersonFixture.CHEW.getPrincipalName()));
         
         kraAuthService.removeRole(userChew.getPrincipalId(), RoleConstants.NARRATIVE_WRITER, currentDoc);
         List<String> names = kraAuthService.getUserNames(currentDoc, RoleConstants.NARRATIVE_WRITER);
@@ -230,15 +251,19 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
         Date requestedStartDateInitial = new Date(System.currentTimeMillis());
         Date requestedEndDateInitial = new Date(System.currentTimeMillis());
 
+        SponsorTestHelper sponsorHelper = new SponsorTestHelper();
+        Sponsor sponsor = sponsorHelper.createSponsor(SponsorFixture.ASU);
+        Sponsor primeSponser = sponsorHelper.createSponsor(SponsorFixture.AZ_STATE);
+        
         document.getDocumentHeader().setDocumentDescription(documentDescription);
-        document.getDevelopmentProposal().setSponsorCode("000162");
+        document.getDevelopmentProposal().setSponsorCode(sponsor.getSponsorCode());
         document.getDevelopmentProposal().setTitle("project title");
         document.getDevelopmentProposal().setRequestedStartDateInitial(requestedStartDateInitial);
         document.getDevelopmentProposal().setRequestedEndDateInitial(requestedEndDateInitial);
         document.getDevelopmentProposal().setActivityTypeCode("1");
         document.getDevelopmentProposal().setProposalTypeCode("1");
         document.getDevelopmentProposal().setOwnedByUnitNumber(leadUnitNumber);
-        document.getDevelopmentProposal().setPrimeSponsorCode("000120");
+        document.getDevelopmentProposal().setPrimeSponsorCode(primeSponser.getSponsorCode());
 
         proposalDevelopmentService.initializeUnitOrganizationLocation(document);
         proposalDevelopmentService.initializeProposalSiteNumbers(document);

@@ -11,7 +11,8 @@ public enum PersonFixture {
     	NEGOTIATOR("negotiator", "1205", "10000000005"),
     	BORST("borst", "1206", "10000000006"),
     	IRB_ADMIN("irbAdmin", "1207", "10000000007"),
-    	IACUC_ADMIN("iacucAdmin", "1208", "10000000008");
+    	IACUC_ADMIN("iacucAdmin", "1208", "10000000008"),
+    	CHEW("chew", "1209", "10000000009");
     	
     	private String principalName;
     	private String entityId;
