@@ -21,7 +21,15 @@ import org.junit.Test;
 import org.kuali.kra.common.committee.bo.CommitteeDecisionMotionType;
 import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
+import org.kuali.rice.kim.api.identity.Person;
 
+@SuppressWarnings("unchecked")
 public class CommitteeDecisionRuleTest extends CommitteeDecisionRuleBase {
     
     private CommitteeDecisionRule rule;
@@ -32,6 +40,14 @@ public class CommitteeDecisionRuleTest extends CommitteeDecisionRuleBase {
         super.setUp();
         
         rule = new CommitteeDecisionRule();
+        
+        PersonTestHelper personHelper = new PersonTestHelper();
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+        
+        UnitTestHelper unitHelper = new UnitTestHelper();
+        unitHelper.createUnit(UnitFixture.TEST);
     }
 
     @Override
@@ -46,7 +62,7 @@ public class CommitteeDecisionRuleTest extends CommitteeDecisionRuleBase {
      * Test a valid approve.
      * @throws Exception
      */
-    @Test
+	@Test
     public void testValidApprove() throws Exception {
         ProtocolDocument protocolDocument = ProtocolFactory.createProtocolDocument();
         
