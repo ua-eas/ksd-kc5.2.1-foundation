@@ -173,6 +173,8 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
                 getKeyPersonnelService().getPersonnelRoleDesc(person));        
     }
     
+    /*
+     * FIXME: This is institution specific, and the UofA does it different than IU
     @Test
     public void testPersonnelRoleDescMpi() {
         document.getDevelopmentProposal().setSponsorCode(NIH_SPONSOR_CODE);
@@ -183,7 +185,7 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
         assertEquals(parameterService.getParameterValueAsString(Constants.KC_GENERIC_PARAMETER_NAMESPACE, Constants.KC_ALL_PARAMETER_DETAIL_TYPE_CODE, NIH_MPI_PARAM), 
                 getKeyPersonnelService().getPersonnelRoleDesc(person));        
     }
-    
+    */
     
     /**
      * Locate the <code>{@link KeyPersonnelService}</code>
