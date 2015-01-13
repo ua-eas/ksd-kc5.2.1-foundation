@@ -26,6 +26,11 @@ import org.kuali.kra.proposaldevelopment.bo.ProposalUser;
 import org.kuali.kra.proposaldevelopment.bo.ProposalUserEditRoles;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.proposaldevelopment.web.bean.ProposalUserRoles;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
@@ -45,6 +50,15 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        PersonTestHelper personHelper = new PersonTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        personHelper.createPerson(PersonFixture.MAJORS);
+        personHelper.createPerson(PersonFixture.CHEW);
+        
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+        
         rule = new ProposalDevelopmentPermissionsRule();
     }
 
@@ -63,7 +77,7 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     public void testAddOK() throws Exception {
         ProposalDevelopmentDocument document = getNewProposalDevelopmentDocument();
         List<ProposalUserRoles> proposalUserRolesList = getProposalUserRoles();
-        ProposalUser proposalUser = createProposalUser("majors");
+        ProposalUser proposalUser = createProposalUser(PersonFixture.MAJORS.getPrincipalName());
         assertTrue(rule.processAddProposalUserBusinessRules(document, proposalUserRolesList, proposalUser));
     }
     
@@ -90,7 +104,7 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     public void testAddDuplicate() throws Exception {
         ProposalDevelopmentDocument document = getNewProposalDevelopmentDocument();
         List<ProposalUserRoles> proposalUserRolesList = getProposalUserRoles();
-        ProposalUser proposalUser = createProposalUser("quickstart");
+        ProposalUser proposalUser = createProposalUser(PersonFixture.QUICKSTART.getPrincipalName());
         assertFalse(rule.processAddProposalUserBusinessRules(document, proposalUserRolesList, proposalUser));
         assertError(Constants.PERMISSION_PROPOSAL_USERS_PROPERTY_KEY + ".username", KeyConstants.ERROR_DUPLICATE_PROPOSAL_USER);
     }
@@ -129,7 +143,7 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     public void testEditOK() throws Exception {
         ProposalDevelopmentDocument document = getNewProposalDevelopmentDocument();
         List<ProposalUserRoles> proposalUserRolesList = getProposalUserRoles();
-        ProposalUserEditRoles editRoles = createProposalUserEditRoles("chew");
+        ProposalUserEditRoles editRoles = createProposalUserEditRoles(PersonFixture.CHEW.getPrincipalName());
         editRoles.setRoleState(RoleConstants.NARRATIVE_WRITER, Boolean.TRUE);
         assertTrue(rule.processEditProposalUserRolesBusinessRules(document, proposalUserRolesList, editRoles));
     }
@@ -143,7 +157,7 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     public void testEditAggregatorOnly() throws Exception {
         ProposalDevelopmentDocument document = getNewProposalDevelopmentDocument();
         List<ProposalUserRoles> proposalUserRolesList = getProposalUserRoles();
-        ProposalUserEditRoles editRoles = createProposalUserEditRoles("chew");
+        ProposalUserEditRoles editRoles = createProposalUserEditRoles(PersonFixture.CHEW.getPrincipalName());
         editRoles.setRoleState(RoleConstants.AGGREGATOR, Boolean.TRUE);
         editRoles.setRoleState(RoleConstants.NARRATIVE_WRITER, Boolean.TRUE);
         assertFalse(rule.processEditProposalUserRolesBusinessRules(document, proposalUserRolesList, editRoles));
@@ -177,7 +191,7 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     public void testEditLastAggregator() throws Exception {
         ProposalDevelopmentDocument document = getNewProposalDevelopmentDocument();
         List<ProposalUserRoles> proposalUserRolesList = getProposalUserRoles();
-        ProposalUserEditRoles editRoles = createProposalUserEditRoles("quickstart");
+        ProposalUserEditRoles editRoles = createProposalUserEditRoles(PersonFixture.QUICKSTART.getPrincipalName());
         editRoles.setRoleState(RoleConstants.NARRATIVE_WRITER, Boolean.TRUE);
         assertFalse(rule.processEditProposalUserRolesBusinessRules(document, proposalUserRolesList, editRoles));
         assertError(Constants.EDIT_ROLES_PROPERTY_KEY, KeyConstants.ERROR_LAST_AGGREGATOR);
@@ -191,12 +205,12 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
         List<ProposalUserRoles> proposalUserRolesList = new ArrayList<ProposalUserRoles>();
         
         ProposalUserRoles userRoles = new ProposalUserRoles();
-        userRoles.setUsername("quickstart");
+        userRoles.setUsername(PersonFixture.QUICKSTART.getPrincipalName());
         userRoles.addRoleName("Aggregator");
         proposalUserRolesList.add(userRoles);
         
         userRoles = new ProposalUserRoles();
-        userRoles.setUsername("chew");
+        userRoles.setUsername(PersonFixture.CHEW.getPrincipalName());
         userRoles.addRoleName("Viewer");
         proposalUserRolesList.add(userRoles);
         
@@ -221,7 +235,8 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
      * @param propertyKey
      * @param errorKey
      */
-    private void assertError(String propertyKey, String errorKey) {
+    @SuppressWarnings("rawtypes")
+	private void assertError(String propertyKey, String errorKey) {
         AutoPopulatingList errors = GlobalVariables.getMessageMap().getMessages(propertyKey);
         assertNotNull(errors);
         assertTrue(errors.size() == 1);
