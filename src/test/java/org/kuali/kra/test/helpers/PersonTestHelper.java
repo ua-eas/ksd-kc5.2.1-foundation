@@ -23,45 +23,39 @@ public class PersonTestHelper extends TestHelper {
 	
 	public Person createPerson(PersonFixture personFixture) {
 
-		// Already exists, or we are on LDAP
-		Person person = getPerson(personFixture);
-		if (person != null) {
-			return person;
-		}
-
 		BusinessObjectService businessObjectService = getService(BusinessObjectService.class);
-		Entity entity = getEntity(personFixture);
-		Principal principal = getPrincipal(personFixture);
+		Entity entity = buildEntity(personFixture);
+		Principal principal = buildPrincipal(personFixture);
 		entity.getPrincipals().add(principal);
 		EntityBo entityBo = EntityBo.from(entity);
 		businessObjectService.save(entityBo);
-		
+
 		return getService(PersonService.class).getPerson(personFixture.getPrincipalId());
 	}
 
 	public void deletePerson(PersonFixture personFixture) {
 
 		// Have to delete first, principal.getEntityId() is a FK
-		Principal principal = getPrincipal(personFixture);
+		Principal principal = buildPrincipal(personFixture);
 		PrincipalBo principalBo = PrincipalBo.from(principal);
 		getService(BusinessObjectService.class).delete(principalBo);
 
-		Entity entity = getEntity(personFixture);
+		Entity entity = buildEntity(personFixture);
 		EntityBo entityBo = EntityBo.from(entity);
 		getService(BusinessObjectService.class).delete(entityBo);
 	}
 
-	private Entity getEntity(PersonFixture personFixture) {
+	private Entity buildEntity(PersonFixture personFixture) {
 		Entity.Builder entityBuilder = Entity.Builder.create();
 		entityBuilder.setActive(true);
 		entityBuilder.setVersionNumber(0L);
 		entityBuilder.setId(personFixture.getEntityId());
-		List<EntityTypeContactInfo.Builder> entityTypes = getEntityTypeContactInfoList(personFixture);
+		List<EntityTypeContactInfo.Builder> entityTypes = buildEntityTypeContactInfoList(personFixture);
 		entityBuilder.setEntityTypes(entityTypes);
 		return entityBuilder.build();
 	}
 
-	private Principal getPrincipal(PersonFixture personFixture) {
+	private Principal buildPrincipal(PersonFixture personFixture) {
 		Principal.Builder principalBuilder = Principal.Builder.create(personFixture.getPrincipalName());
 		principalBuilder.setActive(true);
 		principalBuilder.setVersionNumber(0L);
@@ -70,7 +64,7 @@ public class PersonTestHelper extends TestHelper {
 		return principalBuilder.build();
 	}
 
-	private List<EntityTypeContactInfo.Builder> getEntityTypeContactInfoList(PersonFixture personFixture) {
+	private List<EntityTypeContactInfo.Builder> buildEntityTypeContactInfoList(PersonFixture personFixture) {
 		List<EntityTypeContactInfo.Builder> results = new ArrayList<EntityTypeContactInfo.Builder>();
 		EntityTypeContactInfo.Builder builder = EntityTypeContactInfo.Builder.create(personFixture.getEntityId(), KimConstants.EntityTypes.PERSON);
 		builder.setActive(true);
@@ -79,7 +73,7 @@ public class PersonTestHelper extends TestHelper {
 		return results;
 	}
 
-	private Person getPerson(PersonFixture personFixture) {
+	public Person getPerson(PersonFixture personFixture) {
 		return getService(PersonService.class).getPersonByPrincipalName(personFixture.getPrincipalName());
 	}
 }
