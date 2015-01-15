@@ -48,7 +48,7 @@ public class ProtocolRiskLevelRuleTest extends ProtocolRuleTestBase {
         RoleTestHelper roleHelper = new RoleTestHelper();
         roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         UnitTestHelper unitHelper = new UnitTestHelper();
-        unitHelper.createUnit(UnitFixture.TEST);
+        unitHelper.createUnit(UnitFixture.TEST_1);
         
         GlobalVariables.setUserSession(new UserSession("quickstart"));
     }

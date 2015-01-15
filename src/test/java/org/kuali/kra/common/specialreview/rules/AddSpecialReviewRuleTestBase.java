@@ -109,7 +109,7 @@ public abstract class AddSpecialReviewRuleTestBase<T extends SpecialReview<? ext
         roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         
         UnitTestHelper unitHelper = new UnitTestHelper();
-        unitHelper.createUnit(UnitFixture.TEST);
+        unitHelper.createUnit(UnitFixture.TEST_1);
         
         context = new JUnit4Mockery() {{
             setImposteriser(ClassImposteriser.INSTANCE);

@@ -101,7 +101,7 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
         RoleTestHelper roleHelper = new RoleTestHelper();
         roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         UnitTestHelper unitHelper = new UnitTestHelper();
-        unitHelper.createUnit(UnitFixture.TEST);
+        unitHelper.createUnit(UnitFixture.TEST_1);
         
         SubmissionQualifierTypeTestHelper qualifierTypeCodeHelper = new SubmissionQualifierTypeTestHelper();
         qualifierTypeCodeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);

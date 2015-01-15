@@ -44,7 +44,7 @@ public class ProtocolFactory {
     private static final String PROTOCOL_TITLE_STR = "New protocol test";
     private static final String PRINCIPAL_INVESTIGATOR_ID = "10000000001";
     private static final String PRINCIPAL_INVESTIGATOR_NAME = "Terry Durkin";
-    private static final String PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST.getUnitNumber();
+    private static final String PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST_1.getUnitNumber();
     private static final String PRINCIPAL_INVESTIGATOR_ROLE = RoleFixture.PROTOCOL_PI.getRoleName();
     private static final String REFERENCE_PERSON_ROLE = "protocolPersonRole";
     private static final String REFERENCE_UNIT = "unit";

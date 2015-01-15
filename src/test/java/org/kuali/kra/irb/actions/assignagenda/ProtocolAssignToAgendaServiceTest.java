@@ -83,7 +83,7 @@ public class ProtocolAssignToAgendaServiceTest extends KcUnitTestBase {
         RoleTestHelper roleHelper = new RoleTestHelper();
         roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         UnitTestHelper unitHelper = new UnitTestHelper();
-        unitHelper.createUnit(UnitFixture.TEST);
+        unitHelper.createUnit(UnitFixture.TEST_1);
         
         GlobalVariables.setUserSession(new UserSession(PersonFixture.QUICKSTART.getPrincipalName()));
         documentService = KraServiceLocator.getService(DocumentService.class);

@@ -3,7 +3,8 @@ package org.kuali.kra.test.fixtures;
 
 public enum UnitFixture {
 
-	TEST("9999", "Test Unit");
+	TEST_1("9999", "Test Unit 1"),
+	TEST_2("9998", "Test Unit 2");
 
 
 	private String unitNumber;

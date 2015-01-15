@@ -75,7 +75,7 @@ public class ProtocolVersioningTest extends KcUnitTestBase {
        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
        
        UnitTestHelper unitHelper = new UnitTestHelper();
-       unitHelper.createUnit(UnitFixture.TEST);
+       unitHelper.createUnit(UnitFixture.TEST_1);
        
        OrgTestHelper orgHelper = new OrgTestHelper();
        orgHelper.createOrg(OrgFixture.ONE);

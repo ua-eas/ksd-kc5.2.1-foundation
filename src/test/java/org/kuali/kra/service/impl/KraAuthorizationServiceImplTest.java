@@ -76,7 +76,7 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
         personHelper.createPerson(PersonFixture.WOODS);
 
         UnitTestHelper unitHelper = new UnitTestHelper();
-        unitHelper.createUnit(UnitFixture.TEST);
+        unitHelper.createUnit(UnitFixture.TEST_1);
 
         kraAuthService = KraServiceLocator.getService(KraAuthorizationService.class);
         proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);

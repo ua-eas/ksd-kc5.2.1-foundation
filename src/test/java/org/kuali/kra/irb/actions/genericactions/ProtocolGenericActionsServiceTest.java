@@ -82,7 +82,7 @@ public class ProtocolGenericActionsServiceTest extends KcUnitTestBase {
         roleHelper.addPersonToRole(person, RoleFixture.SUPER_USER);
         
         UnitTestHelper unitTestHelper = new UnitTestHelper();
-        unitTestHelper.createUnit(UnitFixture.TEST);
+        unitTestHelper.createUnit(UnitFixture.TEST_1);
     }
 
     @Override

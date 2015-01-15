@@ -15,6 +15,9 @@
  */
 package org.kuali.kra.award.home.fundingproposal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +32,14 @@ import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPerson;
 import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonCreditSplit;
 import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonUnit;
 import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonUnitCreditSplit;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import org.kuali.rice.kim.api.identity.Person;
 
 public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest {
 
@@ -42,10 +49,18 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        unit1 = new Unit();
-        unit1.setUnitNumber("000001");
-        unit2 = new Unit();
-        unit2.setUnitNumber("BL-BL");
+        
+        PersonTestHelper personHelper = new PersonTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        personHelper.createPerson(PersonFixture.JTESTER);
+        personHelper.createPerson(PersonFixture.WOODS);
+
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+        
+        UnitTestHelper unitHelper = new UnitTestHelper();
+        unit1 = unitHelper.createUnit(UnitFixture.TEST_1);
+        unit2 = unitHelper.createUnit(UnitFixture.TEST_2);
     }
     
     protected InstitutionalProposalPerson generateIPPerson(String personId, String personName, String roleCode, KualiDecimal creditSplit) {
@@ -124,9 +139,9 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     
     @Test
     public void testFeedNewAward() {
-        InstitutionalProposalPerson ipPerson1 = generateIPPerson("10000000001", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson ipPerson1 = generateIPPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         ipPerson1.add(generateIPUnit(unit1, true, new KualiDecimal(100.00)));
-        InstitutionalProposalPerson ipPerson2 = generateIPPerson("10000000002", "Number 2", ContactRole.COI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson ipPerson2 = generateIPPerson(PersonFixture.JTESTER.getPrincipalId(), "Number 2", ContactRole.COI_CODE, new KualiDecimal(50.00));
         ipPerson2.add(generateIPUnit(unit1, false, new KualiDecimal(50.00)));
         ipPerson2.add(generateIPUnit(unit2, false, new KualiDecimal(50.00)));
         proposal.add(ipPerson1);
@@ -146,16 +161,16 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     
     @Test
     public void testTypicalMerge() {
-        InstitutionalProposalPerson ipPerson1 = generateIPPerson("10000000001", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson ipPerson1 = generateIPPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         ipPerson1.add(generateIPUnit(unit1, true, new KualiDecimal(100.00)));
-        InstitutionalProposalPerson  ipPerson2 = generateIPPerson("10000000002", "Number 2", ContactRole.COI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson  ipPerson2 = generateIPPerson(PersonFixture.JTESTER.getPrincipalId(), "Number 2", ContactRole.COI_CODE, new KualiDecimal(50.00));
         ipPerson2.add(generateIPUnit(unit1, false, new KualiDecimal(50.00)));
         ipPerson2.add(generateIPUnit(unit2, false, new KualiDecimal(50.00)));
         proposal.add(ipPerson1);
         proposal.add(ipPerson2);
-        AwardPerson awardPerson1 = generateAwardPerson("10000000003", "Number 3", ContactRole.PI_CODE, new KualiDecimal(80.00));
+        AwardPerson awardPerson1 = generateAwardPerson(PersonFixture.WOODS.getPrincipalId(), "Number 3", ContactRole.PI_CODE, new KualiDecimal(80.00));
         awardPerson1.add(generateAwardUnit(unit1, true, new KualiDecimal(100.00)));
-        AwardPerson awardPerson2 = generateAwardPerson("10000000002", "Number 2", ContactRole.COI_CODE, new KualiDecimal(20.00));
+        AwardPerson awardPerson2 = generateAwardPerson(PersonFixture.JTESTER.getPrincipalId(), "Number 2", ContactRole.COI_CODE, new KualiDecimal(20.00));
         awardPerson2.add(generateAwardUnit(unit1, false, new KualiDecimal(100.00)));
         award.add(awardPerson1);
         award.add(awardPerson2);
@@ -182,10 +197,10 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     
     @Test
     public void testDuplicateMerge() {
-        InstitutionalProposalPerson ipPerson1 = generateIPPerson("10000000001", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson ipPerson1 = generateIPPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         ipPerson1.add(generateIPUnit(unit1, true, new KualiDecimal(100.00)));
         proposal.add(ipPerson1);
-        AwardPerson awardPerson1 = generateAwardPerson("10000000001", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        AwardPerson awardPerson1 = generateAwardPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         awardPerson1.add(generateAwardUnit(unit1, true, new KualiDecimal(100.00)));
         award.add(awardPerson1);
         ProjectPersonnelDataFeedCommand command = new ProjectPersonnelDataFeedCommand(award, proposal, FundingProposalMergeType.MERGE);
@@ -198,10 +213,10 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     
     @Test
     public void testTypicalReplace() {
-        InstitutionalProposalPerson ipPerson1 = generateIPPerson("10000000001", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        InstitutionalProposalPerson ipPerson1 = generateIPPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         ipPerson1.add(generateIPUnit(unit1, true, new KualiDecimal(100.00)));
         proposal.add(ipPerson1);
-        AwardPerson awardPerson1 = generateAwardPerson("10000000003", "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
+        AwardPerson awardPerson1 = generateAwardPerson(PersonFixture.WOODS.getPrincipalId(), "Number 1", ContactRole.PI_CODE, new KualiDecimal(50.00));
         awardPerson1.add(generateAwardUnit(unit1, true, new KualiDecimal(100.00)));
         award.add(awardPerson1);
         ProjectPersonnelDataFeedCommand command = new ProjectPersonnelDataFeedCommand(award, proposal, FundingProposalMergeType.REPLACE);
@@ -216,16 +231,16 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     
     @Test
     public void testNoSplitReplace() {
-        InstitutionalProposalPerson ipPerson1 = generateIPPerson("10000000001", "Number 1", ContactRole.PI_CODE, null);
+        InstitutionalProposalPerson ipPerson1 = generateIPPerson(PersonFixture.QUICKSTART.getPrincipalId(), "Number 1", ContactRole.PI_CODE, null);
         ipPerson1.add(generateIPUnit(unit1, true, null));
-        InstitutionalProposalPerson  ipPerson2 = generateIPPerson("10000000002", "Number 2", ContactRole.COI_CODE, null);
+        InstitutionalProposalPerson  ipPerson2 = generateIPPerson(PersonFixture.JTESTER.getPrincipalId(), "Number 2", ContactRole.COI_CODE, null);
         ipPerson2.add(generateIPUnit(unit1, false, null));
         ipPerson2.add(generateIPUnit(unit2, false, null));
         proposal.add(ipPerson1);
         proposal.add(ipPerson2);
-        AwardPerson awardPerson1 = generateAwardPerson("10000000003", "Number 3", ContactRole.PI_CODE, new KualiDecimal(80.00));
+        AwardPerson awardPerson1 = generateAwardPerson(PersonFixture.WOODS.getPrincipalId(), "Number 3", ContactRole.PI_CODE, new KualiDecimal(80.00));
         awardPerson1.add(generateAwardUnit(unit1, true, new KualiDecimal(100.00)));
-        AwardPerson awardPerson2 = generateAwardPerson("10000000002", "Number 2", ContactRole.COI_CODE, new KualiDecimal(20.00));
+        AwardPerson awardPerson2 = generateAwardPerson(PersonFixture.JTESTER.getPrincipalId(), "Number 2", ContactRole.COI_CODE, new KualiDecimal(20.00));
         awardPerson2.add(generateAwardUnit(unit1, false, new KualiDecimal(100.00)));
         award.add(awardPerson1);
         award.add(awardPerson2);
