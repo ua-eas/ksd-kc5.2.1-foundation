@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.irb.actions.amendrenew;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -33,16 +35,20 @@ import org.kuali.kra.irb.actions.ProtocolActionType;
 import org.kuali.kra.irb.actions.copy.ProtocolCopyService;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.questionnaire.answer.QuestionnaireAnswerService;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
+import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
-
-import java.util.List;
 
 /**
  * Test the ProtocolAmendRenewService implementation.
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
 
     private static final String SUMMARY = "my test summary";
@@ -57,6 +63,11 @@ public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
     public void setUp() throws Exception {
         super.setUp();
 
+        PersonTestHelper personHelper = new PersonTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+        
         service = new ProtocolAmendRenewServiceImpl();
         service.setDocumentService(KraServiceLocator.getService(DocumentService.class));
         service.setProtocolCopyService(KraServiceLocator.getService(ProtocolCopyService.class));
@@ -130,8 +141,8 @@ public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
         assertEquals(expectedSummary, amendRenewal.getSummary());
         verifyModules(amendRenewal, moduleCount);
     }
-    
-    private void verifyModules(ProtocolAmendRenewal amendRenewal, int moduleCount) {
+
+	private void verifyModules(ProtocolAmendRenewal amendRenewal, int moduleCount) {
         List<ProtocolAmendRenewModule> modules = (List)amendRenewal.getModules();
         assertEquals(moduleCount, modules.size());
         if (moduleCount > 0) {
@@ -153,7 +164,6 @@ public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
      * Verify that the getAmendmentAndRenewals() method works.
      * @throws WorkflowException
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetAmendmentsAndRenewals() throws Exception {
         ProtocolDocument a1 = ProtocolFactory.createProtocolDocument("0906000001A001");
