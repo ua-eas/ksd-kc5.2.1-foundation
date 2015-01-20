@@ -21,19 +21,16 @@ import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
-
-import java.util.HashMap;
 
 /**
  * Base class for Proposal Development business rule tests.
  * 
  * @author Kuali Research Administration Team (kualidev@oncourse.iu.edu)
  */
+@SuppressWarnings("deprecation")
 public abstract class ProposalDevelopmentRuleTestBase extends KcUnitTestBase {
 
     protected DocumentService documentService = null;
@@ -41,9 +38,6 @@ public abstract class ProposalDevelopmentRuleTestBase extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
     }
 

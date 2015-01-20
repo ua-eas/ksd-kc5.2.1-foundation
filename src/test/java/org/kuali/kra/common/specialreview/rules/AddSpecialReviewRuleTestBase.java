@@ -42,15 +42,10 @@ import org.kuali.kra.infrastructure.KeyConstants;
 import org.kuali.kra.irb.Protocol;
 import org.kuali.kra.irb.ProtocolFinderDao;
 import org.kuali.kra.irb.test.ProtocolFactory;
-import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.document.Document;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.util.ErrorMessage;
@@ -102,11 +97,6 @@ public abstract class AddSpecialReviewRuleTestBase<T extends SpecialReview<? ext
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         
         UnitTestHelper unitHelper = new UnitTestHelper();
         unitHelper.createUnit(UnitFixture.TEST_1);

@@ -15,6 +15,9 @@
  */
 package org.kuali.kra.proposaldevelopment.rules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,16 +30,9 @@ import org.kuali.kra.proposaldevelopment.bo.ProposalUserEditRoles;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.proposaldevelopment.web.bean.ProposalUserRoles;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Test the business rules for Proposal Permissions.
@@ -50,15 +46,6 @@ public class ProposalDevelopmentPermissionsRuleTest extends ProposalDevelopmentR
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        personHelper.createPerson(PersonFixture.MAJORS);
-        personHelper.createPerson(PersonFixture.CHEW);
-        
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
-        
         rule = new ProposalDevelopmentPermissionsRule();
     }
 

@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.rules;
 
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +32,7 @@ import org.kuali.kra.proposaldevelopment.service.ProposalRoleTemplateService;
 import org.kuali.kra.rule.event.SaveCustomDataEvent;
 import org.kuali.kra.service.KraAuthorizationService;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.rice.core.api.util.RiceKeyConstants;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.document.authorization.PessimisticLock;
 import org.kuali.rice.krad.service.DocumentService;
@@ -42,8 +40,6 @@ import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
-
-import java.util.UUID;
 
 
 // TODO : temporary extends ProposalDevelopmentRuleTestBase to test proposal document custom data 
@@ -56,11 +52,6 @@ public class SaveCustomAttributeRuleTest extends ProposalDevelopmentRuleTestBase
     public void setUp() throws Exception {
         super.setUp();
         rule = new CustomDataRule();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
     }
 
     @Override
@@ -94,7 +85,7 @@ public class SaveCustomAttributeRuleTest extends ProposalDevelopmentRuleTestBase
         setCustomAttributeValue(document, document.getCustomAttributeDocuments().get("4"), CustomAttributeDocumentTestUtilities.GRADUATE_STUDENT_COUNT_VALUE);
         setCustomAttributeValue(document, document.getCustomAttributeDocuments().get("8"), CustomAttributeDocumentTestUtilities.LOCAL_REVIEW_DATE_VALUE);
         setCustomAttributeValue(document, document.getCustomAttributeDocuments().get("9"), "Yes");
-        setCustomAttributeValue(document, document.getCustomAttributeDocuments().get("5"), "quickstart");
+        setCustomAttributeValue(document, document.getCustomAttributeDocuments().get("5"), PersonFixture.QUICKSTART.getPrincipalName());
         SaveCustomDataEvent saveCustomAttributeEvent = new SaveCustomDataEvent(document);
         assertTrue(rule.processRules(saveCustomAttributeEvent));
     }

@@ -45,15 +45,10 @@ import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
 import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.kim.api.identity.Person;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.bo.DocumentHeader;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
@@ -77,15 +72,10 @@ public class ProtocolAssignToAgendaServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+
         UnitTestHelper unitHelper = new UnitTestHelper();
         unitHelper.createUnit(UnitFixture.TEST_1);
-        
-        GlobalVariables.setUserSession(new UserSession(PersonFixture.QUICKSTART.getPrincipalName()));
+
         documentService = KraServiceLocator.getService(DocumentService.class);
         protocolActionService = KraServiceLocator.getService(ProtocolActionService.class);
         protocolAssignToAgendaService = KraServiceLocator.getService(ProtocolAssignToAgendaService.class);

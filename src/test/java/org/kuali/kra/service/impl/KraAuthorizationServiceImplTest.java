@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kuali.kra.bo.KcPerson;
 import org.kuali.kra.bo.RolePersons;
 import org.kuali.kra.bo.Sponsor;
 import org.kuali.kra.infrastructure.KraServiceLocator;
@@ -29,16 +30,12 @@ import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
 import org.kuali.kra.service.KraAuthorizationService;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.SponsorFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.SponsorTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kim.api.identity.IdentityService;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kim.api.identity.principal.PrincipalContract;
 import org.kuali.rice.krad.util.GlobalVariables;
 
@@ -62,18 +59,6 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        
-        // User for doc creation
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
-        
-        // Users for other tests
-        personHelper.createPerson(PersonFixture.CHEW);
-        personHelper.createPerson(PersonFixture.MAJORS);
-        personHelper.createPerson(PersonFixture.WOODS);
 
         UnitTestHelper unitHelper = new UnitTestHelper();
         unitHelper.createUnit(UnitFixture.TEST_1);
@@ -185,8 +170,6 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
     /**
      * Test the getPersonsInRole() service method.
      */
-    /* FIXME: The kraAuthService.getPersonsInRole() method has a different path for
-     *        pulling a principal from the DB and is broken.
     @Test
     public void testGetPersonsInRole() throws Exception {
         ProposalDevelopmentDocument doc = createProposal("Proposal-7", "000001");
@@ -195,8 +178,7 @@ public class KraAuthorizationServiceImplTest extends KcUnitTestBase {
         List<KcPerson> persons = kraAuthService.getPersonsInRole(doc, RoleConstants.AGGREGATOR);
         assertEquals(2, persons.size());
     }
-    */
-    
+
     /**
      * Test the getAllRolePersons() service method.
      */

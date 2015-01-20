@@ -43,14 +43,9 @@ import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.actions.submit.ProtocolSubmitAction;
 import org.kuali.kra.irb.onlinereview.ProtocolOnlineReviewService;
 import org.kuali.kra.irb.test.ProtocolFactory;
-import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.service.DocumentService;
 
 public class ProtocolGenericActionsServiceTest extends KcUnitTestBase {
@@ -74,12 +69,6 @@ public class ProtocolGenericActionsServiceTest extends KcUnitTestBase {
         service.setDocumentService(KraServiceLocator.getService(DocumentService.class));
         service.setProtocolOnlineReviewService(getMockProtocolOnlineReviewService());
         service.setProtocolVersionService(KraServiceLocator.getService(ProtocolVersionService.class));
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person person = personHelper.createPerson(PersonFixture.QUICKSTART);
-        
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(person, RoleFixture.SUPER_USER);
         
         UnitTestHelper unitTestHelper = new UnitTestHelper();
         unitTestHelper.createUnit(UnitFixture.TEST_1);

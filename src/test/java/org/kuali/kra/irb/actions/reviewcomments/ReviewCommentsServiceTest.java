@@ -46,15 +46,11 @@ import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.meeting.CommitteeScheduleMinute;
 import org.kuali.kra.service.KcPersonService;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.datetime.DateTimeService;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kim.api.role.RoleService;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
@@ -79,15 +75,9 @@ public class ReviewCommentsServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+
         UnitTestHelper unitHelper = new UnitTestHelper();
         unitHelper.createUnit(UnitFixture.TEST_1);
-        
-        personHelper.createPerson(PersonFixture.JTESTER);
         
         service = new ReviewCommentsServiceImpl();
     }

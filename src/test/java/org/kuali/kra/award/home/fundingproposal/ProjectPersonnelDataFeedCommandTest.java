@@ -33,13 +33,9 @@ import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonC
 import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonUnit;
 import org.kuali.kra.institutionalproposal.contacts.InstitutionalProposalPersonUnitCreditSplit;
 import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
-import org.kuali.rice.kim.api.identity.Person;
 
 public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest {
 
@@ -49,14 +45,6 @@ public class ProjectPersonnelDataFeedCommandTest extends BaseDataFeedCommandTest
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        personHelper.createPerson(PersonFixture.JTESTER);
-        personHelper.createPerson(PersonFixture.WOODS);
-
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
         
         UnitTestHelper unitHelper = new UnitTestHelper();
         unit1 = unitHelper.createUnit(UnitFixture.TEST_1);

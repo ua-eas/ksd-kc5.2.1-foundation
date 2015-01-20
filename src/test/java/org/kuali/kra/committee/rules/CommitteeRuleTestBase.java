@@ -19,28 +19,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.kuali.kra.committee.bo.Committee;
 import org.kuali.kra.committee.document.CommitteeDocument;
-import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
 import org.springframework.util.AutoPopulatingList;
-
-import java.util.HashMap;
 
 /**
  * Base class for Committee business rule tests.
  */
-@SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
+@SuppressWarnings({"deprecation", "rawtypes"})
 public abstract class CommitteeRuleTestBase extends KcUnitTestBase {
 
     protected DocumentService documentService = null;
@@ -48,15 +39,7 @@ public abstract class CommitteeRuleTestBase extends KcUnitTestBase {
 	@Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person irbAdmin = personHelper.createPerson(PersonFixture.QUICKSTART);
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(irbAdmin, RoleFixture.SUPER_USER);
     }
 
     @After

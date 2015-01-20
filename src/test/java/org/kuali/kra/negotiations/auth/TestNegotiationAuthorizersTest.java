@@ -35,22 +35,14 @@ import org.kuali.kra.negotiations.document.NegotiationDocument;
 import org.kuali.kra.service.TaskAuthorizationService;
 import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.fixtures.RoleFixture;
-import org.kuali.kra.test.helpers.PersonTestHelper;
 import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.krad.service.BusinessObjectService;
 
-/*
- * Users
- * -----------------
- * quickstart: Super User
- * jtester: Negotiation Creator
- * negotiator: Negotiator
- * ospAdmin: view -- unrestricted
- * woods: none
- */
+
 public class TestNegotiationAuthorizersTest extends KcUnitTestBase {
     
     TaskAuthorizationService taskAuthorizationService;
@@ -68,12 +60,12 @@ public class TestNegotiationAuthorizersTest extends KcUnitTestBase {
     	taskAuthorizationService = KraServiceLocator.getService(TaskAuthorizationService.class);
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
 
-        PersonTestHelper personHelper = new PersonTestHelper();
-        quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        jtester = personHelper.createPerson(PersonFixture.JTESTER);
-        woods = personHelper.createPerson(PersonFixture.WOODS);
-        ospAdmin = personHelper.createPerson(PersonFixture.OPS_ADMIN);
-        negotiator = personHelper.createPerson(PersonFixture.NEGOTIATOR);
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPerson((PersonFixture.QUICKSTART.getPrincipalName()));
+        jtester = personService.getPerson((PersonFixture.JTESTER.getPrincipalName()));
+        woods = personService.getPerson((PersonFixture.WOODS.getPrincipalName()));
+        ospAdmin = personService.getPerson((PersonFixture.OPS_ADMIN.getPrincipalName()));
+        negotiator = personService.getPerson((PersonFixture.NEGOTIATOR.getPrincipalName()));
 
     	// Set permissions
         RoleTestHelper roleHelper = new RoleTestHelper();

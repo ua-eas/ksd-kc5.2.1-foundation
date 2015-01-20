@@ -46,27 +46,21 @@ import org.kuali.kra.test.fixtures.ExemptStudiesCheckListFixture;
 import org.kuali.kra.test.fixtures.ExpeditedReviewCheckListFixture;
 import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.fixtures.ProtocolReviewTypeFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
 import org.kuali.kra.test.helpers.ExemptStudiesChecklistTestHelper;
 import org.kuali.kra.test.helpers.ExpeditedReviewCheckListTestHelper;
-import org.kuali.kra.test.helpers.PersonTestHelper;
 import org.kuali.kra.test.helpers.ProtocolReviewTypeTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.IdentityService;
-import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kim.api.identity.principal.Principal;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
 
 /**
  * Test the ProtocolSubmitActionService implementation.
@@ -93,22 +87,13 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        PersonTestHelper personHelper = new PersonTestHelper();
-        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-        personHelper.createPerson(PersonFixture.MAJORS);
-        personHelper.createPerson(PersonFixture.JTESTER);
-        RoleTestHelper roleHelper = new RoleTestHelper();
-        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+
         UnitTestHelper unitHelper = new UnitTestHelper();
         unitHelper.createUnit(UnitFixture.TEST_1);
         
         SubmissionQualifierTypeTestHelper qualifierTypeCodeHelper = new SubmissionQualifierTypeTestHelper();
         qualifierTypeCodeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
-        
-        GlobalVariables.setUserSession(new UserSession(PersonFixture.QUICKSTART.getPrincipalName()));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
+
         protocolSubmitActionService = KraServiceLocator.getService(ProtocolSubmitActionService.class);
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
         documentService = KraServiceLocator.getService("kraDocumentService");

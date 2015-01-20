@@ -21,31 +21,29 @@ import org.kuali.kra.irb.Protocol;
 import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.personnel.ProtocolPerson;
 import org.kuali.kra.irb.personnel.ProtocolUnit;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
 import org.springframework.util.AutoPopulatingList;
-
-import java.util.HashMap;
 
 /**
  * Base class for Protocol business rule tests.
  * 
  */
+@SuppressWarnings("deprecation")
 public abstract class ProtocolRuleTestBase extends KcUnitTestBase {
 
     protected DocumentService documentService = null;
     protected static final String DEFAULT_DOCUMENT_DESCRIPTION = "Protocol Document";
     protected static final String PROTOCOL_TYPE_CODE_STR = "1";//test of option "Standard";
     protected static final String PROTOCOL_TITLE_STR = "New protocol test";
-    protected static final String PRINCIPAL_INVESTIGATOR_ID = "10000000001";
-    protected static final String PRINCIPAL_INVESTIGATOR_NAME = "Joe Tester";
+    protected static final String PRINCIPAL_INVESTIGATOR_ID = PersonFixture.QUICKSTART.getPrincipalId();
+    protected static final String PRINCIPAL_INVESTIGATOR_NAME = PersonFixture.QUICKSTART.getPrincipalName();
     protected static final String PRINCIPAL_INVESTIGATOR_UNIT = "IN-CARD";
     protected static final String PRINCIPAL_INVESTIGATOR_ROLE = "PI";
     protected static final String REFERENCE_PERSON_ROLE = "protocolPersonRole";
@@ -55,9 +53,6 @@ public abstract class ProtocolRuleTestBase extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
     }
 

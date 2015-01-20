@@ -15,7 +15,15 @@
  */
 package org.kuali.kra.irb;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.SeparateAssociate;
 import org.kuali.kra.bo.AttachmentFile;
@@ -28,51 +36,25 @@ import org.kuali.kra.protocol.ProtocolAssociateBase;
 import org.kuali.kra.protocol.protocol.location.ProtocolLocationBase;
 import org.kuali.kra.service.VersioningService;
 import org.kuali.kra.test.fixtures.OrgFixture;
-import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
 import org.kuali.kra.test.helpers.OrgTestHelper;
-import org.kuali.kra.test.helpers.PersonTestHelper;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.kim.api.identity.Person;
-import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
-import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
 
 /**
  * Integration test for protocol versioning.  Does not test attachment versioning.
  */
-@SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
 public class ProtocolVersioningTest extends KcUnitTestBase {
-    
+
     private DocumentService documentService;
     private VersioningService versioningService;
     private ProtocolDocument ver1;
 
 
-	@Override
+	@Before
     public void setUp() throws Exception {
        super.setUp();
-       GlobalVariables.setUserSession(new UserSession("quickstart"));
-       GlobalVariables.setMessageMap(new MessageMap());
-       KNSGlobalVariables.setAuditErrorMap(new HashMap());
-       
-       PersonTestHelper personHelper = new PersonTestHelper();
-       RoleTestHelper roleHelper = new RoleTestHelper();
-       Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
-       roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
        
        UnitTestHelper unitHelper = new UnitTestHelper();
        unitHelper.createUnit(UnitFixture.TEST_1);

@@ -40,6 +40,7 @@ import java.util.Map;
  * 
  * This class is to test the rules to add institutional attachment
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ProposalDevelopmentInstituteAttachmentRuleTest extends ProposalDevelopmentRuleTestBase {
 
     private static final String NEW_INSTITUTE_ATTACHMENT = "newInstituteAttachment";
@@ -53,7 +54,8 @@ public class ProposalDevelopmentInstituteAttachmentRuleTest extends ProposalDeve
     private List<NarrativeType> narrativeTypes;
     private List<NarrativeStatus> narrativeStatuses;
     private BusinessObjectService bos;
-    @Before
+    
+	@Before
     public void setUp() throws Exception {
         super.setUp();
         rule = new ProposalDevelopmentInstituteAttachmentRule();
