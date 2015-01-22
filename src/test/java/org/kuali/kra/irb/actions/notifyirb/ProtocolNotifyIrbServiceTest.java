@@ -15,6 +15,13 @@
  */
 package org.kuali.kra.irb.actions.notifyirb;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -36,21 +43,21 @@ import org.kuali.kra.irb.actions.ProtocolAction;
 import org.kuali.kra.irb.actions.ProtocolActionType;
 import org.kuali.kra.irb.actions.ProtocolSubmissionDoc;
 import org.kuali.kra.irb.actions.request.MockFormFile;
-import org.kuali.kra.irb.actions.submit.*;
+import org.kuali.kra.irb.actions.submit.ProtocolActionService;
+import org.kuali.kra.irb.actions.submit.ProtocolReviewType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmission;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionQualifierType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.questionnaire.IrbSubmissionQuestionnaireHelper;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.protocol.actions.notify.ProtocolActionAttachment;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Test the Protocol NotifyIrb Service Implementation.
@@ -74,6 +81,9 @@ public class ProtocolNotifyIrbServiceTest extends KcUnitTestBase {
         service = new ProtocolNotifyIrbServiceImpl();
         service.setProtocolActionService(KraServiceLocator.getService(ProtocolActionService.class));
         service.setDocumentService(getMockDocumentService());
+        
+        SubmissionQualifierTypeTestHelper qualTypeHelper = new SubmissionQualifierTypeTestHelper();
+        qualTypeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.AE_UADE);
         
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
         service.setBusinessObjectService(businessObjectService);
@@ -205,7 +215,6 @@ public class ProtocolNotifyIrbServiceTest extends KcUnitTestBase {
     /*
      * Find a ProtocolSubmissionDoc in the database.
      */
-    @SuppressWarnings("unchecked")
     private ProtocolSubmissionDoc findSubmissionDoc(ProtocolSubmission protocolSubmission) {
         Map<String, Object> fieldValues = new HashMap<String, Object>();
         fieldValues.put("submissionIdFk", protocolSubmission.getSubmissionId());
