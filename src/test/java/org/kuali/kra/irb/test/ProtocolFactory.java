@@ -112,7 +112,8 @@ public class ProtocolFactory {
         ProtocolPerson protocolPerson = getProtocolPerson(PRINCIPAL_INVESTIGATOR_ID, PRINCIPAL_INVESTIGATOR_NAME, PRINCIPAL_INVESTIGATOR_ROLE, protocolNumber);
         
         ProtocolUnit protocolUnit = new ProtocolUnit();
-        protocolUnit.setUnitNumber(PRINCIPAL_INVESTIGATOR_UNIT);
+        protocolUnit.setUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        protocolUnit.setUnitName(UnitFixture.TEST_1.getUnitName());
         protocolUnit.setLeadUnitFlag(true);
         protocolUnit.setProtocolNumber(protocolNumber == null ? PROTOCOL_NUMBER : protocolNumber);
         protocolUnit.setSequenceNumber(0);
