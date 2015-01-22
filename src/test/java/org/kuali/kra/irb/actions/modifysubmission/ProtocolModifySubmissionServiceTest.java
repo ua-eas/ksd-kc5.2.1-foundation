@@ -15,6 +15,9 @@
  */
 package org.kuali.kra.irb.actions.modifysubmission;
 
+import java.sql.Date;
+import java.util.Collections;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -26,15 +29,18 @@ import org.kuali.kra.authorization.Task;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.irb.Protocol;
 import org.kuali.kra.irb.ProtocolDocument;
-import org.kuali.kra.irb.actions.submit.*;
+import org.kuali.kra.irb.actions.submit.ProtocolReviewType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmission;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionQualifierType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.service.TaskAuthorizationService;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
-
-import java.sql.Date;
-import java.util.Collections;
 
 public class ProtocolModifySubmissionServiceTest extends KcUnitTestBase {
     
@@ -56,6 +62,10 @@ public class ProtocolModifySubmissionServiceTest extends KcUnitTestBase {
         service.setTaskAuthorizationService(getMockTaskAuthorizationService());
         service.setBusinessObjectService(businessObjectService);
         service.setDocumentService(KraServiceLocator.getService(DocumentService.class));
+        
+        SubmissionQualifierTypeTestHelper qualTypeHelper = new SubmissionQualifierTypeTestHelper();
+        qualTypeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
+        
     }
 
     @Override
