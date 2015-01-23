@@ -46,6 +46,7 @@ import java.util.List;
 /**
  * This class tests the ProposalDevelopmentSponsorProgramInformationAuditRule class
  */
+@SuppressWarnings("deprecation")
 public class ProposalDevelopmentRequiredFieldsAuditRuleTest extends KcUnitTestBase {
 
     private DocumentService documentService = null;
@@ -61,11 +62,10 @@ public class ProposalDevelopmentRequiredFieldsAuditRuleTest extends KcUnitTestBa
     Date tomorrow;
 
 
-    @Before
+
+	@Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
         parameterService = CoreFrameworkServiceLocator.getParameterService();
         auditRule = new ProposalDevelopmentProposalRequiredFieldsAuditRule();
