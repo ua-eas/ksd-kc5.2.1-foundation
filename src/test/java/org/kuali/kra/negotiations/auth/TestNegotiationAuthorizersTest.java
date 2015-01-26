@@ -56,16 +56,17 @@ public class TestNegotiationAuthorizersTest extends KcUnitTestBase {
 
     @Before
     public void setUp() throws Exception {
-        
+        super.setUp();
+    	
     	taskAuthorizationService = KraServiceLocator.getService(TaskAuthorizationService.class);
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
 
         PersonService personService = getService(PersonService.class);
-        quickstart = personService.getPerson((PersonFixture.QUICKSTART.getPrincipalName()));
-        jtester = personService.getPerson((PersonFixture.JTESTER.getPrincipalName()));
-        woods = personService.getPerson((PersonFixture.WOODS.getPrincipalName()));
-        ospAdmin = personService.getPerson((PersonFixture.OPS_ADMIN.getPrincipalName()));
-        negotiator = personService.getPerson((PersonFixture.NEGOTIATOR.getPrincipalName()));
+        quickstart = personService.getPersonByPrincipalName((PersonFixture.QUICKSTART.getPrincipalName()));
+        jtester = personService.getPersonByPrincipalName((PersonFixture.JTESTER.getPrincipalName()));
+        woods = personService.getPersonByPrincipalName((PersonFixture.WOODS.getPrincipalName()));
+        ospAdmin = personService.getPersonByPrincipalName((PersonFixture.OPS_ADMIN.getPrincipalName()));
+        negotiator = personService.getPersonByPrincipalName((PersonFixture.NEGOTIATOR.getPrincipalName()));
 
     	// Set permissions
         RoleTestHelper roleHelper = new RoleTestHelper();
