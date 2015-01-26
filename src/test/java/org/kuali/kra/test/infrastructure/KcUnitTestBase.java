@@ -119,6 +119,8 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
         personHelper.createPerson(PersonFixture.CHEW);
         personHelper.createPerson(PersonFixture.BORST);
         personHelper.createPerson(PersonFixture.IACUC_ADMIN);
+        personHelper.createPerson(PersonFixture.OPS_ADMIN);
+        personHelper.createPerson(PersonFixture.NEGOTIATOR);
     }
 
     /**
