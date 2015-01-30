@@ -18,6 +18,7 @@ package org.kuali.kra.budget.service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.kuali.kra.bo.Unit;
 import org.kuali.kra.budget.core.BudgetCommonService;
 import org.kuali.kra.budget.document.BudgetDocument;
 import org.kuali.kra.infrastructure.RoleConstants;
@@ -25,6 +26,12 @@ import org.kuali.kra.proposaldevelopment.budget.service.ProposalBudgetService;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
 import org.kuali.kra.service.KraAuthorizationService;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.kim.api.identity.PersonService;
@@ -41,15 +48,27 @@ import java.util.UUID;
  */
 public class BudgetServiceTest extends KcUnitTestBase {
     
-    private BudgetCommonService budgetCommonService;
+    @SuppressWarnings( "rawtypes" )
+	private BudgetCommonService budgetCommonService;
     private ProposalDevelopmentService proposalDevelopmentService;
+    
+    private Unit unit1;
     
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         budgetCommonService = getService(ProposalBudgetService.class);
         proposalDevelopmentService = getService(ProposalDevelopmentService.class);
+        
+        OrgTestHelper orgHelper = new OrgTestHelper();
+        orgHelper.createOrg(OrgFixture.ONE);
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unit1 = unitTestHelper.createUnit(UnitFixture.TEST_1);
+        
+        SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
+        sponsorTestHelper.createSponsor(SponsorFixture.ASU);
+        sponsorTestHelper.createSponsor(SponsorFixture.AZ_STATE);
     }
     
     @After
@@ -63,7 +82,8 @@ public class BudgetServiceTest extends KcUnitTestBase {
      * 
      * @throws Exception
      */
-    @Test
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+	@Test
     public void testGetNewBudgetVersion() throws Exception {
  
         ProposalDevelopmentDocument pdDocument = getPersistedProposalDevelopmentDocument();
@@ -97,7 +117,8 @@ public class BudgetServiceTest extends KcUnitTestBase {
      * 
      * @throws Exception
      */
-    @Test
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+	@Test
     public void testCopyBudgetVersion() throws Exception {
         
         ProposalDevelopmentDocument pdDocument = getPersistedProposalDevelopmentDocument();
@@ -129,15 +150,17 @@ public class BudgetServiceTest extends KcUnitTestBase {
         ProposalDevelopmentDocument pdDocument = 
             (ProposalDevelopmentDocument) getDocumentService().getNewDocument(ProposalDevelopmentDocument.class);
         
+        unit1.setOrganizationId(OrgFixture.ONE.getOrgId());
+        
         pdDocument.getDocumentHeader().setDocumentDescription("Testing budget versions");
         pdDocument.getDevelopmentProposal().setActivityTypeCode("2");
-        pdDocument.getDevelopmentProposal().setOwnedByUnitNumber("IN-CARD");
+        pdDocument.getDevelopmentProposal().setOwnedByUnitNumber(UnitFixture.TEST_1.getUnitNumber());
         pdDocument.getDevelopmentProposal().setProposalTypeCode("1");
         pdDocument.getDevelopmentProposal().setTitle("Testing budget versions");
-        pdDocument.getDevelopmentProposal().setSponsorCode("005770");
+        pdDocument.getDevelopmentProposal().setSponsorCode(SponsorFixture.ASU.getSponsorCode());
         pdDocument.getDevelopmentProposal().setRequestedStartDateInitial(new Date(1/1/2008));
         pdDocument.getDevelopmentProposal().setRequestedEndDateInitial(new Date(12/31/2008));
-        pdDocument.getDevelopmentProposal().setPrimeSponsorCode("000120");
+        pdDocument.getDevelopmentProposal().setPrimeSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());    
         
         proposalDevelopmentService.initializeUnitOrganizationLocation(pdDocument);
         proposalDevelopmentService.initializeProposalSiteNumbers(pdDocument);
