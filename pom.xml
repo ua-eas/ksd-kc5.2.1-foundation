@@ -1163,7 +1163,7 @@ module of int tests -->
 		</dependency>
 
 		<dependency>
- 			<groupId>org.kuali.kra.s2s</groupId>
+ 			<groupId>edu.arizona.kra.s2s</groupId>
 			<artifactId>sf424r-2.0-gg</artifactId>
 			<version>${sf424r-2.0-gg.version}</version>
 		</dependency>
@@ -2013,6 +2013,17 @@ module of int tests -->
 	</profiles>
 
     <repositories>
+        <repository>
+            <id>ua.artifactory</id>
+            <name>UofA Repository Manager</name>
+            <url>https://research-toolkit.uaccess-aws.arizona.edu/artifactory/repo</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>kuali.nexus</id>
             <name>Nexus Repository Manager</name>
