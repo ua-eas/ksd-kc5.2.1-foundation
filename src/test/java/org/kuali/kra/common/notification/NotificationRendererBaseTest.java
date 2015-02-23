@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class NotificationRendererBaseTest extends KcUnitTestBase {
 
-	private static final String USER_FULLNAME_VAL = "Geoff  McGregor";
+	private static final String USER_FULLNAME_VAL = "";
 
 	@SuppressWarnings( "serial" )
 	@Test
