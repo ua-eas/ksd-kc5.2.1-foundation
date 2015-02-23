@@ -12,18 +12,20 @@
  */
 package org.kuali.kra.common.notification;
 
-import org.junit.Test;
-import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Test;
+import org.kuali.kra.service.KcPersonService;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.rice.kim.api.identity.Person;
 
 /**
  * This class contains tests for NotificationRendererBase
  */
 public class NotificationRendererBaseTest extends KcUnitTestBase {
-
-	private static final String USER_FULLNAME_VAL = "Geoff  McGregor";
 
 	@SuppressWarnings( "serial" )
 	@Test
@@ -66,6 +68,10 @@ public class NotificationRendererBaseTest extends KcUnitTestBase {
 
 	@Test
 	public void testGetDefaultReplacementParameters() {
+		PersonTestHelper personTestHelper = new PersonTestHelper();
+		Person person = personTestHelper.getPerson( PersonFixture.QUICKSTART );
+		String USER_FULLNAME_VAL = getService( KcPersonService.class ).getKcPersonByPersonId( person.getPrincipalId() ).getFullName();
+
 		// we will test an anonymous instance of the abstract renderer
 		@SuppressWarnings( "serial" )
 		NotificationRendererBase renderer = new NotificationRendererBase() {
