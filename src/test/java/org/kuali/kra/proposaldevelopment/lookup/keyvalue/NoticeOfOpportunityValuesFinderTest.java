@@ -12,17 +12,34 @@
  */
 package org.kuali.kra.proposaldevelopment.lookup.keyvalue;
 
-import org.kuali.kra.keyvalue.ValuesFinderTestBase;
-import org.kuali.rice.core.api.util.ConcreteKeyValue;
-import org.kuali.rice.core.api.util.KeyValue;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.kuali.kra.keyvalue.ValuesFinderTestBase;
+import org.kuali.kra.test.fixtures.NoticeOfOpportunityFixture;
+import org.kuali.kra.test.helpers.NoticeOfOpportunityTestHelper;
+import org.kuali.rice.core.api.util.KeyValue;
 
 /**
  * This class tests NoticeOfOpportunityValuesFinder.
  */
 public class NoticeOfOpportunityValuesFinderTest extends ValuesFinderTestBase {
+
+	// @Before
+	public void setUp() {
+		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
+		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
+			helper.createNoticeOfOpportunity( notice );
+		}
+	}
+
+	// @After
+	public void tearDown() {
+		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
+		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
+			helper.deleteNoticeOfOpportunity( notice );
+		}
+	}
 
 	@Override
 	protected Class<NoticeOfOpportunityValuesFinder> getTestClass() {
@@ -31,18 +48,13 @@ public class NoticeOfOpportunityValuesFinderTest extends ValuesFinderTestBase {
 
 	@Override
 	protected List<KeyValue> getKeyValues() {
-		final List<KeyValue> keylabel = new ArrayList<KeyValue>();
+		List<KeyValue> keyValue = new ArrayList<KeyValue>();
+		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
 
-		keylabel.add( new ConcreteKeyValue( "", "select" ) );
-		keylabel.add( new ConcreteKeyValue( "1", "Federal Solicitation" ) );
-		keylabel.add( new ConcreteKeyValue( "2", "Unsolicited" ) );
-		keylabel.add( new ConcreteKeyValue( "3", "Verbal Request for Proposal" ) );
-		keylabel.add( new ConcreteKeyValue( "4", "SBIR Solicitation" ) );
-		keylabel.add( new ConcreteKeyValue( "5", "STTR Solicitation" ) );
-		keylabel.add( new ConcreteKeyValue( "6", "Non-Federal Solicitation" ) );
-		keylabel.add( new ConcreteKeyValue( "7", "Internal" ) );
-
-		return keylabel;
+		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
+			keyValue.add( helper.getNoticeKeyValue( notice ) );
+		}
+		return keyValue;
 	}
 
 }
