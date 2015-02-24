@@ -7,7 +7,7 @@ import org.kuali.kra.infrastructure.RoleConstants;
 
 
 public enum RoleFixture {
-	
+
 	// ************************************************************************
 	// NEGOTIATION
 	//*************************************************************************
@@ -52,6 +52,9 @@ public enum RoleFixture {
 	// ************************************************************************
 	// MISC
 	//*************************************************************************
+	
+	//Subaward
+	SUBAWARD_MODIFIER("KC-SUBAWARD", "Modify Subaward", new HashMap<String, String>()),
 	
 	// Protocol Unit Hierarchy requires these qualifications
 	@SuppressWarnings("serial")

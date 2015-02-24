@@ -23,6 +23,9 @@ import org.kuali.kra.infrastructure.TaskName;
 import org.kuali.kra.service.TaskAuthorizationService;
 import org.kuali.kra.subaward.bo.SubAward;
 import org.kuali.kra.subaward.document.SubAwardDocument;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
@@ -39,11 +42,20 @@ public class TestSubAwardAuthorizersTest extends KcUnitTestBase {
 
     @Before
     public void setUp() throws Exception {
+    	super.setUp();
         taskAuthorizationService = KraServiceLocator.getService(TaskAuthorizationService.class);
-        quickstart = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("quickstart");
-        jtester = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("jtester");
-        woods = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("woods");
-        ospAdmin = KraServiceLocator.getService(PersonService.class).getPersonByPrincipalName("borst");
+        
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPersonByPrincipalName((PersonFixture.QUICKSTART.getPrincipalName()));
+        jtester = personService.getPersonByPrincipalName((PersonFixture.JTESTER.getPrincipalName()));
+        woods = personService.getPersonByPrincipalName((PersonFixture.WOODS.getPrincipalName()));
+        ospAdmin = personService.getPersonByPrincipalName((PersonFixture.OPS_ADMIN.getPrincipalName()));
+        
+        RoleTestHelper roleHelper = new RoleTestHelper();
+    	roleHelper.addPersonToRole(quickstart, RoleFixture.SUBAWARD_MODIFIER);
+    	roleHelper.addPersonToRole(ospAdmin, RoleFixture.SUPER_USER);
+    	roleHelper.addPersonToRole(jtester, RoleFixture.SUPER_USER);
+    	roleHelper.addPersonToRole(woods, RoleFixture.SUPER_USER);
     }
 
     @After
