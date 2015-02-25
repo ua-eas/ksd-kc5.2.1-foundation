@@ -24,13 +24,16 @@ import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.proposaldevelopment.bo.DevelopmentProposal;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.test.fixtures.ProposalDevelopmentDocumentFixture;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 
 public class ProposalDevelopmentServiceTest extends KcUnitTestBase {
     
     private ProposalDevelopmentService proposalDevelopmentService;
-    private BudgetService budgetService;
+    @SuppressWarnings("rawtypes")
+	private BudgetService budgetService;
     private ProposalDevelopmentDocument document;
 
     @Before
@@ -39,7 +42,12 @@ public class ProposalDevelopmentServiceTest extends KcUnitTestBase {
         proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
         budgetService = KraServiceLocator.getService(BudgetService.class);
         document = ProposalDevelopmentDocumentFixture.NORMAL_DOCUMENT.getDocument();
-        document.getDevelopmentProposal().setPrimeSponsorCode("000120");
+        
+        SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
+        sponsorTestHelper.createSponsor(SponsorFixture.AZ_STATE);
+        
+        document.getDevelopmentProposal().setPrimeSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());
+        document.getDevelopmentProposal().setSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());
     }
     
     @After
@@ -56,7 +64,8 @@ public class ProposalDevelopmentServiceTest extends KcUnitTestBase {
         assertTrue(document.getDevelopmentProposal().getTitle() == null);
     }
     
-    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
     public void testDeleteProposalWithBudget() throws WorkflowException {
         BudgetDocument<DevelopmentProposal> budget1 = budgetService.addBudgetVersion(document, "Ver1");
         BudgetDocument<DevelopmentProposal> budget2 = budgetService.addBudgetVersion(document, "Ver2 With Long Name");
