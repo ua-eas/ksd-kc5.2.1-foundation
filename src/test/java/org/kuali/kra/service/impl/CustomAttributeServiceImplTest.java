@@ -21,20 +21,19 @@ import org.junit.Test;
 import org.kuali.kra.bo.CustomAttribute;
 import org.kuali.kra.bo.CustomAttributeDocValue;
 import org.kuali.kra.bo.CustomAttributeDocument;
-import org.kuali.kra.bo.CustomAttributeDocumentTestUtilities;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
-import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
 import org.kuali.kra.service.CustomAttributeService;
+import org.kuali.kra.test.fixtures.CustomAttributeDocumentFixture;
+import org.kuali.kra.test.fixtures.CustomAttributeFixture;
+import org.kuali.kra.test.helpers.CustomAttributeDocumentTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,21 +44,31 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
 
 
     private Map<String, CustomAttributeDocument> testCustomAttributeDocuments;
+    private CustomAttributeDocument customAttributeDocument1;
+    private CustomAttributeDocument customAttributeDocument2;
 
     private DocumentService documentService = null;
     private CustomAttributeService customAttributeService = null;
-    private ProposalDevelopmentService proposalDevelopmentService;
     
     private static final String TEST_DOCUMENT_TYPE_CODE = "PRDV";
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        testCustomAttributeDocuments = CustomAttributeDocumentTestUtilities.setupTestCustomAttributeDocuments();
+        
+        testCustomAttributeDocuments = new HashMap<String, CustomAttributeDocument>();
+        getBusinessObjectService().deleteMatching(CustomAttributeDocument.class, new HashMap<String, String>());
+        
+        CustomAttributeDocumentTestHelper customAttributeDocumentTestHelper = new CustomAttributeDocumentTestHelper();
+        customAttributeDocument1 = customAttributeDocumentTestHelper.createCustomAttributeDocuments(CustomAttributeFixture.CUSTOM_ATTRIBUTE_1, CustomAttributeDocumentFixture.CUSTOM_ATTRIBUTE_DOCUMENT_1);
+        customAttributeDocument2 = customAttributeDocumentTestHelper.createCustomAttributeDocuments(CustomAttributeFixture.CUSTOM_ATTRIBUTE_2, CustomAttributeDocumentFixture.CUSTOM_ATTRIBUTE_DOCUMENT_2);
+        
+        testCustomAttributeDocuments.put("1", customAttributeDocument1);
+        testCustomAttributeDocuments.put("2", customAttributeDocument2);
+        
         documentService = KRADServiceLocatorWeb.getDocumentService();
         customAttributeService = KraServiceLocator.getService(CustomAttributeService.class);
-        proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
+
     }
 
     @After
@@ -154,7 +163,8 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
 
 
     @Test public void testGetDefaultCustomAttributesFromSavedDocument() throws Exception {
-        ProposalDevelopmentDocument document = getDocument();
+    	ProposalDevelopmentDocument document = (ProposalDevelopmentDocument) documentService.getNewDocument(ProposalDevelopmentDocument.class);
+        document.initialize();
 
         Map<String, CustomAttributeDocument>customAttributeDocuments = document.getCustomAttributeDocuments();
         assertNotNull(customAttributeDocuments);
@@ -181,7 +191,8 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
         }
     }
     
-    @Test public void testGetLookupReturns() throws Exception {
+    @SuppressWarnings( "rawtypes" )
+	@Test public void testGetLookupReturns() throws Exception {
         List<String> properties = new ArrayList<String>();
         properties.add("degreeCode");
         properties.add("degreeLevel");
@@ -200,47 +211,4 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
         String lookupReturnFields = customAttributeService.getLookupReturnsForAjaxCall("org.kuali.kra.bo.DegreeType");
         assertEquals(properties,lookupReturnFields);
     }
-
-    private ProposalDevelopmentDocument getDocument() throws WorkflowException {
-        ProposalDevelopmentDocument document = (ProposalDevelopmentDocument) documentService.getNewDocument("ProposalDevelopmentDocument");
-        document.initialize();
-
-        Date requestedStartDateInitial = new Date(System.currentTimeMillis());
-        Date requestedEndDateInitial = new Date(System.currentTimeMillis());
-
-        setBaseDocumentFields(document, "ProposalDevelopmentDocumentTest test doc", "005770", "project title", requestedStartDateInitial, requestedEndDateInitial, "1", "1", "000001", "000120");
-
-        documentService.saveDocument(document);
-
-        ProposalDevelopmentDocument savedDocument = (ProposalDevelopmentDocument) documentService.getByDocumentHeaderId(document.getDocumentNumber());
-
-        return savedDocument;
-    }
-
-    /**
-     * This method sets the base/required document fields
-     * @param document ProposalDevelopmentDocument to set fields for
-     * @param title String title to set
-     * @param requestedStartDateInitial Date start date to set
-     * @param requestedEndDateInitial Date end date to set
-     * @param activityTypeCode String activity type code to set
-     * @param proposalTypeCode String proposal type code to set
-     * @param ownedByUnit String owned-by unit to set
-     */
-    private void setBaseDocumentFields(ProposalDevelopmentDocument document, String description, String sponsorCode, String title, Date requestedStartDateInitial, Date requestedEndDateInitial, String activityTypeCode, String proposalTypeCode, String ownedByUnit, String primeSponsorCode) {
-        document.getDocumentHeader().setDocumentDescription(description);
-        document.getDevelopmentProposal().setSponsorCode(sponsorCode);
-        document.getDevelopmentProposal().setTitle(title);
-        document.getDevelopmentProposal().setRequestedStartDateInitial(requestedStartDateInitial);
-        document.getDevelopmentProposal().setRequestedEndDateInitial(requestedEndDateInitial);
-        document.getDevelopmentProposal().setActivityTypeCode(activityTypeCode);
-        document.getDevelopmentProposal().setProposalTypeCode(proposalTypeCode);
-        document.getDevelopmentProposal().setOwnedByUnitNumber(ownedByUnit);
-        document.getDevelopmentProposal().setPrimeSponsorCode(primeSponsorCode);
-
-        proposalDevelopmentService.initializeUnitOrganizationLocation(document);
-        proposalDevelopmentService.initializeProposalSiteNumbers(document);
-
-    }
-
 }
