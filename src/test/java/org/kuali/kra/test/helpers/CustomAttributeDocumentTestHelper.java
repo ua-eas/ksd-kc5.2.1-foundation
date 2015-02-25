@@ -21,6 +21,7 @@ public class CustomAttributeDocumentTestHelper extends TestHelper {
         customAttributeDocument.setCustomAttributeId(customAttribute.getId());
         customAttributeDocument.setDocumentTypeName(customAttributeDocumentFixture.getDocumentTypeCode());
         customAttributeDocument.setRequired(customAttributeDocumentFixture.isRequired());
+        customAttributeDocument.setActive(customAttributeDocumentFixture.isActive());
 
         customAttributeDocument.setCustomAttribute(customAttribute);
         return customAttributeDocument;
