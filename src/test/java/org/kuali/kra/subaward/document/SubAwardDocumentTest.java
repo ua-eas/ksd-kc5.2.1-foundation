@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.subaward.bo.SubAward;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
 
 public class SubAwardDocumentTest extends KcUnitTestBase{
@@ -28,7 +27,6 @@ public class SubAwardDocumentTest extends KcUnitTestBase{
     @Before
     public void setUp() throws Exception {
         super.setUp(); 
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
     }
     
     @After

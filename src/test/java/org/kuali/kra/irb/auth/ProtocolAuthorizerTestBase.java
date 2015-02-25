@@ -32,6 +32,7 @@ import org.kuali.kra.protocol.actions.submit.ProtocolSubmissionBase;
 import org.kuali.kra.service.KraAuthorizationService;
 import org.kuali.kra.service.KraWorkflowService;
 import org.kuali.kra.service.UnitAuthorizationService;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import java.util.List;
 public abstract class ProtocolAuthorizerTestBase extends KcUnitTestBase {
     
     protected static final String PROTOCOL_NUMBER = "0906000001";
-    private static final String USERNAME = "quickstart";
+    private static final String USERNAME = PersonFixture.QUICKSTART.getPrincipalName();
     
     private static final String KC_PROTOCOL_NAMESPACE = "KC-PROTOCOL";
     private static final String KC_UNIT_NAMESPACE = "KC-UNT";

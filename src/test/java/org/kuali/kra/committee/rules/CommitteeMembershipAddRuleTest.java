@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.committee.rules;
 
+import java.sql.Date;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,7 @@ import org.kuali.kra.common.committee.rule.event.AddCommitteeMembershipEvent;
 import org.kuali.kra.common.committee.rule.event.AddCommitteeMembershipRoleEvent;
 import org.kuali.kra.infrastructure.Constants;
 import org.kuali.kra.infrastructure.KeyConstants;
-
-import java.sql.Date;
+import org.kuali.kra.test.fixtures.PersonFixture;
 
 /**
  * Test the Committee Membership Add Rules
@@ -65,9 +66,8 @@ public class CommitteeMembershipAddRuleTest extends CommitteeRuleTestBase {
     @Test
     public void testAddCommitteeMembershipWithPersonId() throws Exception {
         CommitteeMembership newCommitteeMembership = new CommitteeMembership();
-        newCommitteeMembership.setPersonId("jtester");
-        //newCommitteeMembership.setRolodexId(123);
-        newCommitteeMembership.setPersonName("jtester");
+        newCommitteeMembership.setPersonId(PersonFixture.JTESTER.getPrincipalId());
+        newCommitteeMembership.setPersonName(PersonFixture.JTESTER.getPrincipalName());
         boolean result =rule.processAddCommitteeMembershipBusinessRules(getAddCommitteeMembershipEvent(newCommitteeMembership));
         assertTrue(result);
         
@@ -79,9 +79,9 @@ public class CommitteeMembershipAddRuleTest extends CommitteeRuleTestBase {
     @Test
     public void testAddCommitteeMembershipWithRolodexId() throws Exception {
         CommitteeMembership newCommitteeMembership = new CommitteeMembership();
-        //newCommitteeMembership.setPersonId("jtester");
+        newCommitteeMembership.setPersonId(PersonFixture.JTESTER.getPrincipalId());
         newCommitteeMembership.setRolodexId(123);
-        newCommitteeMembership.setPersonName("jtester");
+        newCommitteeMembership.setPersonName(PersonFixture.JTESTER.getPrincipalName());
         boolean result =rule.processAddCommitteeMembershipBusinessRules(getAddCommitteeMembershipEvent(newCommitteeMembership));
         assertTrue(result);
         
@@ -90,7 +90,7 @@ public class CommitteeMembershipAddRuleTest extends CommitteeRuleTestBase {
     @Test
     public void testAddCommitteeMembershipWithPersonName() throws Exception {
         CommitteeMembership newCommitteeMembership = new CommitteeMembership();
-        newCommitteeMembership.setPersonId("jtester");
+        newCommitteeMembership.setPersonId(PersonFixture.JTESTER.getPrincipalId());
         newCommitteeMembership.setRolodexId(123);        
         assertFalse(rule.processAddCommitteeMembershipBusinessRules(getAddCommitteeMembershipEvent(newCommitteeMembership)));
         assertError("committeeHelper.newCommitteeMembership.personName", KeyConstants.ERROR_COMMITTEE_MEMBERHSIP_PERSON_NO_NAME);

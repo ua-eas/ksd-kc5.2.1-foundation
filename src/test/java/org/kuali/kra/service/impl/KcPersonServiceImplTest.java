@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.kuali.kra.bo.KcPerson;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.KcPersonService;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
 public class KcPersonServiceImplTest extends KcUnitTestBase {
@@ -38,15 +39,15 @@ public class KcPersonServiceImplTest extends KcUnitTestBase {
 
     @Test
     public void testGetKcPersonByUserName() {
-        String userName = "quickstart";
+        String userName = PersonFixture.QUICKSTART.getPrincipalName();
         KcPerson person = service.getKcPersonByUserName(userName);
         assertTrue("Should have found 'quickstart', but found:" + person.getUserName(), userName.equals(person.getUserName()));
     }
 
     @Test
     public void testGetKcPersonByPersonId() {
-        String personID = "10000000002";
-        String expectedUserName = "jtester";
+        String personID = PersonFixture.JTESTER.getPrincipalId();
+        String expectedUserName = PersonFixture.JTESTER.getPrincipalName();
         KcPerson person = service.getKcPersonByPersonId(personID);
         assertTrue("Should have found:" + expectedUserName  + ", but found:" + person.getUserName(), expectedUserName.equals(person.getUserName()));
     }

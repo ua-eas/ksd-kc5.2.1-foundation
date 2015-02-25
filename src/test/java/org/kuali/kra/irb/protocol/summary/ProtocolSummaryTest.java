@@ -15,9 +15,19 @@
  */
 package org.kuali.kra.irb.protocol.summary;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.kuali.kra.bo.*;
+import org.kuali.kra.bo.AttachmentFile;
+import org.kuali.kra.bo.ExemptionType;
+import org.kuali.kra.bo.FundingSourceType;
+import org.kuali.kra.bo.Organization;
+import org.kuali.kra.bo.SpecialReviewApprovalType;
+import org.kuali.kra.bo.SpecialReviewType;
 import org.kuali.kra.irb.Protocol;
 import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.ResearchArea;
@@ -38,12 +48,9 @@ import org.kuali.kra.irb.specialreview.ProtocolSpecialReview;
 import org.kuali.kra.irb.specialreview.ProtocolSpecialReviewExemption;
 import org.kuali.kra.irb.summary.ProtocolSummary;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProtocolSummaryTest extends KcUnitTestBase {
 
@@ -62,8 +69,8 @@ public class ProtocolSummaryTest extends KcUnitTestBase {
     private static final String REFERENCE_NUMBER_2 = "ref 2";
     private static final String DESCRIPTION = "whatever";
     private static final Object PRINCIPAL_INVESTIGATOR = "Principal Investigator";
-    private static final Object UNIT_NUMBER = "BL-BL";
-    private static final Object UNIT_NAME = "BLOOMINGTON CAMPUS";
+    private static final String UNIT_NUMBER = UnitFixture.TEST_1.getUnitNumber();
+    private static final String UNIT_NAME = UnitFixture.TEST_1.getUnitName();
 
     private static final String RA_DESCRIPTION = "Rocket Science";
     private static final String RA_CODE = "09.101";
@@ -88,7 +95,7 @@ public class ProtocolSummaryTest extends KcUnitTestBase {
     
     private static final String NEW_PRINCIPAL_INVESTIGATOR_ID = "000000003";
     private static final String NEW_PRINCIPAL_INVESTIGATOR_NAME = "Molly Dog";
-    private static final String NEW_PRINCIPAL_INVESTIGATOR_UNIT = "000001";
+    private static final String NEW_PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST_2.getUnitNumber();
     private static final String NEW_PRINCIPAL_INVESTIGATOR_ROLE = "PI";
     private static final String NEW_REFERENCE_UNIT = "unit";
     
@@ -155,6 +162,9 @@ public class ProtocolSummaryTest extends KcUnitTestBase {
         exemptionType.setDescription(EXEMPTION_DESCRIPTION);
         specialReviewExemption.setExemptionType(exemptionType);
         specialReviewExemptions.add(specialReviewExemption);
+        
+        UnitTestHelper unitHelper = new UnitTestHelper();
+        unitHelper.createUnit(UnitFixture.TEST_1);
         
         protocolDocument = createProtocolDocument();
     }

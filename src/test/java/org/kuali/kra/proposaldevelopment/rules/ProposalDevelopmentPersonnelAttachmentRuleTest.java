@@ -43,7 +43,7 @@ public class ProposalDevelopmentPersonnelAttachmentRuleTest extends ProposalDeve
 
     private ProposalDevelopmentPersonnelAttachmentRule rule = null;
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -143,7 +143,8 @@ public class ProposalDevelopmentPersonnelAttachmentRuleTest extends ProposalDeve
      * @param expectedErrorCount
      * @param errorKeys
      */
-    private void checkErrorCountAndContent(String errorPathContext, String errorKey) {
+    @SuppressWarnings("rawtypes")
+	private void checkErrorCountAndContent(String errorPathContext, String errorKey) {
         AutoPopulatingList errors = GlobalVariables.getMessageMap().getMessages(ProposalDevelopmentPersonnelAttachmentRule.buildErrorPath(errorPathContext));
         assertNotNull(errors);
         assertTrue(errors.size() == 1);

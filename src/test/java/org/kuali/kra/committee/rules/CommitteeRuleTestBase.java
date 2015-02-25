@@ -22,29 +22,23 @@ import org.kuali.kra.committee.document.CommitteeDocument;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
 import org.springframework.util.AutoPopulatingList;
-
-import java.util.HashMap;
 
 /**
  * Base class for Committee business rule tests.
  */
+@SuppressWarnings({"deprecation", "rawtypes"})
 public abstract class CommitteeRuleTestBase extends KcUnitTestBase {
 
     protected DocumentService documentService = null;
 
-    @Before
+	@Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
     }
 

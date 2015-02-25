@@ -27,6 +27,7 @@ import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.MessageMap;
 import org.springframework.util.AutoPopulatingList;
 
+@SuppressWarnings({"deprecation", "rawtypes"})
 public class QuestionMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
 
     private QuestionMaintenanceDocumentRule rule = null;

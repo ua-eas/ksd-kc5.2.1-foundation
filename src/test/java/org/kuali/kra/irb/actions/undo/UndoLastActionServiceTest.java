@@ -15,6 +15,10 @@
  */
 package org.kuali.kra.irb.actions.undo;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -37,24 +41,31 @@ import org.kuali.kra.irb.actions.genericactions.ProtocolGenericActionBean;
 import org.kuali.kra.irb.actions.genericactions.ProtocolGenericActionService;
 import org.kuali.kra.irb.actions.request.ProtocolRequestBean;
 import org.kuali.kra.irb.actions.request.ProtocolRequestService;
-import org.kuali.kra.irb.actions.submit.*;
+import org.kuali.kra.irb.actions.submit.ProtocolActionService;
+import org.kuali.kra.irb.actions.submit.ProtocolReviewType;
+import org.kuali.kra.irb.actions.submit.ProtocolReviewerBean;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmission;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionQualifierType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmitAction;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmitActionService;
 import org.kuali.kra.irb.questionnaire.IrbSubmissionQuestionnaireHelper;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.protocol.actions.notify.ProtocolActionAttachment;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.kra.util.DateUtils;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 // import org.kuali.kra.irb.actions.notifyirb.ProtocolActionAttachment;
 
 /**
  * Test the ProtocolWithdrawService implementation.
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class UndoLastActionServiceTest extends KcUnitTestBase {
 
     private static final String COMMENTS = "something silly";
@@ -84,6 +95,9 @@ public class UndoLastActionServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        SubmissionQualifierTypeTestHelper qualTypeHelper = new SubmissionQualifierTypeTestHelper();
+        qualTypeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
         
         service = new UndoLastActionServiceImpl();
         service.setProtocolActionService(KraServiceLocator.getService(ProtocolActionService.class));
@@ -417,8 +431,8 @@ public class UndoLastActionServiceTest extends KcUnitTestBase {
         
         return bean;
     }
-    
-    private UndoLastActionBean getMockUndoLastActionBean(final Protocol protocol) {
+
+	private UndoLastActionBean getMockUndoLastActionBean(final Protocol protocol) {
         final UndoLastActionBean bean = context.mock(UndoLastActionBean.class);
         
         context.checking(new Expectations() {{

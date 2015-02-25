@@ -15,6 +15,11 @@
  */
 package org.kuali.kra.irb;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -32,16 +37,11 @@ import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kns.lookup.HtmlData;
 import org.kuali.rice.kns.web.ui.Field;
 import org.kuali.rice.kns.web.ui.Row;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.bo.BusinessObject;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.util.GlobalVariables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class ProtocolLookupHelperServiceTest extends KcUnitTestBase {
     
     private static final String EDIT_URL ="../protocolProtocol.do?viewDocument=false&docId=101&docTypeName=ProtocolDocument&methodToCall=docHandler&command=displayDocSearchView";
@@ -65,7 +65,6 @@ public class ProtocolLookupHelperServiceTest extends KcUnitTestBase {
         super.setUp();
         protocolLookupableHelperServiceImpl = new ProtocolLookupableHelperServiceImpl();
         protocolLookupableHelperServiceImpl.setBusinessObjectClass(Protocol.class);
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
    }
 
     @After
@@ -142,7 +141,8 @@ public class ProtocolLookupHelperServiceTest extends KcUnitTestBase {
      * 
      * This method to check the 'edit' link is correct
      */
-    @Test
+    @SuppressWarnings({"rawtypes", "unchecked"})
+	@Test
     public void testGetCustomActionUrls() {
         List pkNames = new ArrayList();
         pkNames.add("protocolId");
@@ -154,8 +154,6 @@ public class ProtocolLookupHelperServiceTest extends KcUnitTestBase {
         final KraAuthorizationService kraAuthorizationService = context.mock(KraAuthorizationService.class);
         final String principalId = GlobalVariables.getUserSession().getPrincipalId();
         context.checking(new Expectations() {{
-            Map<String, String> fieldValues = new HashMap<String, String>();
-
             one(kraAuthorizationService).hasPermission(principalId, protocol, PermissionConstants.MODIFY_PROTOCOL);
             will(returnValue(true));
             one(kraAuthorizationService).hasPermission(principalId, protocol, PermissionConstants.VIEW_PROTOCOL);

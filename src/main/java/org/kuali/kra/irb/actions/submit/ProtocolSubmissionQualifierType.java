@@ -23,7 +23,7 @@ public class ProtocolSubmissionQualifierType extends ProtocolSubmissionQualifier
      * Comment for <code>serialVersionUID</code>
      */
     private static final long serialVersionUID = -8568514666944391924L;
-
+    
     public static final String ANNUAL_SCHEDULED_BY_IRB = "2";
 
     public static final String CONTINGENT = "3";

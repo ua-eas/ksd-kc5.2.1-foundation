@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.proposaldevelopment.bo.MailType;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
@@ -34,7 +35,6 @@ public class KraPersistableBusinessObjectBaseTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
     }
 
     @After
@@ -49,7 +49,7 @@ public class KraPersistableBusinessObjectBaseTest extends KcUnitTestBase {
         assertNull(kraPersistableBusinessObjectBase.getUpdateUser());
         kraPersistableBusinessObjectBase.beforeInsert(null);
 
-        updateAsserts("quickstart", kraPersistableBusinessObjectBase);
+        updateAsserts(PersonFixture.QUICKSTART.getPrincipalName(), kraPersistableBusinessObjectBase);
     }
 
     @Test public void testBeforeUpdateQuickstart() throws Exception {
@@ -58,29 +58,29 @@ public class KraPersistableBusinessObjectBaseTest extends KcUnitTestBase {
         assertNull(kraPersistableBusinessObjectBase.getUpdateUser());
         kraPersistableBusinessObjectBase.beforeUpdate(null);
 
-        updateAsserts("quickstart", kraPersistableBusinessObjectBase);
+        updateAsserts(PersonFixture.QUICKSTART.getPrincipalName(), kraPersistableBusinessObjectBase);
     }
 
     @Test public void testBeforeInsertUser4() throws Exception {
-        GlobalVariables.setUserSession(new UserSession("jtester"));
+        GlobalVariables.setUserSession(new UserSession(PersonFixture.JTESTER.getPrincipalName()));
 
         KraPersistableBusinessObjectBase kraPersistableBusinessObjectBase = new MailType();
         assertNull(kraPersistableBusinessObjectBase.getUpdateTimestamp());
         assertNull(kraPersistableBusinessObjectBase.getUpdateUser());
         kraPersistableBusinessObjectBase.beforeInsert(null);
 
-        updateAsserts("jtester", kraPersistableBusinessObjectBase);
+        updateAsserts(PersonFixture.JTESTER.getPrincipalName(), kraPersistableBusinessObjectBase);
     }
 
     @Test public void testBeforeUpdateUser4() throws Exception {
-        GlobalVariables.setUserSession(new UserSession("jtester"));
+        GlobalVariables.setUserSession(new UserSession(PersonFixture.JTESTER.getPrincipalName()));
 
         KraPersistableBusinessObjectBase kraPersistableBusinessObjectBase = new MailType();
         assertNull(kraPersistableBusinessObjectBase.getUpdateTimestamp());
         assertNull(kraPersistableBusinessObjectBase.getUpdateUser());
         kraPersistableBusinessObjectBase.beforeUpdate(null);
 
-        updateAsserts("jtester", kraPersistableBusinessObjectBase);
+        updateAsserts(PersonFixture.JTESTER.getPrincipalName(), kraPersistableBusinessObjectBase);
     }
 
     private void updateAsserts(String udpateUser, KraPersistableBusinessObjectBase kraPersistableBusinessObjectBase) {

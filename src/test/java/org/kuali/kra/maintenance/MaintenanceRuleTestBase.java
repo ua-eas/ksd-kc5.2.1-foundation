@@ -15,8 +15,6 @@
  */
 package org.kuali.kra.maintenance;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
@@ -34,10 +32,9 @@ import org.kuali.rice.krad.util.GlobalVariables;
 /**
  *  Base class for testing <code>{@link MaintenanceDocument}</code> instances
  */
+@SuppressWarnings("deprecation")
 public abstract class MaintenanceRuleTestBase extends KcUnitTestBase {
-    private static final Log LOG = LogFactory.getLog(MaintenanceRuleTestBase.class); 
-    private static final String DOCUMENT_ERRORS = "document.document*,document.explanation*,document.reversal*,document.selected*,document.header*";
-        
+
     /**
      * This method creates a minimal MaintenanceDocument instance, and populates it with the provided businessObject for the
      * newMaintainable, and null for the oldMaintainable.

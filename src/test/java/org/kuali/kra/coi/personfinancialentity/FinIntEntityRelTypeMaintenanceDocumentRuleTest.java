@@ -15,6 +15,10 @@
  */
 package org.kuali.kra.coi.personfinancialentity;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -25,10 +29,7 @@ import org.kuali.kra.maintenance.MaintenanceRuleTestBase;
 import org.kuali.rice.kns.document.MaintenanceDocument;
 import org.kuali.rice.krad.service.BusinessObjectService;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class FinIntEntityRelTypeMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
     
     private static final String REL_TYPE_SORT_ID_FIELD_NAME = "sortId";
@@ -91,7 +92,6 @@ public class FinIntEntityRelTypeMaintenanceDocumentRuleTest extends MaintenanceR
         context.checking(new Expectations() {{
             Map<String, Object> fieldValues1 = new HashMap<String, Object>();
             fieldValues1.put(REL_TYPE_SORT_ID_FIELD_NAME, SORT_ID_1);
- //           fieldValues1.put(GROUP_NAME_FIELD_NAME, GROUP_NAME);
             
             FinIntEntityRelType finIntEntityRelType = new FinIntEntityRelType();
             finIntEntityRelType.setRelationshipTypeCode(CODE_1);
