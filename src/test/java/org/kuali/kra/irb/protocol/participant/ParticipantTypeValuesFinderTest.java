@@ -15,22 +15,30 @@ package org.kuali.kra.irb.protocol.participant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.kuali.kra.keyvalue.ValuesFinderTestBase;
+import org.kuali.kra.test.fixtures.ParticipantTypeFixture;
+import org.kuali.kra.test.helpers.ParticipantTypeValueFinderTestHelper;
 import org.kuali.rice.core.api.util.KeyValue;
-import org.kuali.rice.kns.util.KNSGlobalVariables;
 import org.kuali.rice.krad.util.GlobalVariables;
 
 /**
  * 
  * Test the Participant Type Values Finder.
  *
- * @author Kuali Research Administration Team (kc.dev@kuali.org)
  */
 public class ParticipantTypeValuesFinderTest extends ValuesFinderTestBase {
+
+	@Before
 	@Override
 	public void setUp() throws Exception {
 		GlobalVariables.clear();
-		KNSGlobalVariables.clear();
+		ParticipantTypeValueFinderTestHelper helper = new ParticipantTypeValueFinderTestHelper();
+		for ( ParticipantTypeFixture participantType : ParticipantTypeFixture.values() ) {
+			if ( !participantType.getKey().equals( "" ) ) {
+				helper.createParticipantType( participantType );
+			}
+		}
 	}
 
 	@Override
@@ -40,20 +48,12 @@ public class ParticipantTypeValuesFinderTest extends ValuesFinderTestBase {
 
 	@Override
 	protected List<KeyValue> getKeyValues() {
-		final List<KeyValue> keylabel = new ArrayList<KeyValue>();
 
-		keylabel.add( createKeyValue( "", "select" ) );
-		keylabel.add( createKeyValue( "1", "Children" ) );
-		keylabel.add( createKeyValue( "2", "Decisionally impaired" ) );
-		keylabel.add( createKeyValue( "3", "Employees" ) );
-		keylabel.add( createKeyValue( "4", "Prisoners" ) );
-		keylabel.add( createKeyValue( "5", "Pregnant women" ) );
-		keylabel.add( createKeyValue( "6", "Fetuses" ) );
-		keylabel.add( createKeyValue( "7", "Students" ) );
-		keylabel.add( createKeyValue( "8", "Students - minors" ) );
-		keylabel.add( createKeyValue( "9", "Wards of the state" ) );
-		keylabel.add( createKeyValue( "10", "Other" ) );
-
-		return keylabel;
+		final List<KeyValue> keyValue = new ArrayList<KeyValue>();
+		for ( ParticipantTypeFixture participantType : ParticipantTypeFixture.values() ) {
+			keyValue.add( createKeyValue( participantType.getKey(), participantType.getValue() ) );
+		}
+		return keyValue;
 	}
+
 }
