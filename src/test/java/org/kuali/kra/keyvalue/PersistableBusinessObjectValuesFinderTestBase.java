@@ -22,6 +22,7 @@ import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.util.KeyValue;
 import org.kuali.rice.krad.keyvalues.PersistableBusinessObjectValuesFinder;
 
+@SuppressWarnings( { "rawtypes", "unchecked" } )
 public abstract class PersistableBusinessObjectValuesFinderTestBase extends KcUnitTestBase {
 	private Class valuesFinderClass;
 	private Class businessObjectClass;
@@ -58,7 +59,7 @@ public abstract class PersistableBusinessObjectValuesFinderTestBase extends KcUn
 		persistableBusinessObjectValuesFinder.setKeyAttributeName( getKeyAttributeName() );
 		persistableBusinessObjectValuesFinder.setLabelAttributeName( getLabelAttributeName() );
 		persistableBusinessObjectValuesFinder.getKeyValues();
-		assertEquals( "expected:\n" + testKeyValues + "\nactual:\n" + persistableBusinessObjectValuesFinder.getKeyValues(), testKeyValues.size(), persistableBusinessObjectValuesFinder.getKeyValues().size() );
+		assertEquals( testKeyValues.size(), persistableBusinessObjectValuesFinder.getKeyValues().size() );
 		for ( int i = 0 ; i < testKeyValues.size() ; i++ ) {
 			assertEquals( testKeyValues.get( i ).getValue(), persistableBusinessObjectValuesFinder.getKeyLabel( testKeyValues.get( i ).getKey().toString() ) );
 		}
