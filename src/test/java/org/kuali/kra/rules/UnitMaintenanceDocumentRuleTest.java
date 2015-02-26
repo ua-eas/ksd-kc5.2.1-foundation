@@ -21,21 +21,39 @@ import org.junit.Test;
 import org.kuali.kra.bo.Unit;
 import org.kuali.kra.infrastructure.KeyConstants;
 import org.kuali.kra.maintenance.MaintenanceRuleTestBase;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.kns.document.MaintenanceDocument;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
 
+@SuppressWarnings("deprecation")
 public class UnitMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
     private UnitMaintenanceDocumentRule rule = null;
 
+    Person quickstart;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
         rule = new UnitMaintenanceDocumentRule();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
+        
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPersonByPrincipalName((PersonFixture.QUICKSTART.getPrincipalName()));
+        GlobalVariables.setUserSession(new UserSession(quickstart.getPrincipalName()));
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.TEST_1);
+        
+        OrgTestHelper orgTestHelper = new OrgTestHelper();
+        orgTestHelper.createOrg(OrgFixture.ONE);
     }
 
     @After
@@ -50,20 +68,21 @@ public class UnitMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
         Unit unit=new Unit();
         String unitNumber="BL-RCEN";
         unit.setUnitName(unitNumber);
-        unit.setUnitNumber("BL-RCEN");
-        unit.setParentUnitNumber("IN-IN");
-        unit.setOrganizationId("00001");
+        unit.setUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        unit.setParentUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        unit.setOrganizationId(OrgFixture.ONE.getOrgId());
         MaintenanceDocument unitmaintenancedocument = newMaintDoc(unit);
         assertTrue(rule.processCustomApproveDocumentBusinessRules(unitmaintenancedocument));
     }
 
-    @Test
+    @SuppressWarnings("rawtypes")
+	@Test
     public void testMoveUnitOwnDescendant() throws Exception{
         Unit unit=new Unit();
         unit.setUnitName("IN-IN");
-        unit.setUnitNumber("IN-IN");
-        unit.setParentUnitNumber("IN-MED");
-        unit.setOrganizationId("00001");
+        unit.setUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        unit.setParentUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        unit.setOrganizationId(OrgFixture.ONE.getOrgId());
         MaintenanceDocument unitmaintenancedocument = newMaintDoc(unit);
         assertFalse(rule.processCustomRouteDocumentBusinessRules(unitmaintenancedocument));
         AutoPopulatingList errors = GlobalVariables.getMessageMap().getMessages("ddocument.newMaintainableObject.parentUnitNumber");
