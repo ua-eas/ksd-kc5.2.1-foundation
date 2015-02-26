@@ -28,6 +28,7 @@ public class UnitTestHelper extends TestHelper {
 		unit.setVersionNumber(0L);
 		unit.setUnitNumber(unitFixture.getUnitNumber());
 		unit.setUnitName(unitFixture.getUnitName());
+		unit.setParentUnitNumber(unitFixture.getParentUnitNumber());
 		return unit;
 	}
 
