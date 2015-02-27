@@ -22,23 +22,28 @@ import org.kuali.kra.infrastructure.KeyConstants;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.test.ProtocolRuleTestBase;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
 
+@SuppressWarnings( { "rawtypes", "unchecked" } )
 public class ProtocolLocationRuleTest extends ProtocolRuleTestBase {
 
 	private static final String NEW_PROTOCOL_LOCATION = "protocolHelper.newProtocolLocation";
 	private ProtocolLocationRule rule = null;
 	private List<ProtocolOrganizationType> protocolOrganizationTypeList;
 	private BusinessObjectService bos;
-	protected static final String NEW_ORGANIZATION_VALUE = "000002";
+	protected static final String NEW_ORGANIZATION_VALUE = OrgFixture.TWO.getOrgId();
 	protected static final String OLD_ORGANIZATION_VALUE = "000001";
 
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+		OrgTestHelper helper = new OrgTestHelper();
+		helper.createOrg( OrgFixture.TWO );
 		rule = new ProtocolLocationRule();
 		bos = KraServiceLocator.getService( BusinessObjectService.class );
 		protocolOrganizationTypeList = (List) bos.findAll( ProtocolOrganizationType.class );
