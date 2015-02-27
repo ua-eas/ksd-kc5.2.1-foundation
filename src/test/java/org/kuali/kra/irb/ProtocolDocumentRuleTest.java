@@ -29,6 +29,7 @@ import org.kuali.rice.kns.service.KNSServiceLocator;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.MessageMap;
 
+@SuppressWarnings( { "deprecation", "static-access" } )
 public class ProtocolDocumentRuleTest extends ProtocolRuleTestBase {
 
 	private static final String PROTOCOL_LUN_FORM_ELEMENT = "protocolHelper.leadUnitNumber";

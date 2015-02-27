@@ -19,6 +19,8 @@ import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.personnel.ProtocolPerson;
 import org.kuali.kra.irb.personnel.ProtocolUnit;
 import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
@@ -41,7 +43,7 @@ public abstract class ProtocolRuleTestBase extends KcUnitTestBase {
 	protected static final String PROTOCOL_TITLE_STR = "New protocol test";
 	protected static final String PRINCIPAL_INVESTIGATOR_ID = PersonFixture.QUICKSTART.getPrincipalId();
 	protected static final String PRINCIPAL_INVESTIGATOR_NAME = PersonFixture.QUICKSTART.getPrincipalName();
-	protected static final String PRINCIPAL_INVESTIGATOR_UNIT = "IN-CARD";
+	protected static final String PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST_1.getUnitNumber();
 	protected static final String PRINCIPAL_INVESTIGATOR_ROLE = "PI";
 	protected static final String REFERENCE_PERSON_ROLE = "protocolPersonRole";
 	protected static final String REFERENCE_UNIT = "unit";
@@ -50,6 +52,8 @@ public abstract class ProtocolRuleTestBase extends KcUnitTestBase {
 	public void setUp() throws Exception {
 		super.setUp();
 		documentService = KRADServiceLocatorWeb.getDocumentService();
+		UnitTestHelper helper = new UnitTestHelper();
+		helper.createUnit( UnitFixture.TEST_1 );
 	}
 
 	@After
