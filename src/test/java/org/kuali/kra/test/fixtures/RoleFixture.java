@@ -53,6 +53,8 @@ public enum RoleFixture {
 	// MISC
 	//*************************************************************************
 	
+	MODIFY_ORGANIZATIONS("KC-UNT", "Modify Organizations", new HashMap<String, String>()),
+	
 	// Protocol Unit Hierarchy requires these qualifications
 	@SuppressWarnings("serial")
 	SUPER_USER("KC-SYS", "KC Superuser", new HashMap<String, String>(){{put("unitNumber","*"); put("subunits","*");}});

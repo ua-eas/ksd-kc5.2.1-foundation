@@ -26,22 +26,37 @@ import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.maintenance.MaintenanceRuleTestBase;
 import org.kuali.kra.rules.OrganizationMaintenanceDocumentRule;
 import org.kuali.kra.service.YnqService;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.rice.core.api.datetime.DateTimeService;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.kns.document.MaintenanceDocument;
-import org.kuali.rice.krad.UserSession;
-import org.kuali.rice.krad.util.GlobalVariables;
 
 import java.sql.Date;
 import java.util.List;
 
+@SuppressWarnings( "deprecation" )
 public class OrganizationMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
     private OrganizationMaintenanceDocumentRule rule = null;
 
+    Person quickstart;
+    
     @Before
     public void setUp() throws Exception {
         super.setUp();
         rule = new OrganizationMaintenanceDocumentRule();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPersonByPrincipalName(PersonFixture.QUICKSTART.getPrincipalName());
+        
+        RoleTestHelper roleTestHelper = new RoleTestHelper();
+        roleTestHelper.addPersonToRole(quickstart, RoleFixture.MODIFY_ORGANIZATIONS);
+        
+        OrgTestHelper orgTestHelper = new OrgTestHelper();
+        orgTestHelper.createOrg(OrgFixture.ONE);
     }
 
     @After
@@ -55,9 +70,9 @@ public class OrganizationMaintenanceDocumentRuleTest extends MaintenanceRuleTest
 
         Organization organization = new Organization();
 
-        organization.setOrganizationId("00999");
-        organization.setOrganizationName("test");
-        organization.setContactAddressId(new Integer(1741));
+        organization.setOrganizationId(OrgFixture.ONE.getOrgId());
+        organization.setOrganizationName(OrgFixture.ONE.getOrgName());
+        organization.setContactAddressId(OrgFixture.ONE.getContactAddressId());
         organization.setOrganizationYnqs(setupOrganizationYnq(organization, "test",KraServiceLocator.getService(DateTimeService.class).getCurrentSqlDate()));
         MaintenanceDocument organizationDocument = newMaintDoc(organization);
         assertTrue(rule.processCustomRouteDocumentBusinessRules(organizationDocument));
@@ -69,9 +84,9 @@ public class OrganizationMaintenanceDocumentRuleTest extends MaintenanceRuleTest
 
         Organization organization = new Organization();
 
-        organization.setOrganizationId("00999");
-        organization.setOrganizationName("test");
-        organization.setContactAddressId(new Integer(1741));
+        organization.setOrganizationId(OrgFixture.ONE.getOrgId());
+        organization.setOrganizationName(OrgFixture.ONE.getOrgName());
+        organization.setContactAddressId(OrgFixture.ONE.getContactAddressId());
         organization.setOrganizationYnqs(setupOrganizationYnq(organization, "test", null));
         MaintenanceDocument organizationDocument = newMaintDoc(organization);
         assertFalse(rule.processCustomRouteDocumentBusinessRules(organizationDocument));
@@ -83,9 +98,9 @@ public class OrganizationMaintenanceDocumentRuleTest extends MaintenanceRuleTest
 
         Organization organization = new Organization();
 
-        organization.setOrganizationId("00999");
-        organization.setOrganizationName("test");
-        organization.setContactAddressId(new Integer(1741));
+        organization.setOrganizationId(OrgFixture.ONE.getOrgId());
+        organization.setOrganizationName(OrgFixture.ONE.getOrgName());
+        organization.setContactAddressId(OrgFixture.ONE.getContactAddressId());
         organization.setOrganizationYnqs(setupOrganizationYnq(organization, "", KraServiceLocator.getService(DateTimeService.class).getCurrentSqlDate()));
         MaintenanceDocument organizationDocument = newMaintDoc(organization);
         assertFalse(rule.processCustomRouteDocumentBusinessRules(organizationDocument));
