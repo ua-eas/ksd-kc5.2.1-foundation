@@ -26,13 +26,15 @@ import org.kuali.kra.infrastructure.Constants;
 import org.kuali.kra.infrastructure.KeyConstants;
 import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.rules.TemplateRuleTest;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
-public class AddProtocolFundingSourceTest {
+public class AddProtocolFundingSourceTest extends KcUnitTestBase {
 
 	private Mockery context = new JUnit4Mockery();
 
-	private final String goodFundingSourceId = "000100";
-	private final String goodFundingSourceName = "Air Force";
+	private final String goodFundingSourceId = SponsorFixture.AZ_STATE.getSponsorCode();
+	private final String goodFundingSourceName = SponsorFixture.AZ_STATE.getSponsorName();
 	private final String badFundingSourceId = "goober99";
 	private final String badFundingSourceName = "";
 
@@ -202,6 +204,7 @@ public class AddProtocolFundingSourceTest {
 		theTest.checkRuleAssertions();
 	}
 
+	@SuppressWarnings( "deprecation" )
 	protected ProtocolFundingSourceService getProtocolFundingSourceService() {
 		final ProtocolFundingSourceService protocolFundingSourceService = context.mock( ProtocolFundingSourceService.class );
 		context.checking( new Expectations() {
