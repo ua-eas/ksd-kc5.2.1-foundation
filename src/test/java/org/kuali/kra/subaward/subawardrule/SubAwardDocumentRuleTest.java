@@ -20,6 +20,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.subaward.bo.*;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
 
@@ -38,12 +40,15 @@ public class SubAwardDocumentRuleTest extends KcUnitTestBase {
     
     
     @Before
+    @SuppressWarnings( "deprecation" )
     public void setUp() throws Exception {              
+        OrgTestHelper helper = new OrgTestHelper();
         
         subAward = new SubAward();
         subAwardDocumentRule = new SubAwardDocumentRule();        
         
-        subAward.setOrganizationId("000140");
+        subAward.setOrganizationId(OrgFixture.ONE.getOrgId());
+        subAward.setOrganization( helper.createOrg( OrgFixture.ONE ) );
         subAward.setStatusCode(1);
         subAward.setSubAwardTypeCode(1);
         subAward.setRequisitionerId("1");
