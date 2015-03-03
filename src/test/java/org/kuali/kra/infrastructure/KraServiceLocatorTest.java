@@ -15,9 +15,20 @@
  */
 package org.kuali.kra.infrastructure;
 
+import static org.kuali.kra.infrastructure.Constants.MODULE_NAMESPACE_PROPOSAL_DEVELOPMENT;
+import static org.kuali.rice.coreservice.framework.parameter.ParameterConstants.DOCUMENT_COMPONENT;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.proposaldevelopment.bo.MailType;
+import org.kuali.kra.test.fixtures.MailTypeFixture;
+import org.kuali.kra.test.helpers.MailTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.criteria.Predicate;
 import org.kuali.rice.core.api.criteria.PredicateFactory;
@@ -28,14 +39,6 @@ import org.kuali.rice.coreservice.api.parameter.ParameterQueryResults;
 import org.kuali.rice.coreservice.api.parameter.ParameterRepositoryService;
 import org.kuali.rice.kns.service.DataDictionaryService;
 import org.kuali.rice.krad.dao.BusinessObjectDao;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import static org.kuali.kra.infrastructure.Constants.MODULE_NAMESPACE_PROPOSAL_DEVELOPMENT;
-import static org.kuali.rice.coreservice.framework.parameter.ParameterConstants.DOCUMENT_COMPONENT;
 
 /**
  * This class tests the KraServiceLocator
@@ -70,6 +73,12 @@ public class KraServiceLocatorTest extends KcUnitTestBase {
         BusinessObjectDao businessObjectDao = (BusinessObjectDao)KraServiceLocator.getService(Constants.BUSINESS_OBJECT_DAO_NAME);
         assertNotNull(businessObjectDao);
 
+        businessObjectDao.deleteMatching(MailType.class, new HashMap<String, String>());
+        MailTypeTestHelper helper = new MailTypeTestHelper();
+        helper.createMailType( MailTypeFixture.MAIL_1 );
+        helper.createMailType( MailTypeFixture.MAIL_2 );
+        helper.createMailType( MailTypeFixture.MAIL_3 );
+        
         Collection carrierTypes = businessObjectDao.findAll(MailType.class);
         assertEquals(3, carrierTypes.size());
     }
