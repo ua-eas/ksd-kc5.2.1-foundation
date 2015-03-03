@@ -22,6 +22,8 @@ import org.kuali.kra.budget.nonpersonnel.ValidCeRateTypeMaintenanceDocumentRule;
 import org.kuali.kra.budget.rates.ValidCeRateType;
 import org.kuali.kra.infrastructure.KeyConstants;
 import org.kuali.kra.maintenance.MaintenanceRuleTestBase;
+import org.kuali.kra.test.fixtures.ValidCeRateTypeFixture;
+import org.kuali.kra.test.helpers.ValidCeRateTypeTestHelper;
 import org.kuali.rice.core.api.util.RiceKeyConstants;
 import org.kuali.rice.kns.document.MaintenanceDocument;
 import org.kuali.rice.krad.UserSession;
@@ -29,6 +31,7 @@ import org.kuali.rice.krad.util.ErrorMessage;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.springframework.util.AutoPopulatingList;
 
+@SuppressWarnings( { "deprecation", "rawtypes" } )
 public class ValidCeRateTypeMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
     private ValidCeRateTypeMaintenanceDocumentRule rule = null;
 
@@ -48,11 +51,9 @@ public class ValidCeRateTypeMaintenanceDocumentRuleTest extends MaintenanceRuleT
     @Test
     public void testOK() throws Exception {
 
-        ValidCeRateType validCeRateType = new ValidCeRateType();
+        ValidCeRateTypeTestHelper helper = new ValidCeRateTypeTestHelper();
+        ValidCeRateType validCeRateType = helper.createValidCeRateType( ValidCeRateTypeFixture.OK_VALID_CE_RATE_TYPE );
         
-        validCeRateType.setRateClassCode("10");
-        validCeRateType.setRateTypeCode("1");
-        validCeRateType.setCostElement("422311");
         MaintenanceDocument validCeRateTypeDocument = newMaintDoc(validCeRateType);
         assertTrue(rule.processCustomRouteDocumentBusinessRules(validCeRateTypeDocument));
         assertTrue(rule.processCustomApproveDocumentBusinessRules(validCeRateTypeDocument));
