@@ -13,62 +13,76 @@ public enum RoleFixture {
 	//*************************************************************************
 	
 	// Can do everything
-	NEGOTIATION_ADMIN(RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiation Administrator", new HashMap<String, String>()),
+	NEGOTIATION_ADMIN("TEST1", RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiation Administrator", new HashMap<String, String>(), "1", true),
 	
 	// Can do everything, but is derived
-	NEGOTIATION_NEGOTIATOR(RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiator", new HashMap<String, String>()),
+	NEGOTIATION_NEGOTIATOR("TEST2", RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiator", new HashMap<String, String>(), "1023", true),
 	
 	// Can do everything but modify activities
-	NEGOTIATION_CREATOR(RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiation Creator", new HashMap<String, String>()),
+	NEGOTIATION_CREATOR("TEST3", RoleConstants.NEGOTIATION_ROLE_TYPE, "Negotiation Creator", new HashMap<String, String>(), "1", true),
 	
 	// Can only view, different roles for tracking
-	NEGOTIATION_INVESTIGATORS(RoleConstants.NEGOTIATION_ROLE_TYPE, "Investigators", new HashMap<String, String>()), // Principle Investigator
-	NEGOTIATION_PI(RoleConstants.NEGOTIATION_ROLE_TYPE, "PI", new HashMap<String, String>()), // Principle Investigator
-	NEGOTIATION_COI(RoleConstants.NEGOTIATION_ROLE_TYPE, "COI", new HashMap<String, String>()), // Co-Investigator
-	NEGOTIATION_KP(RoleConstants.NEGOTIATION_ROLE_TYPE, "KP", new HashMap<String, String>()), // Key Personnel
+	NEGOTIATION_INVESTIGATORS("TEST4", RoleConstants.NEGOTIATION_ROLE_TYPE, "Investigators", new HashMap<String, String>(), "1024", true), // Principle Investigator
+	NEGOTIATION_PI("TEST5", RoleConstants.NEGOTIATION_ROLE_TYPE, "PI", new HashMap<String, String>(), "1024", true), // Principle Investigator
+	NEGOTIATION_COI("TEST6", RoleConstants.NEGOTIATION_ROLE_TYPE, "COI", new HashMap<String, String>(), "1024", true), // Co-Investigator
+	NEGOTIATION_KP("TEST7", RoleConstants.NEGOTIATION_ROLE_TYPE, "KP", new HashMap<String, String>(), "1024", true), // Key Personnel
 
 
 	// ************************************************************************
 	// TIME AND MONEY
 	//*************************************************************************
-	PROTOCOL_PI(RoleConstants.PROTOCOL_ROLE_TYPE, "PI", new HashMap<String, String>()), // Principle Investigator
+	PROTOCOL_PI("TEST8", RoleConstants.PROTOCOL_ROLE_TYPE, "PI", new HashMap<String, String>(), "1021", true), // Principle Investigator
 	
 	
 	// ************************************************************************
 	// TIME AND MONEY
 	//*************************************************************************
 
-	TIME_AND_MONEY_VIEWER("KC-T", "Time And Money Viewer", new HashMap<String, String>()),
-	TIME_AND_MONEY_MODIFIER("KC-T", "Time And Money Modifier", new HashMap<String, String>()),
+	TIME_AND_MONEY_VIEWER("TEST9", "KC-T", "Time And Money Viewer", new HashMap<String, String>(), "1002", true),
+	TIME_AND_MONEY_MODIFIER("TEST10", "KC-T", "Time And Money Modifier", new HashMap<String, String>(), "1002", true),
 
 	
 	// ************************************************************************
 	// TIME AND MONEY
 	//*************************************************************************
 	
-	COMMITTEE_ADMIN("KC-COMMITTEE", "Committee Administrator", new HashMap<String, String>()),
+	COMMITTEE_ADMIN("TEST11", "KC-COMMITTEE", "Committee Administrator", new HashMap<String, String>(), "1001", true),
 
 
 	// ************************************************************************
 	// MISC
 	//*************************************************************************
 	
+	MAINTAIN_QUESTIONNAIRE("TEST12", "KC-QUESTIONNAIRE", "Maintain Questionnaire", new HashMap<String, String>(), "1", true),
+	VIEW_QUESTIONNAIRE("TEST13", "KC-QUESTIONNAIRE", "View Questionnaire", new HashMap<String, String>(), "1", true),
+	
 	// Protocol Unit Hierarchy requires these qualifications
 	@SuppressWarnings("serial")
-	SUPER_USER("KC-SYS", "KC Superuser", new HashMap<String, String>(){{put("unitNumber","*"); put("subunits","*");}});
+	SUPER_USER("TEST14", "KC-SYS", "KC Superuser", new HashMap<String, String>(){{put("unitNumber","*"); put("subunits","*");}}, "1002", true);
 
 
+	private String roleId;
 	private String namespaceCode;
 	private String roleName;
 	private Map<String, String> qualifications;
+	private String kimTypId;
+	private boolean active;
 
 
-	private RoleFixture(String namespaceCode, String roleName, Map<String, String> qualifications) {
+	private RoleFixture(String roleId, String namespaceCode, String roleName, Map<String, String> qualifications, String kimTypId, boolean active) {
+		this.roleId = roleId;
 		this.namespaceCode = namespaceCode;
 		this.roleName = roleName;
 		this.qualifications = qualifications;
+		this.kimTypId = kimTypId;
+		this.active = active;
 	}
 
+	
+	
+	public String getRoleId() {
+		return roleId;
+	}
 
 	public String getNamespaceCode() {
 		return namespaceCode;
@@ -80,6 +94,14 @@ public enum RoleFixture {
 
 	public Map<String, String> getQualifications() {
 		return qualifications;
+	}
+
+	public String getKimTypId() {
+		return kimTypId;
+	}
+
+	public boolean isActive() {
+		return active;
 	}
 
 }
