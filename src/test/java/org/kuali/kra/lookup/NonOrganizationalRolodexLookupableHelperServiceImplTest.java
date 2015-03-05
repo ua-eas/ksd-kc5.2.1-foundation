@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.kuali.kra.bo.NonOrganizationalRolodex;
 import org.kuali.kra.dao.RolodexDao;
 import org.kuali.kra.infrastructure.KraServiceLocator;
+import org.kuali.kra.test.fixtures.RolodexFixture;
+import org.kuali.kra.test.helpers.RolodexTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.bo.BusinessObject;
 
@@ -31,6 +33,7 @@ import java.util.Map;
 /**
  * Tests the {@link NonOrganizationalLookupableHelperServiceImpl}.
  */
+@SuppressWarnings("deprecation")
 public class NonOrganizationalRolodexLookupableHelperServiceImplTest extends KcUnitTestBase {
     
     private NonOrganizationalRolodexLookupableHelperServiceImpl nonOrganizationalRolodexLookupableHelperServiceImpl;
@@ -41,6 +44,10 @@ public class NonOrganizationalRolodexLookupableHelperServiceImplTest extends KcU
         nonOrganizationalRolodexLookupableHelperServiceImpl = new NonOrganizationalRolodexLookupableHelperServiceImpl();
         nonOrganizationalRolodexLookupableHelperServiceImpl.setBusinessObjectClass(NonOrganizationalRolodex.class);
         nonOrganizationalRolodexLookupableHelperServiceImpl.setRolodexDao(KraServiceLocator.getService(RolodexDao.class));
+        
+        RolodexTestHelper rolodexTestHelper = new RolodexTestHelper();
+        rolodexTestHelper.createRolodex(RolodexFixture.TEST_1);
+        rolodexTestHelper.createRolodex(RolodexFixture.TEST_2);
     }
 
     @After
@@ -73,7 +80,7 @@ public class NonOrganizationalRolodexLookupableHelperServiceImplTest extends KcU
 
         List<? extends BusinessObject> results = nonOrganizationalRolodexLookupableHelperServiceImpl.getSearchResults(fieldValues);
         
-        assertEquals(6, results.size());
+        assertEquals(1, results.size());
     }
 
 }
