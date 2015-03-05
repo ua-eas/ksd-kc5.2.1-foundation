@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@SuppressWarnings( "deprecation" )
 public class AwardHierarchyServiceImplTest extends KcUnitTestBase {
     
     private static final int NUMBER_OF_CHILDREN_A = 20;
@@ -179,6 +180,7 @@ public class AwardHierarchyServiceImplTest extends KcUnitTestBase {
     @Test
     public void testCreatingFullHierarchy() {
         AwardHierarchy rootNode = service.loadFullHierarchyFromAnyNode(generateAwardNumber(BASE_AWARD_NUMBER, BASE_HIERARCHY_SEQUENCE));
+        AwardHierarchy rootNodeA = createFullAwardHierarchy(BASE_AWARD_NUMBER, NUMBER_OF_CHILDREN_A, NUMBER_OF_GRANDCHILDREN_A);
 
         assertNotNull(rootNode);
         assertEquals(rootNodeA, rootNode);
@@ -189,6 +191,7 @@ public class AwardHierarchyServiceImplTest extends KcUnitTestBase {
             assertEquals(rootNodeA.getAwardNumber(), child.getRootAwardNumber());
             assertEquals(rootNodeA.getAwardNumber(), child.getParentAwardNumber());
             assertEquals(generateAwardNumber(BASE_AWARD_NUMBER, hierarchySequenceNumber++), child.getAwardNumber());
+            assertEquals(NUMBER_OF_GRANDCHILDREN_A, child.getChildren().size());
             for(AwardHierarchy grandChild: child.getChildren()) {
                 assertEquals(rootNodeA.getAwardNumber(), grandChild.getRootAwardNumber());
                 assertEquals(child.getAwardNumber(), grandChild.getParentAwardNumber());
@@ -277,19 +280,20 @@ public class AwardHierarchyServiceImplTest extends KcUnitTestBase {
     private AwardHierarchy createFullAwardHierarchy(Long baseAwardNumber, int numberOfChildNodes, int numberOfGrandChildren) {
         AwardHierarchy rootNodeA = createRootHierarchyNode(baseAwardNumber);
         List<AwardHierarchy> childNodes = new ArrayList<AwardHierarchy>();
-        for(int i = 0, sequenceNo = i + 2; i < numberOfChildNodes; i++) {
-            AwardHierarchy childBranchNode = new AwardHierarchy(rootNodeA, rootNodeA, generateAwardNumber(baseAwardNumber, sequenceNo++), DUMMY_AWARD_NUMBER);
-            childBranchNode.setBusinessObjectService(getBusinessObjectService());
-            childBranchNode.setVersionHistoryService(getVersionHistoryService());
-            childNodes.add(childBranchNode);
+        int sequenceNo = BASE_HIERARCHY_SEQUENCE + 1;
+        for ( int i = 0 ; i < numberOfChildNodes ; i++ ) {
+            String childAwardNumber = generateAwardNumber( baseAwardNumber, sequenceNo );
+            sequenceNo++;
+            AwardHierarchy childBranchNode = createHierarchyNode( rootNodeA, rootNodeA, childAwardNumber, DUMMY_AWARD_NUMBER );
             List<AwardHierarchy> grandchildNodes = new ArrayList<AwardHierarchy>();
-            for(int j = 0; j < numberOfGrandChildren; j++) {
-                AwardHierarchy grandChildNode = new AwardHierarchy(rootNodeA, childBranchNode, generateAwardNumber(baseAwardNumber, sequenceNo++), DUMMY_AWARD_NUMBER);
-                childBranchNode.setBusinessObjectService(getBusinessObjectService());
-                grandChildNode.setVersionHistoryService(getVersionHistoryService());
+            for ( int j = 0 ; j < numberOfGrandChildren ; j++ ) {
+                String grandChildAwardNumber = generateAwardNumber( baseAwardNumber, sequenceNo );
+                sequenceNo++;
+                AwardHierarchy grandChildNode = createHierarchyNode( rootNodeA, childBranchNode, grandChildAwardNumber, DUMMY_AWARD_NUMBER );
                 grandchildNodes.add(grandChildNode);
             }
             childBranchNode.setChildren(grandchildNodes);
+            childNodes.add( childBranchNode );
         }
         rootNodeA.setChildren(childNodes);
         return rootNodeA;
@@ -342,5 +346,16 @@ public class AwardHierarchyServiceImplTest extends KcUnitTestBase {
             //do nothing.
         }
     }    
+
+    private AwardHierarchy createHierarchyNode( AwardHierarchy rootNode, AwardHierarchy parentNode, String awardNumber, String originatingAwardNumber ) {
+        AwardHierarchy node = new AwardHierarchy();
+        node.setRoot( rootNode );
+        node.setParent( parentNode );
+        node.setAwardNumber( awardNumber );
+        node.setOriginatingAwardNumber( originatingAwardNumber );
+        node.setBusinessObjectService( getBusinessObjectService() );
+        node.setVersionHistoryService( getVersionHistoryService() );
+        return node;
+    }
 
 }
