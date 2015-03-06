@@ -25,7 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.infrastructure.PermissionConstants;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.kns.document.MaintenanceDocumentBase;
 import org.kuali.rice.kns.lookup.HtmlData;
 import org.kuali.rice.kns.lookup.HtmlData.AnchorHtmlData;
@@ -38,11 +41,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
 
     private QuestionnaireLookupableHelperServiceImpl questionnaireLookupableHelperServiceImpl;
     private DocumentService documentService;
     private Mockery context = new JUnit4Mockery();
+    
+    Person quickstart;
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +56,10 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
         questionnaireLookupableHelperServiceImpl = new QuestionnaireLookupableHelperServiceImpl();
         questionnaireLookupableHelperServiceImpl.setBusinessObjectClass(Questionnaire.class);
         documentService = KraServiceLocator.getService(DocumentService.class);
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
+        
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPersonByPrincipalName((PersonFixture.QUICKSTART.getPrincipalName()));
+        GlobalVariables.setUserSession(new UserSession(quickstart.getPrincipalName()));
    }
 
     @After
@@ -67,7 +76,8 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
      * This method to test getSearchResults
      * @throws Exception
      */
-    @Test 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test 
     public void testGetSearchResults() throws Exception {
         MaintenanceDocumentBase maintDocument = (MaintenanceDocumentBase) documentService.getNewDocument(KraServiceLocator.getService(MaintenanceDocumentDictionaryService.class).getDocumentTypeName(Questionnaire.class));
         maintDocument.getDocumentHeader().setDocumentDescription("test 1"); 
@@ -80,7 +90,7 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
         maintDocument.getNewMaintainableObject().setBusinessObject(createQuestionnaire("test2", "desc 2"));
         documentService.routeDocument(maintDocument, null, null);
         List<Questionnaire> searchResults = (List<Questionnaire>) questionnaireLookupableHelperServiceImpl.getSearchResults(new HashMap());
-        assertEquals(17 , searchResults.size());
+        assertEquals(getBusinessObjectService().findMatching(Questionnaire.class, new HashMap<String, String>(){private static final long serialVersionUID = 1L; {put("active", "Y");}}).size(), searchResults.size());
         
         Questionnaire test1 = null;
         Questionnaire test2 = null;
@@ -110,7 +120,8 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
      * should have edit/view/copy action links
      * @throws Exception
      */
-    @Test 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test 
     public void testCustomActionUrlWithVIEW_QUESTIONNAIRE() throws Exception {
         final QuestionnaireAuthorizationService questionnaireAuthorizationService = context.mock(QuestionnaireAuthorizationService.class);
         questionnaireLookupableHelperServiceImpl.setQuestionnaireAuthorizationService(questionnaireAuthorizationService);
@@ -142,7 +153,8 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
      * should only have view action links
      * @throws Exception
      */
-    @Test 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test 
     public void testCustomActionUrlWithMODIFY_QUESTIONNAIRE() throws Exception {
         final QuestionnaireAuthorizationService questionnaireAuthorizationService = context.mock(QuestionnaireAuthorizationService.class);
         questionnaireLookupableHelperServiceImpl.setQuestionnaireAuthorizationService(questionnaireAuthorizationService);
@@ -175,6 +187,7 @@ public class QuestionnaireLookupableHelperServiceTest extends KcUnitTestBase {
      * This method to test getCustomActionUrls for someone with no permission to modify/view questionnaire.
      * @throws Exception
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test 
     public void testCustomActionUrlWithNoPermission() throws Exception {
         final QuestionnaireAuthorizationService questionnaireAuthorizationService = context.mock(QuestionnaireAuthorizationService.class);
