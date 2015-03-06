@@ -33,7 +33,7 @@ public class LifecycleTest extends KcUnitTestBase {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         int responseCode = connection.getResponseCode();
         connection.disconnect();
-        assertTrue("Server not loaded", responseCode == 200);
+        assertTrue("Server not loaded", responseCode >= 100 && responseCode <= 399);
     }
 
 }
