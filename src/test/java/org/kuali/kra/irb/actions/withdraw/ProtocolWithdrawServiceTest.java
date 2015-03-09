@@ -34,6 +34,8 @@ import org.kuali.kra.irb.actions.correspondence.ProtocolActionCorrespondenceGene
 import org.kuali.kra.irb.actions.submit.*;
 import org.kuali.kra.irb.onlinereview.ProtocolOnlineReviewService;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
@@ -68,6 +70,9 @@ public class ProtocolWithdrawServiceTest extends KcUnitTestBase {
         service.setProtocolActionCorrespondenceGenerationService(getMockActionCorrespondenceGenerationService());
         
         protocolSubmitActionService = KraServiceLocator.getService(ProtocolSubmitActionService.class);
+        
+        SubmissionQualifierTypeTestHelper submissionQualifierTypeTestHelper = new SubmissionQualifierTypeTestHelper();
+        submissionQualifierTypeTestHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
     }
 
     @After
