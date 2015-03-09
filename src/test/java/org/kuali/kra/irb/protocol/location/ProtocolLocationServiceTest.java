@@ -15,13 +15,29 @@
  */
 package org.kuali.kra.irb.protocol.location;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.irb.Protocol;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
+import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
-import static org.junit.Assert.assertEquals;
 
-public class ProtocolLocationServiceTest {
-    protected static final String NEW_ORGANIZATION_VALUE =  "000004";
+public class ProtocolLocationServiceTest extends KcUnitTestBase{
+    protected static final String NEW_ORGANIZATION_VALUE =  "999991";
+    
+    @Before
+    public void setUp() throws Exception {
+    	super.setUp();
+    	OrgTestHelper orgTestHelper = new OrgTestHelper();
+    	orgTestHelper.createOrg(OrgFixture.ONE);
+    }
+    
+    @After
+    public void tearDown() throws Exception {
+    	super.tearDown();
+    }
     
     /**
      * This method is to add a new protocol location
@@ -32,7 +48,8 @@ public class ProtocolLocationServiceTest {
         
         ProtocolLocationService service  = new ProtocolLocationServiceImpl();
         
-        Protocol protocol = new Protocol(){
+        @SuppressWarnings("serial")
+		Protocol protocol = new Protocol(){
             @Override
             public void refreshReferenceObject(String referenceObjectName) {}
             
