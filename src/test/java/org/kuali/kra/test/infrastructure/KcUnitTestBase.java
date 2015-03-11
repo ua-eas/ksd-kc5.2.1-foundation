@@ -30,6 +30,8 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunListener;
 import org.kuali.kra.infrastructure.KraServiceLocator;
+import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
+import org.kuali.kra.questionnaire.answer.QuestionnaireAnswerService;
 import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.helpers.PersonTestHelper;
@@ -75,6 +77,8 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
     private DocumentService documentService;
     private BusinessObjectService businessObjectService;
     private ParameterService parameterService;
+    private QuestionnaireAnswerService questionnaireAnswerService;
+    private ProposalDevelopmentService proposalDevelopmentService;
     
     protected boolean transactional = true;
     
@@ -232,6 +236,20 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
         return getClass().getSimpleName() + "." + method.getName();
     }
 
+    protected QuestionnaireAnswerService getQuestionnaireAnswerService(){
+        if (questionnaireAnswerService == null){
+            questionnaireAnswerService = KraServiceLocator.getService(QuestionnaireAnswerService.class);
+        }
+		return questionnaireAnswerService;
+    }
+    
+    protected ProposalDevelopmentService getProposalDevelopmentService(){
+        if (proposalDevelopmentService == null){
+            proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
+        }
+		return proposalDevelopmentService;
+    }
+    
     protected BusinessObjectService getBusinessObjectService() {
         if(businessObjectService == null) {
             businessObjectService = KRADServiceLocator.getBusinessObjectService();
