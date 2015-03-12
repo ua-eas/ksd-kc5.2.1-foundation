@@ -55,6 +55,8 @@ public enum RoleFixture {
 	
 	MAINTAIN_QUESTIONNAIRE("TEST12", "KC-QUESTIONNAIRE", "Maintain Questionnaire", new HashMap<String, String>(), "1", true),
 	VIEW_QUESTIONNAIRE("TEST13", "KC-QUESTIONNAIRE", "View Questionnaire", new HashMap<String, String>(), "1", true),
+	MODIFY_QUESTION("TEST14", "KC-QUESTIONNAIRE", "Modify Question", new HashMap<String, String>(), "1", true),
+	VIEW_QUESTION("TEST15", "KC-QUESTIONNAIRE", "View Question", new HashMap<String, String>(), "1", true),
 	
 	// Protocol Unit Hierarchy requires these qualifications
 	@SuppressWarnings("serial")
