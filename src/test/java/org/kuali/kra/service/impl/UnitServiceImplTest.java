@@ -22,6 +22,9 @@ import org.kuali.kra.bo.Unit;
 import org.kuali.kra.bo.UnitAdministrator;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.UnitService;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.UnitHierarchyTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
 import java.util.Collection;
@@ -40,8 +43,18 @@ public class UnitServiceImplTest extends KcUnitTestBase {
 
     @Before
     public void setUp() throws Exception {
+    	super.setUp();
         unitService = KraServiceLocator.getService(UnitService.class);
         unitServiceImpl = (UnitServiceImpl) KraServiceLocator.getService(UnitService.class);
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.CARDIOLOGY_UNIT_NUMBER);
+        unitTestHelper.createUnit(UnitFixture.BLOOMINGTON_CAMPUS);
+        Unit inPers = unitTestHelper.createUnit(UnitFixture.IN_PERS);
+        
+        UnitHierarchyTestHelper unitHierarchyTestHelper = new UnitHierarchyTestHelper();
+        unitHierarchyTestHelper.createUnitHierarchy(inPers, 6);
+        unitHierarchyTestHelper.makeSubunit(CARDIOLOGY_UNIT_NUMBER, 1);
         
     }
 
@@ -54,13 +67,13 @@ public class UnitServiceImplTest extends KcUnitTestBase {
     @Test
     public void testGetUnitName() {
         String retrievedName = unitService.getUnitName(UNIVERSITY_UNIT_NUMBER);
-        assertEquals("University", retrievedName);
+        assertEquals("UNIVERSITY OF ARIZONA", retrievedName);
     }
 
     @Test
     public void testGetUnits() {
         Collection<Unit> units = unitService.getUnits();
-        assertEquals(13, units.size());
+        assertEquals(getBusinessObjectService().findAll(Unit.class).size(), units.size());
     }
     
     @Test
