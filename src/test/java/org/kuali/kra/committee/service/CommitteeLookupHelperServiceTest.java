@@ -21,20 +21,46 @@ import org.junit.Test;
 import org.kuali.kra.committee.bo.Committee;
 import org.kuali.kra.committee.document.CommitteeDocument;
 import org.kuali.kra.committee.lookup.CommitteeLookupableHelperServiceImpl;
+import org.kuali.kra.infrastructure.KraServiceLocator;
+import org.kuali.kra.test.fixtures.PermissionFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.PermissionTestHelper;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RolePermissionTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
+import org.kuali.rice.kim.api.role.RoleService;
+import org.kuali.rice.kim.impl.permission.PermissionBo;
+import org.kuali.rice.kim.impl.role.RoleBo;
+import org.kuali.rice.kim.impl.role.RoleMemberBo;
+import org.kuali.rice.kim.impl.role.RolePermissionBo;
 import org.kuali.rice.kns.lookup.HtmlData;
 import org.kuali.rice.kns.web.ui.Field;
 import org.kuali.rice.kns.web.ui.Row;
+import org.kuali.rice.krad.service.BusinessObjectService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class CommitteeLookupHelperServiceTest extends KcUnitTestBase {
     
     private static final int NUMBER_LOOKUP_CRITERIA_FIELDS = 9;
     private static final String EDIT_URL = "../committeeCommittee.do?committeeId=100&docTypeName=CommitteeDocument&methodToCall=docHandler&command=initiate";
     
     private CommitteeLookupableHelperServiceImpl committeeLookupableHelperServiceImpl;
+    
+    Person quickstart;
+    RoleBo role1;
+
 
     @Before
     public void setUp() throws Exception {
@@ -42,6 +68,27 @@ public class CommitteeLookupHelperServiceTest extends KcUnitTestBase {
         
         committeeLookupableHelperServiceImpl = new CommitteeLookupableHelperServiceImpl();
         committeeLookupableHelperServiceImpl.setBusinessObjectClass(Committee.class);
+        
+        getBusinessObjectService().deleteMatching(RoleMemberBo.class, new HashMap<String, Object>());
+
+        
+        PersonTestHelper personTestHelper = new PersonTestHelper();
+        personTestHelper.createPerson(PersonFixture.IRB_ADMIN);
+        PersonService personService = getService(PersonService.class);
+        quickstart = personService.getPersonByPrincipalName(PersonFixture.IRB_ADMIN.getPrincipalName());
+
+        RoleTestHelper roleTestHelper = new RoleTestHelper();
+        RolePermissionTestHelper rolePermissionTestHelper = new RolePermissionTestHelper();
+        
+        PermissionTestHelper permissionTestHelper = new PermissionTestHelper();
+        permissionTestHelper.createPermission(PermissionFixture.MODIFY_COMMITTEE);
+        
+
+        role1 = roleTestHelper.createRole(RoleFixture.USER);
+        roleTestHelper.addPersonToRole(quickstart, RoleFixture.USER);
+       
+        rolePermissionTestHelper.createRolePermission(PermissionFixture.MODIFY_COMMITTEE.getPermId(), role1.getId());
+        
     }
 
     @After
@@ -75,13 +122,14 @@ public class CommitteeLookupHelperServiceTest extends KcUnitTestBase {
      * 
      * This method to check the 'edit' link is correct
      */
-    @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
     public void testGetCustomActionUrl() {
         List pkNames = new ArrayList();
         pkNames.add("committeeId");
         Committee committee = new Committee();
         committee.setCommitteeId("100");
-        committee.setHomeUnitNumber("000001");
+        committee.setHomeUnitNumber(UnitFixture.TEST_1.getUnitNumber());
         CommitteeDocument document = new CommitteeDocument();
         document.setDocumentNumber("101");
         committee.setCommitteeDocument(document);

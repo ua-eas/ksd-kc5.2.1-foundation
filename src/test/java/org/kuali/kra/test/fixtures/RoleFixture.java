@@ -56,6 +56,12 @@ public enum RoleFixture {
 	MAINTAIN_QUESTIONNAIRE("TEST12", "KC-QUESTIONNAIRE", "Maintain Questionnaire", new HashMap<String, String>(), "1", true),
 	VIEW_QUESTIONNAIRE("TEST13", "KC-QUESTIONNAIRE", "View Questionnaire", new HashMap<String, String>(), "1", true),
 	
+	@SuppressWarnings("serial")
+	IRB_COMMITTEE("TEST15", "KC-UNT", "IRB Committee", new HashMap<String, String>(){{put("unitNumber","*");}}, "1002", true),
+	
+	@SuppressWarnings("serial")
+	IRB_ADMIN("TEST16", "KC-UNT", "IRB Administrator", new HashMap<String, String>(){{put("unitNumber","*");}}, "1002", true),
+	USER("TEST19", "KUALI", "User", new HashMap<String, String>(), "2", true),
 	// Protocol Unit Hierarchy requires these qualifications
 	@SuppressWarnings("serial")
 	SUPER_USER("TEST14", "KC-SYS", "KC Superuser", new HashMap<String, String>(){{put("unitNumber","*"); put("subunits","*");}}, "1002", true);

@@ -4,7 +4,12 @@ import org.kuali.kra.infrastructure.PermissionConstants;
 
 public enum PermissionFixture {
 
-	VIEW_QUESTIONNAIRE("1", "KC-QUESTIONNAIRE", PermissionConstants.VIEW_QUESTIONNAIRE, true);
+	VIEW_QUESTIONNAIRE("1", "KC-QUESTIONNAIRE", PermissionConstants.VIEW_QUESTIONNAIRE, true),
+	VIEW_COMMITTEE("TEST3", "KC-PROTOCOL", PermissionConstants.VIEW_COMMITTEE, true),
+	MODIFY_COMMITTEE("TEST4", "KC-PROTOCOL", PermissionConstants.MODIFY_COMMITTEE, true),
+	PERFORM_COMMITTEE_ACTIONS("TEST5", "KC-PROTOCOL", PermissionConstants.PERFORM_COMMITTEE_ACTIONS, true),
+	MODIFY_IACUC_COMMITTEE("TEST6", "KC-IACUC", PermissionConstants.MODIFY_IACUC_COMMITTEE, true),
+	VIEW_IACUC_COMMITTEE("TEST7", "KC-IACUC", PermissionConstants.VIEW_IACUC_COMMITTEE, true);
 	
 	private String permId;
 	private String namespaceCode;
