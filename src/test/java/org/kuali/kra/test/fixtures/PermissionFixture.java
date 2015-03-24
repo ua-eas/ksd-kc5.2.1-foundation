@@ -4,7 +4,9 @@ import org.kuali.kra.infrastructure.PermissionConstants;
 
 public enum PermissionFixture {
 
-	VIEW_QUESTIONNAIRE("1", "KC-QUESTIONNAIRE", PermissionConstants.VIEW_QUESTIONNAIRE, true);
+	VIEW_QUESTIONNAIRE("1", "KC-QUESTIONNAIRE", PermissionConstants.VIEW_QUESTIONNAIRE, true),
+	CREATE_PROTOCOL_DOCUMENT("2", "KC-PROTOCOL", PermissionConstants.CREATE_PROTOCOL, true),
+	MAINTAIN_PROTOCOL_SUBMISSIONS("3", "KC-PROTOCOL", PermissionConstants.MAINTAIN_PROTOCOL_SUBMISSIONS, true);
 	
 	private String permId;
 	private String namespaceCode;

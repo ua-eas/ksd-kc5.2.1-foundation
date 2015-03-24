@@ -1,5 +1,7 @@
 package org.kuali.kra.test.helpers;
 
+import java.util.Random;
+
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.rice.kim.impl.role.RolePermissionBo;
 import org.kuali.rice.krad.service.BusinessObjectService;
@@ -14,11 +16,20 @@ public class RolePermissionTestHelper extends TestHelper {
 	
 	private RolePermissionBo buildRolePermission(String permissionId, String roleId) {
 		RolePermissionBo rolePermission = new RolePermissionBo();
-		rolePermission.setId("1");
+		rolePermission.setId(getRandomId());
 		rolePermission.setRoleId(roleId);
 		rolePermission.setPermissionId(permissionId);
 		rolePermission.setActive(true);
 		return rolePermission;
+	}
+	
+	private String getRandomId() {
+		StringBuilder sb = new StringBuilder();
+		Random rand = new Random();
+		for (int i = 0; i < 8; i++) {
+			sb.append((char) (rand.nextInt((126 - 33) + 1) + 33));
+		}
+		return sb.toString();
 	}
 	
 }
