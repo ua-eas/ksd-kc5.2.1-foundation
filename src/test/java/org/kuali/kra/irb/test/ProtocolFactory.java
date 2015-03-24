@@ -25,6 +25,7 @@ import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.personnel.ProtocolPerson;
 import org.kuali.kra.irb.personnel.ProtocolUnit;
 import org.kuali.kra.service.KraAuthorizationService;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
 import org.kuali.rice.kew.api.exception.WorkflowException;
@@ -42,7 +43,7 @@ public class ProtocolFactory {
     private static final String PROTOCOL_NUMBER = "0906000001";
     private static final String PROTOCOL_TYPE_CODE_STR = "1";//test of option "Standard";
     private static final String PROTOCOL_TITLE_STR = "New protocol test";
-    private static final String PRINCIPAL_INVESTIGATOR_ID = "10000000001";
+    private static final String PRINCIPAL_INVESTIGATOR_ID = PersonFixture.QUICKSTART.getPrincipalId();
     private static final String PRINCIPAL_INVESTIGATOR_NAME = "Terry Durkin";
     private static final String PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST_1.getUnitNumber();
     private static final String PRINCIPAL_INVESTIGATOR_ROLE = RoleFixture.PROTOCOL_PI.getRoleName();
