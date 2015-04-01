@@ -23,20 +23,15 @@ import org.kuali.kra.bo.CustomAttributeDocValue;
 import org.kuali.kra.bo.CustomAttributeDocument;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
-import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
 import org.kuali.kra.service.CustomAttributeService;
 import org.kuali.kra.test.fixtures.CustomAttributeDocumentFixture;
 import org.kuali.kra.test.fixtures.CustomAttributeFixture;
-import org.kuali.kra.test.fixtures.SponsorFixture;
 import org.kuali.kra.test.helpers.CustomAttributeDocumentTestHelper;
-import org.kuali.kra.test.helpers.SponsorTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +49,6 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
 
     private DocumentService documentService = null;
     private CustomAttributeService customAttributeService = null;
-    private ProposalDevelopmentService proposalDevelopmentService;
     
     private static final String TEST_DOCUMENT_TYPE_CODE = "PRDV";
 
@@ -74,11 +68,6 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
         
         documentService = KRADServiceLocatorWeb.getDocumentService();
         customAttributeService = KraServiceLocator.getService(CustomAttributeService.class);
-        proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
-        
-        SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
-        sponsorTestHelper.createSponsor(SponsorFixture.ASU);
-        sponsorTestHelper.createSponsor(SponsorFixture.AZ_STATE);
     }
 
     @After
@@ -173,7 +162,8 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
 
 
     @Test public void testGetDefaultCustomAttributesFromSavedDocument() throws Exception {
-        ProposalDevelopmentDocument document = getDocument();
+    	ProposalDevelopmentDocument document = (ProposalDevelopmentDocument) documentService.getNewDocument(ProposalDevelopmentDocument.class);
+        document.initialize();
 
         Map<String, CustomAttributeDocument>customAttributeDocuments = document.getCustomAttributeDocuments();
         assertNotNull(customAttributeDocuments);
@@ -219,48 +209,6 @@ public class CustomAttributeServiceImplTest extends KcUnitTestBase {
         String properties = ",degreeCode;Degree Code,degreeLevel;Degree Level,description;Description";
         String lookupReturnFields = customAttributeService.getLookupReturnsForAjaxCall("org.kuali.kra.bo.DegreeType");
         assertEquals(properties,lookupReturnFields);
-    }
-
-    private ProposalDevelopmentDocument getDocument() throws WorkflowException {
-        ProposalDevelopmentDocument document = (ProposalDevelopmentDocument) documentService.getNewDocument("ProposalDevelopmentDocument");
-        document.initialize();
-
-        Date requestedStartDateInitial = new Date(System.currentTimeMillis());
-        Date requestedEndDateInitial = new Date(System.currentTimeMillis());
-
-        setBaseDocumentFields(document, "ProposalDevelopmentDocumentTest test doc", SponsorFixture.ASU.getSponsorCode(), "project title", requestedStartDateInitial, requestedEndDateInitial, "1", "1", "000001", SponsorFixture.AZ_STATE.getSponsorCode());
-
-        documentService.saveDocument(document);
-
-        ProposalDevelopmentDocument savedDocument = (ProposalDevelopmentDocument) documentService.getByDocumentHeaderId(document.getDocumentNumber());
-
-        return savedDocument;
-    }
-
-    /**
-     * This method sets the base/required document fields
-     * @param document ProposalDevelopmentDocument to set fields for
-     * @param title String title to set
-     * @param requestedStartDateInitial Date start date to set
-     * @param requestedEndDateInitial Date end date to set
-     * @param activityTypeCode String activity type code to set
-     * @param proposalTypeCode String proposal type code to set
-     * @param ownedByUnit String owned-by unit to set
-     */
-    private void setBaseDocumentFields(ProposalDevelopmentDocument document, String description, String sponsorCode, String title, Date requestedStartDateInitial, Date requestedEndDateInitial, String activityTypeCode, String proposalTypeCode, String ownedByUnit, String primeSponsorCode) {
-        document.getDocumentHeader().setDocumentDescription(description);
-        document.getDevelopmentProposal().setSponsorCode(sponsorCode);
-        document.getDevelopmentProposal().setTitle(title);
-        document.getDevelopmentProposal().setRequestedStartDateInitial(requestedStartDateInitial);
-        document.getDevelopmentProposal().setRequestedEndDateInitial(requestedEndDateInitial);
-        document.getDevelopmentProposal().setActivityTypeCode(activityTypeCode);
-        document.getDevelopmentProposal().setProposalTypeCode(proposalTypeCode);
-        document.getDevelopmentProposal().setOwnedByUnitNumber(ownedByUnit);
-        document.getDevelopmentProposal().setPrimeSponsorCode(primeSponsorCode);
-
-        proposalDevelopmentService.initializeUnitOrganizationLocation(document);
-        proposalDevelopmentService.initializeProposalSiteNumbers(document);
-
     }
 
 }
