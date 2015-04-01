@@ -15,6 +15,8 @@ package org.kuali.kra.proposaldevelopment.lookup.keyvalue;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import org.junit.Before;
 import org.kuali.kra.keyvalue.ValuesFinderTestBase;
 import org.kuali.kra.test.fixtures.NoticeOfOpportunityFixture;
 import org.kuali.kra.test.helpers.NoticeOfOpportunityTestHelper;
@@ -25,19 +27,15 @@ import org.kuali.rice.core.api.util.KeyValue;
  */
 public class NoticeOfOpportunityValuesFinderTest extends ValuesFinderTestBase {
 
-	// @Before
+
+	@Before
+	@Override
 	public void setUp() {
 		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
 		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
-			helper.createNoticeOfOpportunity( notice );
-		}
-	}
-
-	// @After
-	public void tearDown() {
-		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
-		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
-			helper.deleteNoticeOfOpportunity( notice );
+			if ( !notice.getKey().equals( "" ) ) {
+				helper.createNoticeOfOpportunity( notice );
+			}
 		}
 	}
 
@@ -49,10 +47,8 @@ public class NoticeOfOpportunityValuesFinderTest extends ValuesFinderTestBase {
 	@Override
 	protected List<KeyValue> getKeyValues() {
 		List<KeyValue> keyValue = new ArrayList<KeyValue>();
-		NoticeOfOpportunityTestHelper helper = new NoticeOfOpportunityTestHelper();
-
 		for ( NoticeOfOpportunityFixture notice : NoticeOfOpportunityFixture.values() ) {
-			keyValue.add( helper.getNoticeKeyValue( notice ) );
+			keyValue.add( createKeyValue( notice.getKey(), notice.getValue() ) );
 		}
 		return keyValue;
 	}

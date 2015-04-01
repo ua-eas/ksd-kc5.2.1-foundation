@@ -1,5 +1,6 @@
 package org.kuali.kra.test.fixtures;
 
+
 public enum NoticeOfOpportunityFixture {
 
 	KEY_VALUE_000( "", "select" ),
