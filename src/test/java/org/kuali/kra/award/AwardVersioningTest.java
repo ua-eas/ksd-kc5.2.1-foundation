@@ -15,8 +15,17 @@
  */
 package org.kuali.kra.award;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.SequenceAssociate;
 import org.kuali.kra.award.commitments.AwardCostShare;
@@ -32,26 +41,18 @@ import org.kuali.kra.award.specialreview.AwardSpecialReview;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.VersionException;
 import org.kuali.kra.service.VersioningService;
-import org.kuali.kra.test.fixtures.PersonFixture;
-import org.kuali.kra.test.fixtures.RoleFixture;
 import org.kuali.kra.test.fixtures.SponsorFixture;
 import org.kuali.kra.test.fixtures.UnitFixture;
-import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.helpers.SponsorTestHelper;
 import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.Person;
-import org.kuali.rice.kim.api.identity.PersonService;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.MessageMap;
-
-import java.sql.Date;
-import java.util.*;
 
 /**
  * This class 
@@ -83,20 +84,13 @@ public class AwardVersioningTest extends KcUnitTestBase {
     /**
      * @see org.kuali.kra.KraTestBase#setUp()
      */
-    @Override
+    @Before
     public void setUp() throws Exception {
        super.setUp();
        SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
        sponsorTestHelper.createSponsor(SponsorFixture.ASU);
        sponsorTestHelper.createSponsor(SponsorFixture.AZ_STATE);
-       
-       PersonService personService = getService(PersonService.class);
-       quickstart = personService.getPersonByPrincipalName(PersonFixture.QUICKSTART.getPrincipalName());
-       GlobalVariables.setUserSession(new UserSession(quickstart.getPrincipalName()));
-       
-       RoleTestHelper roleTestHelper = new RoleTestHelper();
-       roleTestHelper.addPersonToRole( quickstart, RoleFixture.SUPER_USER );
-       
+
        UnitTestHelper unitTestHelper = new UnitTestHelper();
        unitTestHelper.createUnit( UnitFixture.TEST_1 );
        
