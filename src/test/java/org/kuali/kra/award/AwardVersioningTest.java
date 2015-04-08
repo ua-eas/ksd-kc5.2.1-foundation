@@ -15,8 +15,17 @@
  */
 package org.kuali.kra.award;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.SequenceAssociate;
 import org.kuali.kra.award.commitments.AwardCostShare;
@@ -32,17 +41,18 @@ import org.kuali.kra.award.specialreview.AwardSpecialReview;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.VersionException;
 import org.kuali.kra.service.VersioningService;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
+import org.kuali.rice.kim.api.identity.Person;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.MessageMap;
-
-import java.sql.Date;
-import java.util.*;
 
 /**
  * This class 
@@ -60,7 +70,6 @@ public class AwardVersioningTest extends KcUnitTestBase {
     private static final String ITEM_B = "ItemB";
     private static final double AMOUNT = 1000.00;
     private static final String AWARD_TITLE = "Award Title";
-    private static final String GOOGLE_SPONSOR_CODE = "005979";
     private static final String SPONSOR_AWARD_NUMBER = "1R01CA123456";
     private static final String DOCUMENT_DESCRIPTION = "Award Versioning Test Document";    
     
@@ -70,14 +79,22 @@ public class AwardVersioningTest extends KcUnitTestBase {
     private List<AwardDocument> savedDocuments;
     private List<Award> awards;
     
+    Person quickstart;
 
     /**
      * @see org.kuali.kra.KraTestBase#setUp()
      */
-    @Override
+    @Before
     public void setUp() throws Exception {
        super.setUp();
-       GlobalVariables.setUserSession(new UserSession("quickstart"));
+       SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
+       sponsorTestHelper.createSponsor(SponsorFixture.ASU);
+       sponsorTestHelper.createSponsor(SponsorFixture.AZ_STATE);
+
+       UnitTestHelper unitTestHelper = new UnitTestHelper();
+       unitTestHelper.createUnit( UnitFixture.TEST_1 );
+       
+       
        savedDocuments = new ArrayList<AwardDocument>();
        awards = new ArrayList<Award>();
        locateServices();
@@ -256,9 +273,9 @@ public class AwardVersioningTest extends KcUnitTestBase {
         awardVersion1.setTitle(AWARD_TITLE);
         awardVersion1.setActivityTypeCode("1");
         awardVersion1.setAwardTransactionTypeCode(1);
-        awardVersion1.setUnitNumber("IN-CARD");
-        awardVersion1.setPrimeSponsorCode(GOOGLE_SPONSOR_CODE);
-        awardVersion1.setSponsorCode(GOOGLE_SPONSOR_CODE);
+        awardVersion1.setUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        awardVersion1.setPrimeSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());
+        awardVersion1.setSponsorCode(SponsorFixture.ASU.getSponsorCode());
         awardVersion1.setStatusCode(1);
         awardVersion1.setModificationNumber("1");
         awardVersion1.setSponsorAwardNumber(SPONSOR_AWARD_NUMBER);
@@ -292,7 +309,8 @@ public class AwardVersioningTest extends KcUnitTestBase {
      * @param award
      * @param items
      */
-    private void saveAndVerifySequenceAssociateValues(Award award, List<? extends SequenceAssociate> items) {
+    @SuppressWarnings("rawtypes")
+	private void saveAndVerifySequenceAssociateValues(Award award, List<? extends SequenceAssociate> items) {
         bos.save(award);
         Map<String,Object> keys = new HashMap<String, Object>();
         keys.put("awardId", award.getAwardId());
@@ -334,7 +352,8 @@ public class AwardVersioningTest extends KcUnitTestBase {
      * @param awardVersion2
      * @param awardVersion3
      */
-    private void verifySequenceAssociatesAfterVersioning(List<? extends SequenceAssociate> sequenceAssociatesBeforeVersioning, List<? extends SequenceAssociate> sequenceAssociatesAfterVersioning) {
+    @SuppressWarnings("rawtypes")
+	private void verifySequenceAssociatesAfterVersioning(List<? extends SequenceAssociate> sequenceAssociatesBeforeVersioning, List<? extends SequenceAssociate> sequenceAssociatesAfterVersioning) {
         assertEquals(sequenceAssociatesBeforeVersioning.size(), sequenceAssociatesAfterVersioning.size());
         for(int index = 0; index < sequenceAssociatesBeforeVersioning.size(); index++) {
             SequenceAssociate associateBeforeVersioning = sequenceAssociatesBeforeVersioning.get(index);

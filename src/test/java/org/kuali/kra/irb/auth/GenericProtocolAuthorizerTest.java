@@ -28,11 +28,25 @@ import org.kuali.kra.irb.actions.submit.ProtocolSubmission;
 import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.service.KraAuthorizationService;
+import org.kuali.kra.test.fixtures.PermissionFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.PermissionTestHelper;
+import org.kuali.kra.test.helpers.RolePermissionTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
+import org.kuali.rice.kim.impl.permission.PermissionBo;
+import org.kuali.rice.kim.impl.role.RoleBo;
+import org.kuali.rice.kim.impl.role.RoleMemberBo;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GenericProtocolAuthorizerTest extends KcUnitTestBase {
@@ -50,7 +64,30 @@ public class GenericProtocolAuthorizerTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
+        
+        getBusinessObjectService().deleteMatching(RoleMemberBo.class, new HashMap<String, Object>());
+        
+        RoleTestHelper roleTestHelper = new RoleTestHelper();
+        RoleBo role1 = roleTestHelper.createRole(RoleFixture.CREATE_PROTOCOL);
+        RoleBo role2 = roleTestHelper.createRole(RoleFixture.MAINTAIN_PROTOCOL);
+   
+        PermissionTestHelper permissionTestHelper = new PermissionTestHelper();
+        PermissionBo permission1 = permissionTestHelper.createPermission(PermissionFixture.CREATE_PROTOCOL_DOCUMENT);
+        PermissionBo permission2 = permissionTestHelper.createPermission(PermissionFixture.MAINTAIN_PROTOCOL_SUBMISSIONS);
+        
+        RolePermissionTestHelper rolePermissionTestHelper = new RolePermissionTestHelper();
+        rolePermissionTestHelper.createRolePermission(permission1.getId(), role1.getId());
+        rolePermissionTestHelper.createRolePermission(permission2.getId(), role2.getId());
+        
+        Person woods = KraServiceLocator.getService(PersonService.class).getPerson(PersonFixture.WOODS.getPrincipalId());
+        roleTestHelper.addPersonToRole(woods, RoleFixture.CREATE_PROTOCOL);
+        roleTestHelper.addPersonToRole(woods, RoleFixture.MAINTAIN_PROTOCOL);
+        
+        GlobalVariables.setUserSession(new UserSession(woods.getPrincipalName()));
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.TEST_1);
+        
         auth = new GenericProtocolAuthorizer();
         kraAuthorizationService = KraServiceLocator.getService(KraAuthorizationService.class);
         protocolActionService = KraServiceLocator.getService(ProtocolActionService.class);
@@ -125,7 +162,7 @@ public class GenericProtocolAuthorizerTest extends KcUnitTestBase {
         assertTrue(auth.isAuthorized(GlobalVariables.getUserSession().getPrincipalId(), task));
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Protocol getBaseProtocol(String protocolStatusCode, String submissionType) throws Exception{
         
         ProtocolDocument pd = ProtocolFactory.createProtocolDocument("123", new Integer(1));
@@ -139,7 +176,7 @@ public class GenericProtocolAuthorizerTest extends KcUnitTestBase {
         protocolSubmissions.add(ps);        
         pd.getProtocol().setProtocolSubmission(ps);
         pd.getProtocol().setProtocolSubmissions((List)protocolSubmissions);
-        pd.getProtocol().setLeadUnitNumber("000001");
+        pd.getProtocol().setLeadUnitNumber(UnitFixture.TEST_1.getUnitNumber());
         return pd.getProtocol();     
     }
 

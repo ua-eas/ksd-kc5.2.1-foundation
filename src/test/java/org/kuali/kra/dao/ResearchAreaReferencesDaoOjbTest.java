@@ -15,6 +15,10 @@
  */
 package org.kuali.kra.dao;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,15 +35,11 @@ import org.kuali.kra.irb.Protocol;
 import org.kuali.kra.irb.ResearchArea;
 import org.kuali.kra.irb.protocol.research.ProtocolResearchAreaService;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ResearchAreaReferencesDaoOjbTest extends KcUnitTestBase {
     
@@ -52,7 +52,6 @@ public class ResearchAreaReferencesDaoOjbTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         this.businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
         this.committeeService = KraServiceLocator.getService(CommitteeService.class);
         this.protocolResearchAreaService = KraServiceLocator.getService(ProtocolResearchAreaService.class);
@@ -89,7 +88,7 @@ public class ResearchAreaReferencesDaoOjbTest extends KcUnitTestBase {
         CommitteeDocument committeeDocument = CommitteeFactory.createCommitteeDocument("555");
         Committee committee = committeeDocument.getCommittee();
         
-        CommitteeMembership committeeMembership = this.createMembership("jtester", "joe tester", null, "1", "2009-01-11", "2009-01-20");
+        CommitteeMembership committeeMembership = this.createMembership(PersonFixture.QUICKSTART.getPrincipalName(), "tester", null, "1", "2009-01-11", "2009-01-20");
         addRole(committeeMembership, "1", "2009-01-11", "2009-01-20");
         this.committeeMembershipService.addCommitteeMembershipExpertise(committeeMembership, researchAreas);
         this.committeeMembershipService.addCommitteeMembership(committee, committeeMembership);

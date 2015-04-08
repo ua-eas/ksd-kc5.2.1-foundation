@@ -15,17 +15,34 @@
  */
 package org.kuali.kra.test.infrastructure;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunListener;
 import org.kuali.kra.infrastructure.KraServiceLocator;
+import org.kuali.kra.proposaldevelopment.service.ProposalDevelopmentService;
+import org.kuali.kra.questionnaire.answer.QuestionnaireAnswerService;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.PersonTestHelper;
+import org.kuali.kra.test.helpers.RoleTestHelper;
 import org.kuali.kra.test.infrastructure.lifecycle.KcUnitTestMainLifecycle;
 import org.kuali.rice.core.framework.persistence.jpa.OrmUtils;
 import org.kuali.rice.coreservice.api.parameter.Parameter;
 import org.kuali.rice.coreservice.framework.CoreFrameworkServiceLocator;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.impl.identity.EntityDefaultInfoCacheBo;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.document.Document;
@@ -36,13 +53,11 @@ import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.MessageMap;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-
 /**
  * This class serves as a base test class for all KC unit tests. It handles ensuring all of the necessary lifecycles are properly
  * launched, started and stopped.
  */
+@SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
 @RunWith(KcUnitTestRunner.class)
 public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
     // non static Log to allow it to be named after the runtime class
@@ -50,7 +65,6 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
 
     private static KcUnitTestMainLifecycle LIFECYCLE = new KcUnitTestMainLifecycle();
     private static RunListener RUN_LISTENER = new KcUnitTestRunListener(LIFECYCLE);
-    private static final String DEFAULT_USER = "quickstart";
 
     private long startTime;
     private long totalMem;
@@ -63,6 +77,8 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
     private DocumentService documentService;
     private BusinessObjectService businessObjectService;
     private ParameterService parameterService;
+    private QuestionnaireAnswerService questionnaireAnswerService;
+    private ProposalDevelopmentService proposalDevelopmentService;
     
     protected boolean transactional = true;
     
@@ -75,7 +91,40 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
         LIFECYCLE.startPerTest(transactional);
         GlobalVariables.setMessageMap(new MessageMap());
         KNSGlobalVariables.setAuditErrorMap(new HashMap());
-        GlobalVariables.setUserSession(new UserSession(DEFAULT_USER));
+        createTestUsers();
+    }
+    
+    /*
+     * Create all test users at once, and subclasses can use PersonFixture and PersonService
+     * to pull the user if needed.
+     */
+    private void createTestUsers() {
+    	
+    	// Need to clear KIM_ENTITY_CACHE_T. Some tests trigger flushing
+        // of Entities to this table, and the transaction isn't always
+        // rolling back this table between tests. This prevents errors
+        // created by attempting to insert existing Entities.
+        final Map<String, Object> emptyMap = Collections.emptyMap();
+        KRADServiceLocator.getBusinessObjectService().deleteMatching(EntityDefaultInfoCacheBo.class, emptyMap);
+
+    	// Any child test class that creates documents relies on this user and session,
+        // we need to ensure the user is present -- we should not count on this being
+        // in the entity cache, and infact should expect the cache to be empty.
+        PersonTestHelper personHelper = new PersonTestHelper();
+        Person quickstart = personHelper.createPerson(PersonFixture.QUICKSTART);
+        RoleTestHelper roleHelper = new RoleTestHelper();
+        roleHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
+        GlobalVariables.setUserSession(new UserSession(quickstart.getPrincipalName()));
+        
+        // Other test users
+        personHelper.createPerson(PersonFixture.JTESTER);
+        personHelper.createPerson(PersonFixture.WOODS);
+        personHelper.createPerson(PersonFixture.MAJORS);
+        personHelper.createPerson(PersonFixture.CHEW);
+        personHelper.createPerson(PersonFixture.BORST);
+        personHelper.createPerson(PersonFixture.IACUC_ADMIN);
+        personHelper.createPerson(PersonFixture.OPS_ADMIN);
+        personHelper.createPerson(PersonFixture.NEGOTIATOR);
     }
 
     /**
@@ -187,6 +236,20 @@ public class KcUnitTestBase extends Assert implements KcUnitTestMethodAware {
         return getClass().getSimpleName() + "." + method.getName();
     }
 
+    protected QuestionnaireAnswerService getQuestionnaireAnswerService(){
+        if (questionnaireAnswerService == null){
+            questionnaireAnswerService = KraServiceLocator.getService(QuestionnaireAnswerService.class);
+        }
+		return questionnaireAnswerService;
+    }
+    
+    protected ProposalDevelopmentService getProposalDevelopmentService(){
+        if (proposalDevelopmentService == null){
+            proposalDevelopmentService = KraServiceLocator.getService(ProposalDevelopmentService.class);
+        }
+		return proposalDevelopmentService;
+    }
+    
     protected BusinessObjectService getBusinessObjectService() {
         if(businessObjectService == null) {
             businessObjectService = KRADServiceLocator.getBusinessObjectService();

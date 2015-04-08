@@ -15,6 +15,9 @@
  */
 package org.kuali.kra.irb.actions.assigncmtsched;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -34,12 +37,8 @@ import org.kuali.kra.irb.actions.submit.ProtocolSubmissionType;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * Test the ProtocolDeleteService implementation.
@@ -53,7 +52,6 @@ public class ProtocolAssignCmtSchedServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
         protocolAssignCmtSchedService = KraServiceLocator.getService(ProtocolAssignCmtSchedService.class);
         committeeDocument = createCommittee("666");

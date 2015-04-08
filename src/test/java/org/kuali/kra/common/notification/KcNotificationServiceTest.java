@@ -15,6 +15,14 @@
  */
 package org.kuali.kra.common.notification;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
@@ -34,6 +42,7 @@ import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.KcEmailService;
 import org.kuali.kra.service.KcPersonService;
 import org.kuali.kra.service.RolodexService;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.kra.util.EmailAttachment;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
@@ -43,8 +52,7 @@ import org.kuali.rice.kim.api.identity.IdentityService;
 import org.kuali.rice.kim.api.role.RoleService;
 import org.kuali.rice.krad.service.BusinessObjectService;
 
-import java.util.*;
-
+@SuppressWarnings( "unchecked" )
 public class KcNotificationServiceTest extends KcUnitTestBase {
     
     private static final String MODULE_CODE_FIELD = "moduleCode";
@@ -60,9 +68,9 @@ public class KcNotificationServiceTest extends KcUnitTestBase {
     private static final Long NOTIFICATION_TYPE_ID_VALUE = 1L;
     private static final String SUBJECT_VALUE = "Message Subject";
     private static final String MESSAGE_VALUE = "Message Text";
-    private static final String PRINCIPAL_ID_VALUE_CHEW = "10000000005";
-    private static final String PRINCIPAL_NAME_VALUE_JTESTER = "jtester";
-    private static final String PRINCIPAL_NAME_VALUE_MAJORS = "majors";
+    private static final String PRINCIPAL_ID_VALUE_CHEW = PersonFixture.CHEW.getPrincipalId();
+    private static final String PRINCIPAL_NAME_VALUE_JTESTER = PersonFixture.JTESTER.getPrincipalName();
+    private static final String PRINCIPAL_NAME_VALUE_MAJORS = PersonFixture.MAJORS.getPrincipalName();
     private static final String ROLODEX_ID_VALUE_UNIVERSITY = "1";
     private static final String EMAIL_ADDRESS_VALUE_CHEW = "kcnotification@gmail.com";
     private static final String EMAIL_ADDRESS_VALUE_JTESTER = "kcnotification@gmail.com";
@@ -139,7 +147,6 @@ public class KcNotificationServiceTest extends KcUnitTestBase {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testGetNotifications() throws Exception {
         service.setBusinessObjectService(getMockSearchBusinessObjectService(MODULE_CODE_VALUE, ACTION_TYPE_CODE_VALUE_101, ACTION_TYPE_CODE_VALUE_102));
         
@@ -287,7 +294,6 @@ public class KcNotificationServiceTest extends KcUnitTestBase {
         return notificationContext;
     }
     
-    @SuppressWarnings("unchecked")
     private BusinessObjectService getMockSearchBusinessObjectService(final String moduleCode, final String... actionTypeCodes) {
         final BusinessObjectService service = context.mock(BusinessObjectService.class);
         context.checking(new Expectations() {{
@@ -400,8 +406,16 @@ public class KcNotificationServiceTest extends KcUnitTestBase {
             allowing(service).getDefaultFromAddress();
             will(returnValue(DEFAULT_FROM_ADDRESS_VALUE));
             
-            oneOf(service).sendEmailWithAttachments(DEFAULT_FROM_ADDRESS_VALUE, personEmailAddresses, SUBJECT_VALUE, null, null, MESSAGE_VALUE, true, 
-                                                    Collections.<EmailAttachment>emptyList());
+            oneOf(service).sendEmailWithAttachments(
+                with(equal(DEFAULT_FROM_ADDRESS_VALUE)),
+                with(any(Set.class)),
+                with(equal(SUBJECT_VALUE)),
+                with(aNull(Set.class)),
+                with(aNull(Set.class)),
+                with(equal(MESSAGE_VALUE)),
+                with(equal(true)),
+                with(equal(Collections.<EmailAttachment>emptyList()))
+                );
         }});
         return service;
     }
@@ -412,11 +426,16 @@ public class KcNotificationServiceTest extends KcUnitTestBase {
             allowing(service).getDefaultFromAddress();
             will(returnValue(DEFAULT_FROM_ADDRESS_VALUE));
             
-            oneOf(service).sendEmailWithAttachments(DEFAULT_FROM_ADDRESS_VALUE, personEmailAddresses, SUBJECT_VALUE, null, null, MESSAGE_VALUE, true, 
-                                                    Collections.<EmailAttachment>emptyList());
-            
-            oneOf(service).sendEmailWithAttachments(DEFAULT_FROM_ADDRESS_VALUE, rolodexEmailAddresses, SUBJECT_VALUE, null, null, MESSAGE_VALUE, true, 
-                                                    Collections.<EmailAttachment>emptyList());
+            exactly(2).of(service).sendEmailWithAttachments(
+                with(equal(DEFAULT_FROM_ADDRESS_VALUE)),
+                with(any(Set.class)),
+                with(equal(SUBJECT_VALUE)),
+                with(aNull(Set.class)),
+                with(aNull(Set.class)),
+                with(equal(MESSAGE_VALUE)),
+                with(equal(true)),
+                with(equal(Collections.<EmailAttachment>emptyList()))
+                );
         }});
         return service;
     }

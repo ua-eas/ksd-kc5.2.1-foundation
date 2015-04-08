@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.proposaldevelopment.rules;
 
+import static org.kuali.kra.proposaldevelopment.rules.ProposalDevelopmentProposalAttachmentsAuditRule.AUDIT_CLUSTER_KEY;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +26,7 @@ import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.rice.kns.util.AuditCluster;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
 
-import static org.kuali.kra.proposaldevelopment.rules.ProposalDevelopmentProposalAttachmentsAuditRule.AUDIT_CLUSTER_KEY;
-
+@SuppressWarnings("deprecation")
 public class ProposalDevelopmentProposalAttachmentsAuditRuleTest extends ProposalDevelopmentRuleTestBase {
     
     ProposalDevelopmentProposalAttachmentsAuditRule rule;

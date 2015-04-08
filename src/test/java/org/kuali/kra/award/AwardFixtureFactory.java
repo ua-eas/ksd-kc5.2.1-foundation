@@ -1,6 +1,7 @@
 package org.kuali.kra.award;
 
 import org.kuali.kra.award.home.Award;
+import org.kuali.kra.test.fixtures.SponsorFixture;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class AwardFixtureFactory {
         award.setSequenceNumber(1);
         award.setSpecialReviewIndicator(YES_FLAG);
         award.setStatusCode(1);
-        award.setSponsorCode("000162");
+        award.setSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());
         award.setSubContractIndicator(YES_FLAG);
         award.setTitle("Sample Award Title");
         award.setTransferSponsorIndicator(YES_FLAG);

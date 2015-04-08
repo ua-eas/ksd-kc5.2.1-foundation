@@ -18,15 +18,12 @@ package org.kuali.kra.proposaldevelopment.specialreview;
 import org.kuali.kra.common.specialreview.rules.AddSpecialReviewRuleTestBase;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.document.Document;
-import org.kuali.rice.krad.util.GlobalVariables;
 
 public class AddProposalSpecialReviewRuleTest extends AddSpecialReviewRuleTestBase<ProposalSpecialReview> {
     
     @Override
     public Document getDocument() throws WorkflowException {
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         Document document = getDocumentService().getNewDocument(ProposalDevelopmentDocument.class);
         return document;
     }

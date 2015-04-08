@@ -15,7 +15,15 @@
  */
 package org.kuali.kra.irb;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.SeparateAssociate;
 import org.kuali.kra.bo.AttachmentFile;
@@ -27,36 +35,34 @@ import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.protocol.ProtocolAssociateBase;
 import org.kuali.kra.protocol.protocol.location.ProtocolLocationBase;
 import org.kuali.kra.service.VersioningService;
+import org.kuali.kra.test.fixtures.OrgFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.OrgTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
-import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
 
 /**
  * Integration test for protocol versioning.  Does not test attachment versioning.
  */
 public class ProtocolVersioningTest extends KcUnitTestBase {
-    
+
     private DocumentService documentService;
     private VersioningService versioningService;
     private ProtocolDocument ver1;
 
-    @Override
+
+	@Before
     public void setUp() throws Exception {
        super.setUp();
-       GlobalVariables.setUserSession(new UserSession("quickstart"));
-       GlobalVariables.setMessageMap(new MessageMap());
-       KNSGlobalVariables.setAuditErrorMap(new HashMap());
+       
+       UnitTestHelper unitHelper = new UnitTestHelper();
+       unitHelper.createUnit(UnitFixture.TEST_1);
+       
+       OrgTestHelper orgHelper = new OrgTestHelper();
+       orgHelper.createOrg(OrgFixture.ONE);
+       orgHelper.createOrg(OrgFixture.TWO);
+       
        locateServices();
        ver1 = ProtocolFactory.createProtocolDocument();
     }
@@ -83,13 +89,13 @@ public class ProtocolVersioningTest extends KcUnitTestBase {
         
         ProtocolLocation location = new ProtocolLocation();
         location.setProtocol(ver1.getProtocol());
-        location.setOrganizationId("000001");
+        location.setOrganizationId(OrgFixture.ONE.getOrgId());
         location.setProtocolOrganizationTypeCode("1");
         locations.add(location);
         
         ProtocolLocation location2 = new ProtocolLocation();
         location2.setProtocol(ver1.getProtocol());
-        location2.setOrganizationId("000002");
+        location2.setOrganizationId(OrgFixture.TWO.getOrgId());
         location2.setProtocolOrganizationTypeCode("2");
         locations.add(location2);
         

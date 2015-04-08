@@ -37,6 +37,8 @@ import org.kuali.kra.irb.actions.assigncmtsched.ProtocolAssignCmtSchedService;
 import org.kuali.kra.irb.actions.reviewcomments.ReviewCommentsBean;
 import org.kuali.kra.irb.actions.submit.*;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
@@ -63,6 +65,9 @@ public class CommitteeDecisionServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        SubmissionQualifierTypeTestHelper qualifierTypeCodeHelper = new SubmissionQualifierTypeTestHelper();
+        qualifierTypeCodeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
         
         service = new CommitteeDecisionServiceImpl();
         service.setProtocolActionService(KraServiceLocator.getService(ProtocolActionService.class));

@@ -18,28 +18,41 @@ package org.kuali.kra.service.impl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.kuali.kra.bo.SponsorHierarchy;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.SponsorService;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.fixtures.SponsorHierarchyFixture;
+import org.kuali.kra.test.helpers.SponsorHierarchyTestHelper;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * This class tests KraPersistableBusinessObjectBase.
  */
 public class SponsorServiceImplTest extends KcUnitTestBase {
 
-    private static final String TEST_SPONSOR_CODE = "005891";
-    private static final String TEST_SPONSOR_NAME = "Baystate Medical Center";
+    private static final String TEST_SPONSOR_CODE = "010152";
+    private static final String TEST_SPONSOR_NAME = "Arizona State University";
     private static final String INVALID_SPONSOR_CODE = "XXXX";
-    private static final String TOP_SPONSOR_HIERARCHY = "Administering Activity;1;COI Disclosures;1;NIH Multiple PI;1;NIH Other Significant Contributor;1;Printing;1;Routing;1;Sponsor Groups";
+    private static final String TOP_SPONSOR_HIERARCHY = "NASA";
     private SponsorService sponsorService;
     
     @Before
     public void setUp() throws Exception {
         super.setUp();
         sponsorService = this.getRegularSponsorService();
+        
+        getBusinessObjectService().deleteMatching(SponsorHierarchy.class, new HashMap<String, String>()); 
+        
+        SponsorHierarchyTestHelper sponsorHierarchyTestHelper = new SponsorHierarchyTestHelper();
+        sponsorHierarchyTestHelper.createSponsorHierarchy(SponsorHierarchyFixture.TEST_1);
+        
+        SponsorTestHelper sponsorTestHelper = new SponsorTestHelper();
+        sponsorTestHelper.createSponsor(SponsorFixture.ASU);
     }
     @After
     public void tearDown() throws Exception {
@@ -68,7 +81,8 @@ public class SponsorServiceImplTest extends KcUnitTestBase {
     }
     private SponsorService getEmptySponsorService() {
         return new SponsorServiceImpl() {
-            public Collection getTopSponsorHierarchyList(){
+            @SuppressWarnings("rawtypes")
+			public Collection getTopSponsorHierarchyList(){
                 return new ArrayList();
             }
         };

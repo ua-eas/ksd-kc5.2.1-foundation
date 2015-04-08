@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.kuali.kra.bo.Sponsor;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.service.SponsorService;
+import org.kuali.kra.test.fixtures.SponsorFixture;
+import org.kuali.kra.test.helpers.SponsorTestHelper;
 
 public class SponsorDataFeedCommandTest extends BaseDataFeedCommandTest {
     
@@ -33,7 +35,11 @@ public class SponsorDataFeedCommandTest extends BaseDataFeedCommandTest {
     public void setUp() throws Exception {
         super.setUp();
         sponsorService = KraServiceLocator.getService(SponsorService.class);
-        sponsor = sponsorService.getSponsor("000107");
+        
+        SponsorTestHelper sponsorHelper = new SponsorTestHelper();
+        sponsorHelper.createSponsor(SponsorFixture.ASU);
+        
+        sponsor = sponsorService.getSponsor(SponsorFixture.ASU.getSponsorCode());
         initializeProposal();
     }
     

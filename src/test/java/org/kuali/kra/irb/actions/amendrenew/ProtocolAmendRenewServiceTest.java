@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.irb.actions.amendrenew;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -38,11 +40,10 @@ import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 
-import java.util.List;
-
 /**
  * Test the ProtocolAmendRenewService implementation.
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
 
     private static final String SUMMARY = "my test summary";
@@ -130,8 +131,8 @@ public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
         assertEquals(expectedSummary, amendRenewal.getSummary());
         verifyModules(amendRenewal, moduleCount);
     }
-    
-    private void verifyModules(ProtocolAmendRenewal amendRenewal, int moduleCount) {
+
+	private void verifyModules(ProtocolAmendRenewal amendRenewal, int moduleCount) {
         List<ProtocolAmendRenewModule> modules = (List)amendRenewal.getModules();
         assertEquals(moduleCount, modules.size());
         if (moduleCount > 0) {
@@ -153,7 +154,6 @@ public class ProtocolAmendRenewServiceTest extends KcUnitTestBase {
      * Verify that the getAmendmentAndRenewals() method works.
      * @throws WorkflowException
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetAmendmentsAndRenewals() throws Exception {
         ProtocolDocument a1 = ProtocolFactory.createProtocolDocument("0906000001A001");

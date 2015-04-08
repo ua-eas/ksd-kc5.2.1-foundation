@@ -14,11 +14,17 @@
  */
 package org.kuali.kra.irb.actions.submit;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kuali.kra.bo.Rolodex;
 import org.kuali.kra.committee.bo.Committee;
 import org.kuali.kra.committee.bo.CommitteeMembership;
 import org.kuali.kra.committee.bo.CommitteeMembershipExpertise;
@@ -36,24 +42,25 @@ import org.kuali.kra.irb.actions.ProtocolStatus;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.protocol.actions.submit.ProtocolReviewerBeanBase;
 import org.kuali.kra.protocol.actions.submit.ProtocolSubmissionBase;
-import org.kuali.kra.service.RolodexService;
+import org.kuali.kra.test.fixtures.ExemptStudiesCheckListFixture;
+import org.kuali.kra.test.fixtures.ExpeditedReviewCheckListFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.ProtocolReviewTypeFixture;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.ExemptStudiesChecklistTestHelper;
+import org.kuali.kra.test.helpers.ExpeditedReviewCheckListTestHelper;
+import org.kuali.kra.test.helpers.ProtocolReviewTypeTestHelper;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.kim.api.identity.IdentityService;
 import org.kuali.rice.kim.api.identity.principal.Principal;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.util.GlobalVariables;
-import org.kuali.rice.krad.util.MessageMap;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Test the ProtocolSubmitActionService implementation.
@@ -64,29 +71,31 @@ import java.util.Map;
  * the submitToIrbForReview(), a check is done against the database to
  * verify that the changes occurred as expected.
  */
+@SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
 public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
 
     private static final String VALID_SUBMISSION_TYPE = "100";
-    private static final String VALID_REVIEW_TYPE = "1";
+    private static final String VALID_REVIEW_TYPE = ProtocolReviewTypeFixture.FULL.getCode();
     private static final String MEMBER_EXPERTISE_CODE = "05.0125";
     
     private ProtocolSubmitActionService protocolSubmitActionService;
-    private BusinessObjectService businessObjectService;   
-    private RolodexService rolodexService;
+    private BusinessObjectService businessObjectService;
     private DocumentService documentService;
     private IdentityService identityManagementService;
     private List<ProtocolReviewerBean> defaultReviewers;
 
-    @SuppressWarnings("unchecked")
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        GlobalVariables.setMessageMap(new MessageMap());
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
+
+        UnitTestHelper unitHelper = new UnitTestHelper();
+        unitHelper.createUnit(UnitFixture.TEST_1);
+        
+        SubmissionQualifierTypeTestHelper qualifierTypeCodeHelper = new SubmissionQualifierTypeTestHelper();
+        qualifierTypeCodeHelper.createSubmissionQualifierType(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB);
+
         protocolSubmitActionService = KraServiceLocator.getService(ProtocolSubmitActionService.class);
         businessObjectService = KraServiceLocator.getService(BusinessObjectService.class);
-        rolodexService = KraServiceLocator.getService(RolodexService.class);
         documentService = KraServiceLocator.getService("kraDocumentService");
         identityManagementService = KraServiceLocator.getService(IdentityService.class);
         defaultReviewers = getDefaultReviewers();
@@ -144,7 +153,9 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
      */
     @Test
     public void testExemptCheckList() throws Exception {
-        runTest("669", "1", ProtocolReviewType.EXEMPT_STUDIES_REVIEW_TYPE_CODE, null, getExemptCheckList(), null);
+    	ProtocolReviewTypeTestHelper exemptionTypeHelper = new ProtocolReviewTypeTestHelper();
+    	exemptionTypeHelper.createReviewType(ProtocolReviewTypeFixture.EXEMPT);
+        runTest("669", "1", ProtocolReviewTypeFixture.EXEMPT.getCode(), null, getExemptCheckList(), null);
     }
     
     /*
@@ -154,7 +165,7 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
      */
     @Test
     public void testExpeditedCheckList() throws Exception {
-        runTest("670", "1", ProtocolReviewType.EXPEDITED_REVIEW_TYPE_CODE, null, null, getExpeditedCheckList());
+        runTest("670", "1", ProtocolReviewTypeFixture.EXPEDITED.getCode(), null, null, getExpeditedCheckList());
     }
     
     /*
@@ -170,7 +181,7 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
         
         submitAction.setExemptStudiesCheckList(exemptStudiesCheckList);
         submitAction.setExpeditedReviewCheckList(expeditedReviewCheckList);
-        submitAction.setSubmissionQualifierTypeCode(ProtocolSubmissionQualifierType.ANNUAL_SCHEDULED_BY_IRB);
+        submitAction.setSubmissionQualifierTypeCode(SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB.getSubmissionQualifierTypeCode());
         Committee committee = null;
         
         if(!StringUtils.isEmpty(committeeId)) {
@@ -208,14 +219,19 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
      * Get a couple of exempt check list items.
      */
     private List<ExemptStudiesCheckListItem> getExemptCheckList() {
+    	
+    	ExemptStudiesChecklistTestHelper checkListHelper = new ExemptStudiesChecklistTestHelper();
+    	checkListHelper.createExemptStudiesChecklist(ExemptStudiesCheckListFixture.ONE);
+    	checkListHelper.createExemptStudiesChecklist(ExemptStudiesCheckListFixture.TWO);
+    	
         List<ExemptStudiesCheckListItem> list = new ArrayList<ExemptStudiesCheckListItem>();
         ExemptStudiesCheckListItem item = new ExemptStudiesCheckListItem();
-        item.setExemptStudiesCheckListCode("1");
+        item.setExemptStudiesCheckListCode(ExemptStudiesCheckListFixture.ONE.getCode());
         item.setChecked(true);        
         list.add(item);
         
         item = new ExemptStudiesCheckListItem();
-        item.setExemptStudiesCheckListCode("2");
+        item.setExemptStudiesCheckListCode(ExemptStudiesCheckListFixture.TWO.getCode());
         item.setChecked(false);        
         list.add(item);
         
@@ -226,14 +242,19 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
      * Get a couple of expedited review check list items.
      */
     private List<ExpeditedReviewCheckListItem> getExpeditedCheckList() {
+    	
+    	ExpeditedReviewCheckListTestHelper checkListHelper = new ExpeditedReviewCheckListTestHelper();
+    	checkListHelper.createExpeditedReviewCheckList(ExpeditedReviewCheckListFixture.ONE);
+    	checkListHelper.createExpeditedReviewCheckList(ExpeditedReviewCheckListFixture.TWO);
+    	
         List<ExpeditedReviewCheckListItem> list = new ArrayList<ExpeditedReviewCheckListItem>();
         ExpeditedReviewCheckListItem item = new ExpeditedReviewCheckListItem();
-        item.setExpeditedReviewCheckListCode("1");
+        item.setExpeditedReviewCheckListCode(ExpeditedReviewCheckListFixture.ONE.getCode());
         item.setChecked(true);        
         list.add(item);
         
         item = new ExpeditedReviewCheckListItem();
-        item.setExpeditedReviewCheckListCode("2");
+        item.setExpeditedReviewCheckListCode(ExpeditedReviewCheckListFixture.TWO.getCode());
         item.setChecked(false);        
         list.add(item);
         
@@ -244,11 +265,11 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
      * Get a couple of reviewers.
      */
     private List<ProtocolReviewerBean> getDefaultReviewers() {
+
         List<ProtocolReviewerBean> reviewers = new ArrayList<ProtocolReviewerBean>();
+        
+        Principal prncpl = identityManagementService.getPrincipalByPrincipalName(PersonFixture.QUICKSTART.getPrincipalName());
         ProtocolReviewerBean reviewer = new ProtocolReviewerBean();
-        
-        
-        Principal prncpl = identityManagementService.getPrincipalByPrincipalName("quickstart");
         reviewer.setPersonId(prncpl.getPrincipalId());
         reviewer.setNonEmployeeFlag(false);
         reviewer.setReviewerTypeCode("1");
@@ -257,21 +278,20 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
         
         
         reviewer = new ProtocolReviewerBean();
-        prncpl = identityManagementService.getPrincipalByPrincipalName("majors");
+        prncpl = identityManagementService.getPrincipalByPrincipalName(PersonFixture.MAJORS.getPrincipalName());
         reviewer.setPersonId(prncpl.getPrincipalId());
         reviewer.setNonEmployeeFlag(false);
         reviewer.setReviewerTypeCode("1");
         reviewer.setFullName(prncpl.getPrincipalName());
         reviewers.add(reviewer);
-        
-        //adding in a rolodex reviewer.
+
         reviewer = new ProtocolReviewerBean();
-        Rolodex rolodex = rolodexService.getRolodex(253);
-        reviewer = new ProtocolReviewerBean();
-        reviewer.setNonEmployeeFlag(true);
-        reviewer.setPersonId("253");
+        Principal coPi = identityManagementService.getPrincipalByPrincipalName(PersonFixture.JTESTER.getPrincipalName());
+        reviewer.setNonEmployeeFlag(false);
+        reviewer.setPersonId(coPi.getPrincipalId());
         reviewer.setReviewerTypeCode("1");
-        reviewer.setFullName(rolodex.getFullName());
+        reviewer.setFullName(coPi.getPrincipalName());
+        reviewers.add(reviewer);
         
         return reviewers;
     }
@@ -505,10 +525,9 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
         return list.size();
     }
 
-    /**
+    /*
      * Find the ProtocolAction in the database.
      */
-    @SuppressWarnings("unchecked")
     private ProtocolAction findProtocolAction(Long protocolId) {
         Map<String, Object> fieldValues = new HashMap<String, Object>();
         fieldValues.put("protocolId", protocolId);
@@ -522,7 +541,6 @@ public class ProtocolSubmitActionServiceTest extends KcUnitTestBase {
     /*
      * Find the ProtocolSubmission in the database.
      */
-    @SuppressWarnings("unchecked")
     private ProtocolSubmission findSubmission(Long protocolId) {
         Map<String, Object> fieldValues = new HashMap<String, Object>();
         fieldValues.put("protocolId", protocolId);

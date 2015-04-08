@@ -15,6 +15,11 @@
  */
 package org.kuali.kra.proposaldevelopment.rules;
 
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -32,20 +37,14 @@ import org.kuali.rice.coreservice.framework.parameter.ParameterService;
 import org.kuali.rice.kns.util.AuditCluster;
 import org.kuali.rice.kns.util.AuditError;
 import org.kuali.rice.kns.util.KNSGlobalVariables;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * This class tests the ProposalDevelopmentSponsorProgramInformationAuditRule class
  */
+@SuppressWarnings("deprecation")
 public class ProposalDevelopmentRequiredFieldsAuditRuleTest extends KcUnitTestBase {
 
     private DocumentService documentService = null;
@@ -61,11 +60,10 @@ public class ProposalDevelopmentRequiredFieldsAuditRuleTest extends KcUnitTestBa
     Date tomorrow;
 
 
-    @Before
+
+	@Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-        KNSGlobalVariables.setAuditErrorMap(new HashMap());
         documentService = KRADServiceLocatorWeb.getDocumentService();
         parameterService = CoreFrameworkServiceLocator.getParameterService();
         auditRule = new ProposalDevelopmentProposalRequiredFieldsAuditRule();
@@ -117,7 +115,8 @@ public class ProposalDevelopmentRequiredFieldsAuditRuleTest extends KcUnitTestBa
      * @param document document to check
      * @param messageKey messageKey for the AuditError
      */
-    private void validateAuditRule(ProposalDevelopmentDocument document, String fieldKey, String messageKey, String auditKey, boolean expectError) {
+    @SuppressWarnings("rawtypes")
+	private void validateAuditRule(ProposalDevelopmentDocument document, String fieldKey, String messageKey, String auditKey, boolean expectError) {
         assertTrue("Audit Rule did not produce expected results", auditRule.processRunAuditBusinessRules(document) ^ expectError);
         assertEquals(expectError?1:0, KNSGlobalVariables.getAuditErrorMap().size());
         AuditCluster auditCluster = (AuditCluster)KNSGlobalVariables.getAuditErrorMap().get(auditKey);
