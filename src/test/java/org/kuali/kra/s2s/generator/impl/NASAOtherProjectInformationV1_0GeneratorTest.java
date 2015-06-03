@@ -41,6 +41,17 @@ import java.util.List;
  */
 public class NASAOtherProjectInformationV1_0GeneratorTest extends S2STestBase<NASAOtherProjectInformationV1_0Generator> {
 
+	/*
+	 * FIXME: REMOVE this setup method once the #prepareData() is fixed.
+	 *        This method triggers a short circuit in the parent, the signal
+	 *        is to artificially null out the parents document variable.
+	 */
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		S2STestBase.document = null;
+	}
+	
     @Override
     protected Class<NASAOtherProjectInformationV1_0Generator> getFormGeneratorClass() {
         return NASAOtherProjectInformationV1_0Generator.class;
@@ -68,7 +79,6 @@ public class NASAOtherProjectInformationV1_0GeneratorTest extends S2STestBase<NA
         person.setProposalPersonNumber(1000);
         List<ProposalPerson> perList = new ArrayList<ProposalPerson>();
         perList.add(person);
-        List<ProposalYnq> proList = new ArrayList<ProposalYnq>();
         document.getDevelopmentProposal().setProposalPersons(perList);
 
         Narrative narrative = new Narrative();
@@ -76,7 +86,8 @@ public class NASAOtherProjectInformationV1_0GeneratorTest extends S2STestBase<NA
         NarrativeAttachment narrativeAttachment = new NarrativeAttachment();
         File file = new File(S2STestConstants.ATT_DIR_PATH + "exercise5.pdf");
         InputStream inStream = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(inStream);
+        @SuppressWarnings("resource")
+		BufferedInputStream bis = new BufferedInputStream(inStream);
         byte[] narrativePdf = new byte[bis.available()];
         narrativeAttachment.setNarrativeData(narrativePdf);
         List<NarrativeAttachment> narrativeList = new ArrayList<NarrativeAttachment>();

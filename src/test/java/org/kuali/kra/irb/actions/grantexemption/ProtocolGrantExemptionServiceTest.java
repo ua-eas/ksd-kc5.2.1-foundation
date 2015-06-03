@@ -30,6 +30,10 @@ import org.kuali.kra.irb.actions.ProtocolStatus;
 import org.kuali.kra.irb.actions.correspondence.ProtocolActionCorrespondenceGenerationService;
 import org.kuali.kra.irb.actions.submit.*;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.test.fixtures.ExemptStudiesCheckListFixture;
+import org.kuali.kra.test.fixtures.SubmissionQualifierTypeFixture;
+import org.kuali.kra.test.helpers.ExemptStudiesChecklistTestHelper;
+import org.kuali.kra.test.helpers.SubmissionQualifierTypeTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.kra.util.DateUtils;
 import org.kuali.rice.krad.service.DocumentService;
@@ -46,7 +50,8 @@ public class ProtocolGrantExemptionServiceTest extends KcUnitTestBase {
     private static final Date ACTION_DATE = new Date(System.currentTimeMillis());
     private static final Date APPROVAL_DATE = DateUtils.convertToSqlDate(DateUtils.addWeeks(ACTION_DATE, -1));
     private static final String COMMENTS = "something silly";
-    private static final String VALID_EXEMPT_STUDIES_ITEM_CODE = "1";
+    private static final String VALID_EXEMPT_STUDIES_ITEM_CODE = ExemptStudiesCheckListFixture.ONE.getCode();
+    private static final String ANNUAL_SCHEDULED_BY_IRB = SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB.getSubmissionQualifierTypeCode();
     
     private ProtocolGrantExemptionServiceImpl service;
     private ProtocolSubmitActionService protocolSubmitActionService;
@@ -58,7 +63,10 @@ public class ProtocolGrantExemptionServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-
+        ExemptStudiesChecklistTestHelper checklistHelper = new ExemptStudiesChecklistTestHelper();
+        checklistHelper.createExemptStudiesChecklist( ExemptStudiesCheckListFixture.ONE );
+        SubmissionQualifierTypeTestHelper qualifierHelper = new SubmissionQualifierTypeTestHelper ();
+        qualifierHelper.createSubmissionQualifierType( SubmissionQualifierTypeFixture.ANNUAL_SCHEDULED_BY_IRB );
         service = new ProtocolGrantExemptionServiceImpl();
         service.setProtocolActionService(KraServiceLocator.getService(ProtocolActionService.class));
         service.setDocumentService(getMockDocumentService());
@@ -111,7 +119,7 @@ public class ProtocolGrantExemptionServiceTest extends KcUnitTestBase {
             will(returnValue(ProtocolReviewType.EXEMPT_STUDIES_REVIEW_TYPE_CODE));
             
             allowing(action).getSubmissionQualifierTypeCode();
-            will(returnValue(ProtocolSubmissionQualifierType.ANNUAL_SCHEDULED_BY_IRB));
+            will(returnValue(ANNUAL_SCHEDULED_BY_IRB));
             
             allowing(action).getNewCommitteeId();
             will(returnValue(Constants.EMPTY_STRING));

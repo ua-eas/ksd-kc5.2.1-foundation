@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
+import org.kuali.kra.test.fixtures.PersonFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
@@ -34,7 +35,7 @@ public class ResearchDocumentBaseTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
+        GlobalVariables.setUserSession(new UserSession(PersonFixture.QUICKSTART.getPrincipalName()));
     }
 
     @After
@@ -49,7 +50,7 @@ public class ResearchDocumentBaseTest extends KcUnitTestBase {
         assertNull(researchDocumentBase.getUpdateUser());
         researchDocumentBase.prepareForSave();
 
-        assertEquals("quickstart", researchDocumentBase.getUpdateUser());
+        assertEquals(PersonFixture.QUICKSTART.getPrincipalName(), researchDocumentBase.getUpdateUser());
         Timestamp updateTimestamp = researchDocumentBase.getUpdateTimestamp();
         assertNotNull(researchDocumentBase.getUpdateTimestamp());
 
@@ -60,14 +61,14 @@ public class ResearchDocumentBaseTest extends KcUnitTestBase {
     }
 
     @Test public void testPrepareForSaveJtester() throws Exception {
-        GlobalVariables.setUserSession(new UserSession("jtester"));
+        GlobalVariables.setUserSession(new UserSession(PersonFixture.JTESTER.getPrincipalName()));
 
         ResearchDocumentBase researchDocumentBase = new ProposalDevelopmentDocument();
         assertNull(researchDocumentBase.getUpdateTimestamp());
         assertNull(researchDocumentBase.getUpdateUser());
         researchDocumentBase.prepareForSave();
 
-        assertEquals("jtester", researchDocumentBase.getUpdateUser());
+        assertEquals(PersonFixture.JTESTER.getPrincipalName(), researchDocumentBase.getUpdateUser());
         Timestamp updateTimestamp = researchDocumentBase.getUpdateTimestamp();
         assertNotNull(researchDocumentBase.getUpdateTimestamp());
 

@@ -15,20 +15,29 @@
  */
 package org.kuali.kra.coi.personfinancialentity;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.maintenance.MaintenanceRuleTestBase;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
 import org.kuali.rice.kns.document.MaintenanceDocument;
+import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.BusinessObjectService;
+import org.kuali.rice.krad.util.GlobalVariables;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class FinEntitiesDataMatrixMaintenanceDocumentRuleTest extends MaintenanceRuleTestBase {
     
     private static final String COLUMN_SORT_ID_FIELD_NAME = "columnSortId";
@@ -46,6 +55,13 @@ public class FinEntitiesDataMatrixMaintenanceDocumentRuleTest extends Maintenanc
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        RoleTestHelper roleTestHelper = new RoleTestHelper();
+        roleTestHelper.createRole(RoleFixture.COI_MAINTAINER);
+        Person jtester = KraServiceLocator.getService(PersonService.class).getPerson(PersonFixture.JTESTER.getPrincipalId());
+        roleTestHelper.addPersonToRole(jtester, RoleFixture.COI_MAINTAINER);
+        
+        GlobalVariables.setUserSession(new UserSession(jtester.getPrincipalName()));
         
         rule = new FinEntitiesDataMatrixMaintenanceDocumentRule();
     }
@@ -92,7 +108,6 @@ public class FinEntitiesDataMatrixMaintenanceDocumentRuleTest extends Maintenanc
         context.checking(new Expectations() {{
             Map<String, Object> fieldValues1 = new HashMap<String, Object>();
             fieldValues1.put(COLUMN_SORT_ID_FIELD_NAME,  SORT_ID_1);
- //           fieldValues1.put(GROUP_NAME_FIELD_NAME, GROUP_NAME);
             
             FinEntitiesDataMatrix finEntitiesDataMatrix = new FinEntitiesDataMatrix();
             finEntitiesDataMatrix.setColumnName(COLUMN_NAME);
@@ -117,7 +132,6 @@ public class FinEntitiesDataMatrixMaintenanceDocumentRuleTest extends Maintenanc
         context.checking(new Expectations() {{
             Map<String, Object> fieldValues1 = new HashMap<String, Object>();
             fieldValues1.put(COLUMN_SORT_ID_FIELD_NAME,  SORT_ID_1);
- //           fieldValues1.put(GROUP_NAME_FIELD_NAME, GROUP_NAME);
             
             FinEntitiesDataMatrix finEntitiesDataMatrix = new FinEntitiesDataMatrix();
             finEntitiesDataMatrix.setColumnName(COLUMN_NAME);

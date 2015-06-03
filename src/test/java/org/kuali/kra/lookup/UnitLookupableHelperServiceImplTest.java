@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.bo.Unit;
 import org.kuali.kra.infrastructure.Constants;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
 import org.kuali.rice.kns.web.ui.Field;
@@ -35,15 +37,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class UnitLookupableHelperServiceImplTest extends KcUnitTestBase {
     
     private static final int LOOKUP_CRITERIA_FIELD_COUNT = 6;
-    private static final int SEARCH_RESULTS_NO_CAMPUS_CODE_COUNT = 13;
-    private static final int SEARCH_RESULTS_CAMPUS_CODE_COUNT = 4;
+    private static final int SEARCH_RESULTS_CAMPUS_CODE_COUNT = 2;
     private static final String CAMPUS_CODE_FIELD = "code";
     private static final String CAMPUS_LOOKUPABLE_CLASS_NAME = "org.kuali.rice.location.impl.campus.CampusBo";
     
-    private static final String CAMPUS_CODE = "BL";
+    private static final String CAMPUS_CODE = "999";
     
     private UnitLookupableHelperServiceImpl service;
     
@@ -54,6 +56,10 @@ public class UnitLookupableHelperServiceImplTest extends KcUnitTestBase {
         super.setUp();
         
         service = new UnitLookupableHelperServiceImpl();
+        
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.TEST_1);
+        unitTestHelper.createUnit(UnitFixture.TEST_2);
     }
 
     @After
@@ -106,7 +112,7 @@ public class UnitLookupableHelperServiceImplTest extends KcUnitTestBase {
         Map<String, String> fieldValues = new HashMap<String, String>();
         fieldValues.put(CAMPUS_CODE_FIELD, Constants.EMPTY_STRING);
         List<? extends BusinessObject> searchResults = service.getSearchResults(fieldValues);
-        assertEquals(SEARCH_RESULTS_NO_CAMPUS_CODE_COUNT, searchResults.size());
+        assertEquals(getBusinessObjectService().findAll(Unit.class).size(), searchResults.size());
     }
     
     @Test

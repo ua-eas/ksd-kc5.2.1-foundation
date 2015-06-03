@@ -19,25 +19,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.krad.UserSession;
-import org.kuali.rice.krad.util.GlobalVariables;
 
 public class AwardDocumentIntegrationTest extends KcUnitTestBase {
-    
+
     @Before
     public void setUp() throws Exception {
         super.setUp();
     }
-    
+
     @After
     public void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     @Test
     public void testSavingDocument() throws Exception {
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
-
         AwardDocument doc = (AwardDocument) getDocumentService().getNewDocument(AwardDocument.class);
         assertNotNull(doc);
     }

@@ -15,6 +15,11 @@
  */
 package org.kuali.kra.proposaldevelopment.service;
 
+import static org.kuali.kra.infrastructure.Constants.PRINCIPAL_INVESTIGATOR_ROLE;
+import static org.kuali.kra.logging.FormattedLogger.info;
+
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,15 +33,8 @@ import org.kuali.kra.proposaldevelopment.service.impl.KeyPersonnelServiceImpl;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
-import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.util.Map;
-
-import static org.kuali.kra.infrastructure.Constants.PRINCIPAL_INVESTIGATOR_ROLE;
-import static org.kuali.kra.logging.FormattedLogger.info;
 
 
 /**
@@ -62,7 +60,6 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         documentService = KRADServiceLocatorWeb.getDocumentService();
         parameterService = KraServiceLocator.getService(ParameterService.class);
         document = (ProposalDevelopmentDocument) documentService.getNewDocument("ProposalDevelopmentDocument");
@@ -80,24 +77,7 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
         getKeyPersonnelService().populateDocument(blankDocument);
         assertTrue(blankDocument.getDevelopmentProposal().getInvestigatorCreditTypes().size() > 0);
     }
-    
-//    @Test 
-//    public void createProposalPersonFromNullPersonId() {
-//        try {
-//            getKeyPersonnelService().createProposalPersonFromPersonId(null);
-//        } catch(IllegalArgumentException iae) {
-//            assertTrue(iae.getMessage().equalsIgnoreCase("the personId is null or empty"));
-//        }
-//        
-//    }
-//
-//    @Test 
-//    public void createProposalPersonFromNullRolodexId() {
-//        assertNull(getKeyPersonnelService().createProposalPersonFromRolodexId(null));
-//    }
-
-
-    
+ 
     /**
      * Verify the proposal person is given the lead unit of the document if the person is an investigator, 
      * initial credit splits exist and are setup properly
@@ -144,7 +124,8 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
         getKeyPersonnelService().populateProposalPerson(person, document);
         document.getDevelopmentProposal().addProposalPerson(person);
         
-        Map<String, Map<String,KualiDecimal>> totals = getKeyPersonnelService().calculateCreditSplitTotals(document);
+        @SuppressWarnings("unchecked")
+		Map<String, Map<String,KualiDecimal>> totals = getKeyPersonnelService().calculateCreditSplitTotals(document);
         for(String key : totals.keySet()) {
             info("Key = %s", key);
         }
@@ -173,6 +154,8 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
                 getKeyPersonnelService().getPersonnelRoleDesc(person));        
     }
     
+    /*
+     * FIXME: This is institution specific, and the UofA does it different than IU
     @Test
     public void testPersonnelRoleDescMpi() {
         document.getDevelopmentProposal().setSponsorCode(NIH_SPONSOR_CODE);
@@ -183,7 +166,7 @@ public class KeyPersonnelServiceTest extends KcUnitTestBase {
         assertEquals(parameterService.getParameterValueAsString(Constants.KC_GENERIC_PARAMETER_NAMESPACE, Constants.KC_ALL_PARAMETER_DETAIL_TYPE_CODE, NIH_MPI_PARAM), 
                 getKeyPersonnelService().getPersonnelRoleDesc(person));        
     }
-    
+    */
     
     /**
      * Locate the <code>{@link KeyPersonnelService}</code>

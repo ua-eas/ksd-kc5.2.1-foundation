@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.irb.test;
 
+import java.util.ArrayList;
+
 import org.kuali.kra.bo.DocumentNextvalue;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.infrastructure.RoleConstants;
@@ -23,12 +25,14 @@ import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.personnel.ProtocolPerson;
 import org.kuali.kra.irb.personnel.ProtocolUnit;
 import org.kuali.kra.service.KraAuthorizationService;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.rice.kew.api.exception.WorkflowException;
 import org.kuali.rice.krad.service.DocumentService;
 import org.kuali.rice.krad.service.KRADServiceLocatorWeb;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.util.ArrayList;
 
 /**
  * Base class for Protocol business rule tests.
@@ -40,10 +44,10 @@ public class ProtocolFactory {
     private static final String PROTOCOL_NUMBER = "0906000001";
     private static final String PROTOCOL_TYPE_CODE_STR = "1";//test of option "Standard";
     private static final String PROTOCOL_TITLE_STR = "New protocol test";
-    private static final String PRINCIPAL_INVESTIGATOR_ID = "10000000001";
+    private static final String PRINCIPAL_INVESTIGATOR_ID = PersonFixture.QUICKSTART.getPrincipalId();
     private static final String PRINCIPAL_INVESTIGATOR_NAME = "Terry Durkin";
-    private static final String PRINCIPAL_INVESTIGATOR_UNIT = "BL-BL";
-    private static final String PRINCIPAL_INVESTIGATOR_ROLE = "PI";
+    private static final String PRINCIPAL_INVESTIGATOR_UNIT = UnitFixture.TEST_1.getUnitNumber();
+    private static final String PRINCIPAL_INVESTIGATOR_ROLE = RoleFixture.PROTOCOL_PI.getRoleName();
     private static final String REFERENCE_PERSON_ROLE = "protocolPersonRole";
     private static final String REFERENCE_UNIT = "unit";
    
@@ -98,6 +102,8 @@ public class ProtocolFactory {
      * @param document
      */
     public static void setProtocolRequiredFields(ProtocolDocument document, String protocolNumber) {
+        UnitTestHelper helper = new UnitTestHelper();
+        helper.createUnit( UnitFixture.TEST_1 );
         Protocol protocol = document.getProtocol();
         document.getDocumentHeader().setDocumentDescription(DEFAULT_DOCUMENT_DESCRIPTION);
         document.setDocumentNextvalues(new ArrayList<DocumentNextvalue>());
@@ -110,7 +116,8 @@ public class ProtocolFactory {
         ProtocolPerson protocolPerson = getProtocolPerson(PRINCIPAL_INVESTIGATOR_ID, PRINCIPAL_INVESTIGATOR_NAME, PRINCIPAL_INVESTIGATOR_ROLE, protocolNumber);
         
         ProtocolUnit protocolUnit = new ProtocolUnit();
-        protocolUnit.setUnitNumber(PRINCIPAL_INVESTIGATOR_UNIT);
+        protocolUnit.setUnitNumber(UnitFixture.TEST_1.getUnitNumber());
+        protocolUnit.setUnitName(UnitFixture.TEST_1.getUnitName());
         protocolUnit.setLeadUnitFlag(true);
         protocolUnit.setProtocolNumber(protocolNumber == null ? PROTOCOL_NUMBER : protocolNumber);
         protocolUnit.setSequenceNumber(0);

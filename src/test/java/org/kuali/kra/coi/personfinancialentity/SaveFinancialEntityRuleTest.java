@@ -18,6 +18,7 @@ package org.kuali.kra.coi.personfinancialentity;
 import org.junit.Test;
 import org.kuali.kra.infrastructure.Constants;
 import org.kuali.kra.rules.TemplateRuleTest;
+import org.kuali.kra.test.fixtures.SponsorFixture;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
 public class SaveFinancialEntityRuleTest extends KcUnitTestBase {
@@ -29,7 +30,7 @@ public class SaveFinancialEntityRuleTest extends KcUnitTestBase {
             @Override
             protected void prerequisite() {
                 PersonFinIntDisclosure personFinIntDisclosure = new PersonFinIntDisclosure();
-                personFinIntDisclosure.setSponsorCode("005770");
+                personFinIntDisclosure.setSponsorCode(SponsorFixture.AZ_STATE.getSponsorCode());
                 event = new SaveFinancialEntityEvent(Constants.EMPTY_STRING, personFinIntDisclosure);
                  rule = new SaveFinancialEntityRule();
                 expectedReturnValue = true;

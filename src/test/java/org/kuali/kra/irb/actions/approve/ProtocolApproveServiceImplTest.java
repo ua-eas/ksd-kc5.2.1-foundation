@@ -33,14 +33,23 @@ import org.kuali.kra.irb.actions.submit.ProtocolActionService;
 import org.kuali.kra.irb.onlinereview.ProtocolOnlineReviewService;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.protocol.actions.ProtocolActionBase;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.fixtures.RoleFixture;
+import org.kuali.kra.test.fixtures.UnitFixture;
+import org.kuali.kra.test.helpers.RoleTestHelper;
+import org.kuali.kra.test.helpers.UnitTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.kra.util.DateUtils;
 import org.kuali.rice.coreservice.framework.parameter.ParameterService;
+import org.kuali.rice.kim.api.identity.Person;
+import org.kuali.rice.kim.api.identity.PersonService;
+import org.kuali.rice.kim.impl.role.RoleMemberBo;
 import org.kuali.rice.krad.service.DocumentService;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProtocolApproveServiceImplTest extends KcUnitTestBase {
     
@@ -52,7 +61,7 @@ public class ProtocolApproveServiceImplTest extends KcUnitTestBase {
     private static final String PROTOCOL_TYPE_EXEMPT = "4";
     
     private ProtocolApproveServiceImpl service;
-
+    
     private Mockery context = new JUnit4Mockery() {{
         setImposteriser(ClassImposteriser.INSTANCE);
     }};
@@ -61,7 +70,17 @@ public class ProtocolApproveServiceImplTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        getBusinessObjectService().deleteMatching(RoleMemberBo.class, new HashMap<String, Object>());
+        
+        Person quickstart = KraServiceLocator.getService(PersonService.class).getPerson(PersonFixture.QUICKSTART.getPrincipalId());
+        
+        RoleTestHelper roleTestHelper = new RoleTestHelper();
+        roleTestHelper.addPersonToRole(quickstart, RoleFixture.SUPER_USER);
 
+        UnitTestHelper unitTestHelper = new UnitTestHelper();
+        unitTestHelper.createUnit(UnitFixture.TEST_1);
+                
         service = new ProtocolApproveServiceImpl();
         service.setProtocolActionService(KraServiceLocator.getService(ProtocolActionService.class));
         service.setParameterService(getMockParameterService());

@@ -25,23 +25,28 @@ import org.kuali.kra.budget.document.BudgetDocument;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.proposaldevelopment.document.ProposalDevelopmentDocument;
 import org.kuali.kra.service.KcPersonService;
+import org.kuali.kra.test.fixtures.PersonAppointmentFixture;
+import org.kuali.kra.test.fixtures.PersonFixture;
+import org.kuali.kra.test.helpers.PersonAppointmentTestHelper;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class BudgetPersonServiceTest extends KcUnitTestBase{
 
-    protected final static String testAppointmentPersonId = "10000000033";
-    protected final static String testOtherPersonId = "10000000034";
-    
     protected BudgetPersonServiceImpl budgetPersonService;
     protected KcPersonService kcPersonService;
     protected Budget budget;
     protected Date startDate;
     protected Date endDate;
     
-    @SuppressWarnings("serial")
+    KcPerson quickstart;
+    PersonAppointment personAppt1;
+    
+    @SuppressWarnings({ "serial", "rawtypes", "unchecked" })
     @Before
     public void setUp() throws Exception {
         kcPersonService = KraServiceLocator.getService(KcPersonService.class);
@@ -60,6 +65,12 @@ public class BudgetPersonServiceTest extends KcUnitTestBase{
         endDate = createDate(2010, 12, 30);
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
+        
+        quickstart = kcPersonService.getKcPersonByUserName(PersonFixture.QUICKSTART.getPrincipalName());
+        
+        PersonAppointmentTestHelper personAppointmentTestHelper = new PersonAppointmentTestHelper();
+        personAppt1 = personAppointmentTestHelper.createPersonAppointment(PersonAppointmentFixture.PERSON_APPOINTMENT_1);
+        
         super.setUp();
     }
     
@@ -72,9 +83,12 @@ public class BudgetPersonServiceTest extends KcUnitTestBase{
     public void testAddBudgetPersonWithAppointments() throws Exception {
         assertTrue(budget.getBudgetPersons().isEmpty());
         BudgetPerson testPerson = new BudgetPerson();
-        KcPerson person = kcPersonService.getKcPersonByPersonId(testAppointmentPersonId);
-        testPerson.setPersonId(testAppointmentPersonId);
-        budgetPersonService.addBudgetPerson(budget, testPerson);
+        KcPerson person = kcPersonService.getKcPersonByPersonId(PersonFixture.QUICKSTART.getPrincipalId());
+        testPerson.setPersonId(PersonFixture.QUICKSTART.getPrincipalId());
+        budgetPersonService.addBudgetPerson(budget, testPerson);  
+        List<PersonAppointment> personAppointments = new ArrayList<PersonAppointment>();
+        personAppointments.add(personAppt1);
+        person.getExtendedAttributes().setPersonAppointments(personAppointments);
         assertFalse(person.getExtendedAttributes().getPersonAppointments().isEmpty());
         assertTrue(person.getExtendedAttributes().getPersonAppointments().size() == budget.getBudgetPersons().size());
     }
@@ -83,7 +97,7 @@ public class BudgetPersonServiceTest extends KcUnitTestBase{
     public void testAddBudgetPerson() throws Exception {
         assertTrue(budget.getBudgetPersons().isEmpty());
         BudgetPerson testPerson = new BudgetPerson();
-        testPerson.setPersonId(testOtherPersonId);
+        testPerson.setPersonId(PersonFixture.QUICKSTART.getPrincipalId());
         budgetPersonService.addBudgetPerson(budget, testPerson);
         assertTrue(budget.getBudgetPersons().size() == 1);
     }

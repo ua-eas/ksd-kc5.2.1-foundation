@@ -257,7 +257,6 @@ public class ProtocolRequestServiceTest extends KcUnitTestBase {
     /*
      * Find a ProtocolSubmissionDoc in the database.
      */
-    @SuppressWarnings("unchecked")
     private ProtocolSubmissionDoc findSubmissionDoc(ProtocolSubmission protocolSubmission) {
         Map<String, Object> fieldValues = new HashMap<String, Object>();
         fieldValues.put("submissionIdFk", protocolSubmission.getSubmissionId());

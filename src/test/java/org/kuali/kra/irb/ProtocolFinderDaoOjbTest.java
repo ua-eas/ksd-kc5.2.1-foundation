@@ -15,17 +15,17 @@
  */
 package org.kuali.kra.irb;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.irb.test.ProtocolFactory;
+import org.kuali.kra.protocol.ProtocolBase;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
 import org.kuali.rice.kew.api.exception.WorkflowException;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.util.List;
 
 public class ProtocolFinderDaoOjbTest extends KcUnitTestBase {
     
@@ -38,7 +38,6 @@ public class ProtocolFinderDaoOjbTest extends KcUnitTestBase {
     public void setUp() throws Exception {
         super.setUp();
         protocolFinder = KraServiceLocator.getService(ProtocolFinderDao.class);
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
     }
 
     @After
@@ -46,16 +45,14 @@ public class ProtocolFinderDaoOjbTest extends KcUnitTestBase {
         GlobalVariables.setUserSession(null);
         super.tearDown();
     }
-    
-    @SuppressWarnings("unchecked")
+
     @Test
     public void testFindProtocol() throws WorkflowException {
         ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER, 1);
-        ProtocolDocument protocolDocument1 = ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER, 2);
-        
-        ProtocolDocument protocolDocument2 = ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER+"A001", 1);
+        ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER, 2);
+        ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER+"A001", 1);
        
-        List<Protocol> protocols = (List)protocolFinder.findProtocols(PROTOCOL_NUMBER);
+        List<ProtocolBase> protocols = protocolFinder.findProtocols(PROTOCOL_NUMBER);
         assertEquals(3, protocols.size());
         assertEquals(PROTOCOL_NUMBER, protocols.get(0).getProtocolNumber());
     }

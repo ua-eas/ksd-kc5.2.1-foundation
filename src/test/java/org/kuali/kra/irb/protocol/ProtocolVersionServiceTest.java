@@ -15,6 +15,8 @@
  */
 package org.kuali.kra.irb.protocol;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -26,10 +28,7 @@ import org.kuali.kra.irb.ProtocolDocument;
 import org.kuali.kra.irb.ProtocolVersionService;
 import org.kuali.kra.irb.test.ProtocolFactory;
 import org.kuali.kra.test.infrastructure.KcUnitTestBase;
-import org.kuali.rice.krad.UserSession;
 import org.kuali.rice.krad.util.GlobalVariables;
-
-import java.util.List;
 
 public class ProtocolVersionServiceTest extends KcUnitTestBase {
     
@@ -40,7 +39,6 @@ public class ProtocolVersionServiceTest extends KcUnitTestBase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GlobalVariables.setUserSession(new UserSession("quickstart"));
         protocolVersionService = KraServiceLocator.getService(ProtocolVersionService.class);
     }
 
@@ -70,10 +68,10 @@ public class ProtocolVersionServiceTest extends KcUnitTestBase {
     public void testGetProtocolVersion() throws Exception {
         Protocol protocol = (Protocol) protocolVersionService.getProtocolVersion(PROTOCOL_NUMBER, 1);
         assertNull(protocol);
-        
+
         ProtocolDocument protocolDocument1 = ProtocolFactory.createProtocolDocument(PROTOCOL_NUMBER);
         ProtocolDocument protocolDocument2 = (ProtocolDocument) protocolVersionService.versionProtocolDocument(protocolDocument1);
-        ProtocolDocument protocolDocument3 = (ProtocolDocument) protocolVersionService.versionProtocolDocument(protocolDocument2);
+        protocolVersionService.versionProtocolDocument(protocolDocument2);
         
         protocol = (Protocol) protocolVersionService.getProtocolVersion(PROTOCOL_NUMBER, 2);
         assertNotNull(protocol);
