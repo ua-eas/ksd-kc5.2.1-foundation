@@ -145,10 +145,7 @@ public class NegotiationDaoOjb extends LookupDaoOjb implements NegotiationDao {
                 GlobalVariables.getMessageMap().putError(KRADConstants.DOCUMENT_ERRORS, RiceKeyConstants.ERROR_CUSTOM, new String[] { "Invalid Numeric Input: " + fieldValues.get("negotiationAge")});
                 result = new ArrayList<Negotiation>();
             }
-        }
-        if (result != null && !result.isEmpty())
-        	result = filterNegotitations(result,associationDetails.get("title"),associationDetails.get("leadUnitNumber"),associationDetails.get("leadUnitName"),associationDetails.get("subAwardRequisitionerId"));
-        return result;
+        } return result;
     }
 
     /*
@@ -395,7 +392,8 @@ public class NegotiationDaoOjb extends LookupDaoOjb implements NegotiationDao {
                 getNegotiationService().getNegotiationAssociationType(NegotiationAssociationType.SUB_AWARD_ASSOCIATION).getId());
 
         Collection<Negotiation> result = this.findCollectionBySearchHelper(Negotiation.class, negotiationValues, false, false, negotiationCrit);
-        
+        if (result != null && !result.isEmpty())
+        	result = filterNegotitations(result,associatedValues.get("title"),associatedValues.get("leadUnitNumber"),associatedValues.get("leadUnitName"),associatedValues.get("subAwardRequisitionerId"));
         return result;
     }  
     
