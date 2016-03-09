@@ -378,7 +378,7 @@ public class NegotiationDaoOjb extends LookupDaoOjb implements NegotiationDao {
         //List<Negotiation> result = new ArrayList<Negotiation>();
         
         Map<String, String> values = transformMap(associatedValues, subAwardTransform);
-        if (values != null && values.containsKey("title"))
+        if (values != null && values.containsKey("title"))// Removing title because there is a bug in the base query, if title is put in the query no results are returned
         	values.remove("title");
         if (values == null) {
             return new ArrayList<Negotiation>();
