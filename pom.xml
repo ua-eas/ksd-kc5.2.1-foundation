@@ -2086,7 +2086,7 @@ module of int tests -->
         <!--dependency versions-->
         <aopalliance.version>1.0</aopalliance.version>
         <cglib-nodep.version>2.2.2</cglib-nodep.version>
-        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-net.version>3.1</commons-net.version>
         <cxf.version>2.7.0</cxf.version>
