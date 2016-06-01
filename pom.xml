@@ -2014,17 +2014,6 @@ module of int tests -->
 
     <repositories>
         <repository>
-            <id>ua.artifactory</id>
-            <name>UofA Repository Manager</name>
-            <url>https://research-toolkit.uaccess-aws.arizona.edu/artifactory/repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>kuali.nexus</id>
             <name>Nexus Repository Manager</name>
             <url>http://nexus.kuali.org/content/groups/public</url>
