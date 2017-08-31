@@ -175,7 +175,7 @@ public class ActionHelper extends ActionHelperBase {
 
     private ProtocolAssignReviewersBean protocolAssignReviewersBean;
     private ProtocolGrantExemptionBean protocolGrantExemptionBean;
-    private ProtocolExpeditedApproveBean protocolExpeditedApprovalBean;
+    private ProtocolExpeditedApproveBean protocolExpeditedApproveBean;
     private ProtocolApproveBean protocolResponseApprovalBean;
     private ProtocolGenericActionBean protocolReopenEnrollmentBean;
     private ProtocolGenericActionBean protocolCloseEnrollmentBean;
@@ -211,7 +211,7 @@ public class ActionHelper extends ActionHelperBase {
         protocolGrantExemptionBean = new ProtocolGrantExemptionBean(this);
         protocolGrantExemptionBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
         
-        protocolExpeditedApprovalBean = buildProtocolExpeditedApproveBean(ProtocolActionType.EXPEDITE_APPROVAL);
+        protocolExpeditedApproveBean = buildProtocolExpeditedApproveBean(ProtocolActionType.EXPEDITE_APPROVAL);
         protocolResponseApprovalBean = (ProtocolApproveBean) buildProtocolApproveBean(ProtocolActionType.RESPONSE_APPROVAL, 
                 Constants.PROTOCOL_RESPONSE_APPROVAL_ACTION_PROPERTY_KEY);
         protocolReopenEnrollmentBean = buildProtocolGenericActionBean(ProtocolActionType.REOPEN_ENROLLMENT, 
@@ -264,7 +264,7 @@ public class ActionHelper extends ActionHelperBase {
         actionBeanTaskMap.put(TaskName.PERMIT_DATA_ANALYSIS, protocolPermitDataAnalysisBean);
         actionBeanTaskMap.put(TaskName.PROTOCOL_REQUEST_DATA_ANALYSIS, protocolDataAnalysisRequestBean);
         actionBeanTaskMap.put(TaskName.DEFER_PROTOCOL, protocolDeferBean);
-        actionBeanTaskMap.put(TaskName.EXPEDITE_APPROVAL, protocolExpeditedApprovalBean);
+        actionBeanTaskMap.put(TaskName.EXPEDITE_APPROVAL, protocolExpeditedApproveBean);
         actionBeanTaskMap.put(TaskName.GRANT_EXEMPTION, protocolGrantExemptionBean);
         actionBeanTaskMap.put(TaskName.IRB_ACKNOWLEDGEMENT, protocolIrbAcknowledgementBean);
         actionBeanTaskMap.put(TaskName.MODIFY_PROTOCOL_SUBMISSION, protocolModifySubmissionBean);
@@ -445,7 +445,7 @@ public class ActionHelper extends ActionHelperBase {
         prepareNotifyIrbActionView();
        
         protocolAssignReviewersBean.prepareView();
-        protocolExpeditedApprovalBean.prepareView();
+        protocolExpeditedApproveBean.prepareView();
         
         
         
@@ -575,7 +575,7 @@ public class ActionHelper extends ActionHelperBase {
         super.prepareCommentsView();
         protocolGrantExemptionBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
         protocolIrbAcknowledgementBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
-        protocolExpeditedApprovalBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
+        protocolExpeditedApproveBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
         protocolResponseApprovalBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
         protocolReopenEnrollmentBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
         protocolCloseEnrollmentBean.getReviewCommentsBean().setReviewComments(getCopiedReviewComments());
@@ -993,8 +993,8 @@ public class ActionHelper extends ActionHelperBase {
         return protocolGrantExemptionBean;
     }
 
-    public ProtocolApproveBean getProtocolExpeditedApprovalBean() {
-        return protocolExpeditedApprovalBean;
+    public ProtocolApproveBean getProtocolExpeditedApproveBean() {
+        return protocolExpeditedApproveBean;
     }
     
     public ProtocolApproveBean getProtocolResponseApprovalBean() {
