@@ -622,7 +622,7 @@ public interface Constants {
     public static final String PROTOCOL_COMMITTEE_DECISION_ACTION_PROPERTY_KEY = "actionHelper.committeeDecision";
     public static final String PROTOCOL_GRANT_EXEMPTION_ACTION_PROPERTY_KEY = "actionHelper.protocolGrantExemptionBean";
     public static final String PROTOCOL_FULL_APPROVAL_ACTION_PROPERTY_KEY = "actionHelper.protocolFullApprovalBean";
-    public static final String PROTOCOL_EXPEDITED_APPROVAL_ACTION_PROPERTY_KEY = "actionHelper.protocolExpeditedApprovalBean";
+    public static final String PROTOCOL_EXPEDITED_APPROVAL_ACTION_PROPERTY_KEY = "actionHelper.protocolExpeditedApproveBean";
     public static final String PROTOCOL_RESPONSE_APPROVAL_ACTION_PROPERTY_KEY = "actionHelper.protocolResponseApprovalBean";
     public static final String PROTOCOL_ADMIN_APPROVAL_ACTION_PROPERTY_KEY = "actionHelper.protocolAdminApprovalBean";    
     public static final String PROTOCOL_CLOSE_ACTION_PROPERTY_KEY = "actionHelper.protocolCloseBean";
