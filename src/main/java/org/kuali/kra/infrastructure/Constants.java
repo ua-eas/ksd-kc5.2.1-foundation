@@ -157,6 +157,10 @@ public interface Constants {
     public static final String PROPOSAL_NUMBER = "proposalNumber";
     public static final String BUDGET_VERSION_PANEL_NAME = "Budget Versions";
 
+
+    public static final String ALTERNATE_NOTIFY_IRB_ACTION_PARAM = "ALTERNATE_NOTIFY_IRB_ACTION_PARAM";
+    public static final String ALTERNATE_NOTIFY_IACUC_ACTION_PARAM = "ALTERNATE_NOTIFY_IACUC_ACTION_PARAM";
+
     // Key Personnel Mojo
     public static final String KEY_PERSONNEL_PAGE = "keyPersonnel";
     public static final String PROPOSAL_PERSON_INVESTIGATOR = "investigator";

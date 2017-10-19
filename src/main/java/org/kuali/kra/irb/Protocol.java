@@ -231,6 +231,8 @@ public class Protocol extends ProtocolBase {
             String type = "Amendment";
             if (amendment.isRenewal()) {
                 type = "Renewal";
+            } else if (amendment.isFYI()) {
+                type = "FYI";
             }
             if (StringUtils.isNotBlank(protocolAction.getComments())) {
                 protocolAction.setComments(type + "-" + index + ": " + protocolAction.getComments());

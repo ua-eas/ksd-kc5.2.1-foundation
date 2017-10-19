@@ -134,7 +134,7 @@ public class IacucProtocolDocument extends ProtocolDocumentBase {
             
             
             String status = getProtocol().getProtocolSubmission().getSubmissionStatusCode();
-            if (isAmendment() || isRenewal() || isContinuation()) {
+            if (!isNormal()) {
                 if (status.equals(IacucProtocolSubmissionStatus.APPROVED) 
                         && getWorkflowDocumentService().getCurrentRouteNodeNames(getDocumentHeader().getWorkflowDocument()).equalsIgnoreCase(Constants.PROTOCOL_IACUCREVIEW_ROUTE_NODE_NAME)) {
                     isComplete = false;
@@ -148,6 +148,7 @@ public class IacucProtocolDocument extends ProtocolDocumentBase {
              */
             if (getProtocol().getProtocolStatusCode().equals(IacucProtocolStatus.AMENDMENT_MERGED) || 
                     getProtocol().getProtocolStatusCode().equals(IacucProtocolStatus.RENEWAL_MERGED) ||
+                    getProtocol().getProtocolStatusCode().equals(IacucProtocolStatus.FYI_MERGED) ||
                     getProtocol().getProtocolStatusCode().equals(IacucProtocolStatus.CONTINUATION_MERGED)) {
                 String protocolId = getNewProtocolDocId();               
                 if (ObjectUtils.isNull(protocolId)) {
@@ -281,13 +282,15 @@ public class IacucProtocolDocument extends ProtocolDocumentBase {
             mergedStatus = IacucProtocolStatus.RENEWAL_MERGED;
         }else if(isContinuation()) {
             mergedStatus = IacucProtocolStatus.CONTINUATION_MERGED;
+        } else if (isFYI()) {
+            mergedStatus = IacucProtocolStatus.FYI_MERGED;
         }
         return mergedStatus;
     }
 
     @Override
     public boolean isNormal() {
-        return !isAmendment() && !isRenewal() && !isContinuation();
+        return !isAmendment() && !isRenewal() && !isContinuation()  && !isFYI();
     }
 
     @Override
@@ -300,8 +303,55 @@ public class IacucProtocolDocument extends ProtocolDocumentBase {
         }
         else if (isContinuation()) {
             mergeAmendment(getProtocolMergedStatus(), "Continuation");
+        }else if (isFYI()) {
+            mergeAmendment(getProtocolMergedStatus(), "FYI");
+            mergeFyiAttachments();
+            getProtocol().reconcileActionsWithSubmissions();
+        }
+
+    }
+
+    protected void mergeFyiAttachments() {
+        IacucProtocolSubmission fyiSubmission = null;
+        ProtocolActionBase createFyiAction = null;
+
+        String fyiNumber = getProtocol().getProtocolNumber().substring(getProtocol().getProtocolNumber().indexOf("F") + 1);
+
+        ProtocolBase originalProtocol = KcServiceLocator.getService(IacucProtocolFinderDao.class).findCurrentProtocolByNumber(getOriginalProtocolNumber());
+        for (ProtocolActionBase originalAction : originalProtocol.getProtocolActions()) {
+            if (originalAction.getProtocolActionTypeCode().equals(IacucProtocolActionType.NOTIFY_IACUC)
+                    && originalAction.getComments().contains("FYI-" + fyiNumber + ": Created")) {
+                createFyiAction = originalAction;
+                break;
+            }
+        }
+
+        if (createFyiAction != null) {
+            fyiSubmission = (IacucProtocolSubmission) originalProtocol.getProtocolSubmission();
+            if (createFyiAction.getSubmissionIdFk() == null) {
+                createFyiAction.setProtocolSubmission(fyiSubmission);
+                createFyiAction.setSubmissionIdFk(fyiSubmission.getSubmissionId());
+                createFyiAction.setSubmissionNumber(fyiSubmission.getSubmissionNumber());
+                getBusinessObjectService().save(createFyiAction);
+            }
+        }
+
+        if (fyiSubmission != null) {
+            List<IacucProtocolSubmissionDoc> mergedAttachments = new ArrayList<IacucProtocolSubmissionDoc>();
+            for (ProtocolAttachmentProtocolBase attachment : getProtocol().getActiveAttachmentProtocols()) {
+                IacucProtocolSubmissionDoc fyiAttachment = IacucProtocolSubmissionBuilder.createProtocolSubmissionDoc(fyiSubmission, attachment.getFile().getName(), attachment.getFile().getType(), attachment.getFile().getData(), attachment.getDescription());
+                fyiAttachment.setProtocolNumber(createFyiAction.getProtocolNumber());
+                fyiAttachment.setProtocolId(createFyiAction.getProtocolId());
+                fyiAttachment.setProtocol(originalProtocol);
+                mergedAttachments.add(fyiAttachment);
+            }
+            getBusinessObjectService().save(mergedAttachments);
+        } else {
+            LOG.error("Couldn't merge FYI attachments into parent protocol-- no submission found for FYI #" + getProtocol().getProtocolNumber());
         }
     }
+
+
 
     @Override
     protected Class<? extends ResearchAreaBase> getResearchAreaBoClassHook() {
@@ -348,6 +398,10 @@ public class IacucProtocolDocument extends ProtocolDocumentBase {
         } catch (WorkflowException e) {
             throw new ProtocolMergeException(e);
         }
+
+        // Have to map copied actions to copied submission FKs and re-save
+        newProtocolDocument.getProtocol().reconcileActionsWithSubmissions();
+        getBusinessObjectService().save(newProtocolDocument.getProtocol().getProtocolActions());
         
         this.getProtocol().setActive(false);
         

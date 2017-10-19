@@ -185,6 +185,8 @@ public abstract class ActionHelperBase implements Serializable {
     protected boolean canManageNotesUnavailable = false;
     protected boolean canAbandon = false;
 
+    protected boolean useAlternateNotifyAction = false;
+
     protected List<? extends ValidProtocolActionActionBase> followupActionActions;
     
     protected boolean canViewOnlineReviewers;
@@ -688,6 +690,8 @@ public abstract class ActionHelperBase implements Serializable {
         canViewOnlineReviewerComments = hasCanViewOnlineReviewerCommentsPermission();        
         canAddSuspendReviewerComments = hasSuspendPermission();
         canAddTerminateReviewerComments = hasTerminatePermission();
+
+        initializeAlternateNotifyActionFlag();
         
         initProtocolCorrespondenceAuthorizationFlags();
         
@@ -698,7 +702,8 @@ public abstract class ActionHelperBase implements Serializable {
         initPrintQuestionnaire();
         initPrintCorrespondence();
     }
-    
+
+    protected abstract void initializeAlternateNotifyActionFlag();
             
     protected abstract void initializeSubmissionConstraintHook();
 
@@ -2695,6 +2700,10 @@ public abstract class ActionHelperBase implements Serializable {
     
     public boolean isAllowedToRegenerateProtocolCorrespondence() {
         return this.allowedToRegenerateProtocolCorrespondence;
+    }
+
+    public boolean isUseAlternateNotifyAction() {
+        return useAlternateNotifyAction;
     }
 
     public class AmendmentSummary {

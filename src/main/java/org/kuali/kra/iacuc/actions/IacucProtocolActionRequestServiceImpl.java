@@ -1173,15 +1173,24 @@ public class IacucProtocolActionRequestServiceImpl extends ProtocolActionRequest
         IacucActionHelper actionHelper = (IacucActionHelper) protocolForm.getActionHelper();
         actionHelper.getIacucProtocolNotifyIacucBean().setAnswerHeaders(getAnswerHeaders(protocolForm, IacucProtocolActionType.NOTIFY_IACUC));
         if (isMandatoryQuestionnaireComplete(actionHelper.getIacucProtocolNotifyIacucBean().getAnswerHeaders(), "actionHelper.protocolNotifyIacucBean.datavalidation")) {
-            getProtocolNotifyService().submitIacucNotification((IacucProtocol)protocolForm.getProtocolDocument().getProtocol(),
-                    actionHelper.getIacucProtocolNotifyIacucBean());
-            protocolForm.getQuestionnaireHelper().setAnswerHeaders(new ArrayList<AnswerHeader>());
-            protocolForm.setReinitializeModifySubmissionFields(true);
-            LOG.info("notifyIacucProtocol " + protocolForm.getProtocolDocument().getDocumentNumber());
-            generateActionCorrespondence(IacucProtocolActionType.NOTIFY_IACUC, protocolForm.getProtocolDocument().getProtocol());
-            recordProtocolActionSuccess(ACTION_NAME_NOTIFY);
-            IacucProtocolNotificationRequestBean notificationBean = new IacucProtocolNotificationRequestBean((IacucProtocol)protocolForm.getProtocolDocument().getProtocol(),IacucProtocolActionType.NOTIFY_IACUC, "Notify IACUC");
-            returnPath = getRedirectPathAfterProtocolAction(protocolForm, notificationBean, IacucConstants.PROTOCOL_ACTIONS_TAB);
+            String returnTab = IacucConstants.PROTOCOL_ACTIONS_TAB;
+            if (protocolForm.getActionHelper().isUseAlternateNotifyAction()) {
+                String newDocId = getProtocolAmendRenewService().createFYI(protocolForm.getProtocolDocument(),
+                        actionHelper.getIacucProtocolNotifyIacucBean());
+                protocolForm.getQuestionnaireHelper().setAnswerHeaders(new ArrayList<>());
+                generateActionCorrespondence(IacucProtocolActionType.NOTIFY_IACUC, protocolForm.getProtocolDocument().getProtocol());
+                refreshAfterProtocolAction(protocolForm, newDocId, ACTION_NAME_FYI, true);
+                returnTab = IacucConstants.PROTOCOL_TAB;
+            } else {
+                getProtocolNotifyService().submitIacucNotification((IacucProtocol) protocolForm.getProtocolDocument().getProtocol(),
+                        actionHelper.getIacucProtocolNotifyIacucBean());
+                protocolForm.getQuestionnaireHelper().setAnswerHeaders(new ArrayList<>());
+                generateActionCorrespondence(IacucProtocolActionType.NOTIFY_IACUC, protocolForm.getProtocolDocument().getProtocol());
+                recordProtocolActionSuccess(ACTION_NAME_NOTIFY);
+            }
+            IacucProtocolNotificationRequestBean notificationBean = new IacucProtocolNotificationRequestBean((IacucProtocol) protocolForm.getProtocolDocument().getProtocol(), IacucProtocolActionType.NOTIFY_IACUC, "Notify IACUC");
+            actionHelper.setProtocolCorrespondence(getProtocolCorrespondence(protocolForm, returnTab, notificationBean, false));
+            returnPath = getRedirectPathAfterProtocolAction(protocolForm, notificationBean, returnTab);
         }
         return returnPath;
     }

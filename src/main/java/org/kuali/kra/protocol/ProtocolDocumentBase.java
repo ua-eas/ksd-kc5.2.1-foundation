@@ -388,6 +388,10 @@ public abstract class ProtocolDocumentBase extends ResearchDocumentBase implemen
     public boolean isAmendment() {
         return getProtocol().isAmendment();
     }
+
+    public boolean isFYI() {
+        return getProtocol().isFYI();
+    }
     
     /**
      * Is this an amendment protocol document?
@@ -402,7 +406,7 @@ public abstract class ProtocolDocumentBase extends ResearchDocumentBase implemen
      * @return
      */
     public boolean isNormal() {
-        return !isAmendment() && !isRenewal();
+        return !isAmendment() && !isRenewal() && !isFYI();
     }
     
     

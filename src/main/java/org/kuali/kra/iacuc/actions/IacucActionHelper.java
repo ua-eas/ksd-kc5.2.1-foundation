@@ -394,6 +394,11 @@ public class IacucActionHelper extends ActionHelperBase {
         
 
     }
+
+    @Override
+    protected void initializeAlternateNotifyActionFlag() {
+        useAlternateNotifyAction = getParameterService().getParameterValueAsBoolean(getProtocolDocumentBOClassHook(), Constants.ALTERNATE_NOTIFY_IACUC_ACTION_PARAM, false);
+    }
  
     
     /**
@@ -1486,8 +1491,7 @@ public class IacucActionHelper extends ActionHelperBase {
     protected ProtocolAmendmentBean configureAmendmentBean(ProtocolAmendmentBean amendmentBean) throws Exception {
         List<String> moduleTypeCodes;
 
-        if (StringUtils.isNotEmpty(getProtocol().getProtocolNumber()) && (getProtocol().isAmendment() || getProtocol().isRenewal() || 
-                getProtocol().isContinuation())) {
+        if (StringUtils.isNotEmpty(getProtocol().getProtocolNumber()) && !getProtocol().isNew()) {
             moduleTypeCodes = getProtocolAmendRenewServiceHook().getAvailableModules(getProtocol().getAmendedProtocolNumber());
             populateExistingAmendmentBean(amendmentBean, moduleTypeCodes);
         } else {
