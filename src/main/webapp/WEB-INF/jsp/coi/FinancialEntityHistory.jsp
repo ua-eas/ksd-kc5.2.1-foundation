@@ -51,4 +51,5 @@
         </c:forEach>
     </table>
 </div>
+<kul:csrf />
                                                 
