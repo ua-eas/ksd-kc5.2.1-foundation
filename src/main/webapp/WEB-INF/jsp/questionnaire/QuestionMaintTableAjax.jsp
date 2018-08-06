@@ -166,6 +166,7 @@
 	</table>
 	<%-- </div> --%>
 	</h3>
+	<kul:csrf />
 </html:form>
 </body>
 </html>	
