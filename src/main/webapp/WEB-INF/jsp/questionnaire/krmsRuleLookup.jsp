@@ -62,4 +62,5 @@
                  
            //      });
             </script>
+    <kul:csrf />
 </html:form>
