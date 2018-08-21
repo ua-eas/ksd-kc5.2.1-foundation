@@ -30,3 +30,4 @@
 	customDataList="${KualiForm.document.newMaintainableObject.businessObject.personCustomDataList}" 
 	customDataListPrefix="document.newMaintainableObject.businessObject.personCustomDataList"
 	headerAndFooter="false"/>
+<kul:csrf />

@@ -16,3 +16,4 @@
 <%@ include file="/WEB-INF/jsp/kraTldHeader.jsp"%>
 
 <kra-a:awardSyncLogs/>
+<kul:csrf />
