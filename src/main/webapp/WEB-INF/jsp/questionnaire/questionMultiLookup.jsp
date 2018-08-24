@@ -38,7 +38,7 @@
 		name="newQuestionId" value="${QuestionLookupForm.newQuestionId}"/>
 	<input type="hidden" id="anchor"
 		name="newQuestionId" value="${QuestionLookupForm.anchor}"/>
-
+		<kul:csrf />
 
  		<!--  <label>Sponsor Code Search</label> -->
    		<label>
@@ -77,5 +77,4 @@
  <%--           
 </kul:page>
   --%>
-	<kul:csrf />
 </html:form>
