@@ -212,3 +212,4 @@ http://www.osedu.org/licenses/ECL-2.0
 	</div>
 	</c:otherwise>
 </c:choose>
+<kul:csrf />

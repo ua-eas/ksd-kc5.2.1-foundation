@@ -20,7 +20,7 @@ function populateQualifier(roleSelect, qualifierSelect) {
 			},
 			function(error) {
 				alert(error);
-			}
+			},$j('[name=csrfToken]').val()
 	);
 }
 
