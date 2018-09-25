@@ -231,7 +231,7 @@ jQuery(function(){
 						warningTitle="Other warnings:"
 						infoTitle="Other informational messages:"/>
             </div>          
-		
+		<kul:csrf />
         </html:form>
         <div id="formComplete"></div> 
       </div>

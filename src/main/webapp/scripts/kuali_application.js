@@ -557,7 +557,7 @@ function populateSelect(methodToCall, firstSelectId, secondSelectId) {
 			},
 			function(error) {
 				alert("error is" + error);
-			}
+			},$j('[name=csrfToken]').val()
 	);
 }
 
@@ -2552,7 +2552,7 @@ function setDefaultReviewerTypeCode(methodToCall, committeeId, scheduleId, proto
 			},
 			function(error) {
 				alert("error is" + error);
-			}
+			},$j('[name=csrfToken]').val()
 	);
 }
 
@@ -2605,7 +2605,7 @@ function setModifySubmissionDefaultReviewerTypeCode(methodToCall, committeeId, s
 			},
 			function(error) {
 				alert("error is" + error);
-			}
+			},$j('[name=csrfToken]').val()
 	);
 }
 
@@ -2625,7 +2625,7 @@ function protocolDisplayReviewers(methodToCall, committeeId, scheduleId, protoco
     			},
     			function(error) {
     				alert("error is" + error);
-    			}
+    			},$j('[name=csrfToken]').val()
     	);
 	}
 }
@@ -2649,7 +2649,7 @@ function protocolModifySubmissionReviewers(methodToCall, committeeId, scheduleId
     			},
     			function(error) {
     				alert("error is" + error);
-    			}
+    			},$j('[name=csrfToken]').val()
     	);
 	}
 }
@@ -3198,12 +3198,12 @@ function closeQuestionnairePop() {
 }
 
 
-function callAjaxByPath(url, methodToCall, codeValue, successCallback, errorCallback) {
+function callAjaxByPath(url, methodToCall, codeValue, successCallback, errorCallback, csrfToken) {
 	$j.ajax( {
 		url : url,
 		type : 'POST',
 		dataType : 'html',
-		data : 'methodToCall='+methodToCall+'&code=' + codeValue,
+		data : 'methodToCall='+methodToCall+'&code=' + codeValue + '&csrfToken=' + csrfToken,
 		cache : false,
 		async : false,
 		timeout : 5000,
@@ -3212,8 +3212,8 @@ function callAjaxByPath(url, methodToCall, codeValue, successCallback, errorCall
 	});
 }
 
-function callAjax(methodToCall, codeValue, successCallback, errorCallback) {
-	callAjaxByPath('jqueryAjax.do', methodToCall, codeValue, successCallback, errorCallback);
+function callAjax(methodToCall, codeValue, successCallback, errorCallback, csrfToken) {
+	callAjaxByPath('jqueryAjax.do', methodToCall, codeValue, successCallback, errorCallback, csrfToken);
 }
 
 function ajaxLoad(methodToCall, codeField, fieldToUpdate) {
@@ -3236,7 +3236,7 @@ function ajaxLoad(methodToCall, codeField, fieldToUpdate) {
 	  //error callback
 	  function() {
 			alert('Error loading XML document');
-	  }); //end callAjax method call.
+	  },$j('[name=csrfToken]').val()); //end callAjax method call.
 
     return false;
 }

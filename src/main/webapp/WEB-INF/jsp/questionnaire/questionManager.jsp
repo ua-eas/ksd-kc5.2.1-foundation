@@ -27,6 +27,7 @@
          tabErrorKey="document.newMaintainableObject.*">
     <kra-questionnaire:questionManagerQuestion />
     <kra-questionnaire:questionManagerResponse />
+    <kul:csrf />
 </kul:tab>
 
      <input type="hidden" id="docStatus" name="docStatus" value="${KualiForm.document.documentHeader.workflowDocument.status.code }"  />   

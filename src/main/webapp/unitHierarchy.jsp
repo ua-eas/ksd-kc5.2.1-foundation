@@ -127,7 +127,7 @@ body {
 
 
 <!--END SOURCE CODE =============================== -->
-
+<kul:csrf />
 </html:form>
 </body>
 </html>
