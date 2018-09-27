@@ -689,7 +689,10 @@ public interface Constants {
     public static final String ENABLE_PROTOCOL_TO_PROPOSAL_LINK = "irb.protocol.institute.proposal.linking.enabled";
     
     public static final String PROTOCOL_TYPE_CODE_EXEMPT = "irb.protocol.protocoltype.exempt";
-    
+
+    //Protocol Watermark Attachment Types
+    public static final String WATERMARK_ATTACHMENT_TYPES = "WATERMARK_ATTACHMENT_TYPES";
+
     // Questionnaire
     public static final String QUESTION_EXPLANATION = "E";
     public static final String QUESTION_POLICY = "P";

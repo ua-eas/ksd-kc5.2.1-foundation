@@ -21,13 +21,17 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.kuali.kra.infrastructure.Constants;
+import org.kuali.kra.infrastructure.KraServiceLocator;
 import org.kuali.kra.printing.service.WatermarkService;
 import org.kuali.kra.util.watermark.WatermarkBean;
 import org.kuali.kra.util.watermark.WatermarkConstants;
+import org.kuali.rice.coreservice.framework.parameter.ParameterService;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * 
@@ -38,6 +42,8 @@ public class WatermarkServiceImpl implements WatermarkService {
 
 
     private static final Log LOG = LogFactory.getLog(WatermarkServiceImpl.class);
+
+    private ParameterService parameterService;
 
     /**
      * This method for applying watermark to the pdf
@@ -67,6 +73,22 @@ public class WatermarkServiceImpl implements WatermarkService {
         return pdfFileData;
     }
 
+    /**
+     *UAR-2818 This method checks if an attachment type is valid for applying a watermark
+     * @param typeCode
+     * @return boolean
+     */
+    @Override
+    public boolean isValidWaterMarkAttachmentType(String typeCode) {
+
+        Collection<String> validWatermarkAttachmentTypes = getParameterService().getParameterValuesAsString(Constants.MODULE_NAMESPACE_PROTOCOL,Constants.PARAMETER_COMPONENT_DOCUMENT,Constants.WATERMARK_ATTACHMENT_TYPES);
+
+        if(validWatermarkAttachmentTypes.size()>0 && !validWatermarkAttachmentTypes.contains(typeCode)){
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * This method for attach watermark with PDF with the help of PdfReader and PdfStamper
@@ -306,6 +328,13 @@ public class WatermarkServiceImpl implements WatermarkService {
             LOG.error("WatermarkDecoratorImpl Error found: " + documentException.getMessage());
         }
 
+    }
+
+    protected ParameterService getParameterService() {
+        if (this.parameterService == null) {
+            this.parameterService = KraServiceLocator.getService(ParameterService.class);
+        }
+        return this.parameterService;
     }
 
 }
