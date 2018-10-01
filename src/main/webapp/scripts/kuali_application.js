@@ -2664,7 +2664,7 @@ function getProtocolReviewerTypes(reviewerData, beanName) {
 			},
 			function( error ) {
 				window.status = errorMessage;	
-			}
+			},$j('[name=csrfToken]').val()
 		);
 }
 /*
