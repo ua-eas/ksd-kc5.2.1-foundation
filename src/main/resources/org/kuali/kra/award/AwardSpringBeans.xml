@@ -767,7 +767,7 @@
                 <bean class="org.kuali.kra.award.document.authorizer.MaintainAwardReportTrackingAuthorizer" parent="parentAwardAuthorizer">
                     <property name="taskName" value="maintainReportTracking" />
                 </bean>    
-                <bean class="org.kuali.kra.award.document.authorizer.CreateAwardAccountAuthorizer" parent="parentAwardAuthorizer">mvn c
+                <bean class="org.kuali.kra.award.document.authorizer.CreateAwardAccountAuthorizer" parent="parentAwardAuthorizer">
                     <property name="taskName" value="createAwardAccount" />
                 </bean>          
             </list>
