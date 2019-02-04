@@ -37,4 +37,11 @@ public interface WatermarkService {
      */
     byte[] applyWatermark(byte[] pdfBytes, WatermarkBean watermarkBean) throws Exception;
 
+    /**
+     * UAR-2818 This method checks if an attachment type is valid for applying a watermark
+     * @param typeCode
+     * @return boolean
+     */
+    boolean isValidWaterMarkAttachmentType(String typeCode);
+
 }
