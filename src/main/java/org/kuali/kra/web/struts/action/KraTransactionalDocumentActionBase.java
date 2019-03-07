@@ -619,7 +619,7 @@ public class KraTransactionalDocumentActionBase extends KualiTransactionalDocume
      * @param doc the Protocol Document
      * @return the status (INITIATED, SAVED, etc.)
      */
-    private String getDocumentStatus(Document doc) {
+    protected String getDocumentStatus(Document doc) {
         return doc.getDocumentHeader().getWorkflowDocument().getStatus().getLabel();
     }
     
@@ -630,7 +630,7 @@ public class KraTransactionalDocumentActionBase extends KualiTransactionalDocume
      * @param status the original status before the save operation
      * @return true if the initial save; otherwise false
      */
-    private boolean isInitialSave(String status) {
+    protected boolean isInitialSave(String status) {
         return GlobalVariables.getMessageMap().hasNoErrors() &&
                StringUtils.equals("INITIATED", status);
     }
@@ -701,14 +701,14 @@ public class KraTransactionalDocumentActionBase extends KualiTransactionalDocume
     }
     
     // stash unconvertedValues in the session
-    private void saveUnconvertedValuesToSession(HttpServletRequest request, KualiDocumentFormBase docForm) {
+    protected void saveUnconvertedValuesToSession(HttpServletRequest request, KualiDocumentFormBase docForm) {
         if (MapUtils.isNotEmpty(docForm.getUnconvertedValues())) {
             request.getSession().setAttribute(getUnconvertedValuesSessionAttributeKey(docForm), new HashMap(docForm.getUnconvertedValues()));
         }
     }
 
     // SIDE EFFECTING: clears out unconverted values from the Session and restores them to the form
-    private Map<String, Object> restoreUnconvertedValuesFromSession(HttpServletRequest request,
+    protected Map<String, Object> restoreUnconvertedValuesFromSession(HttpServletRequest request,
             KualiDocumentFormBase docForm) {// first restore unconvertedValues and clear out of session
         Map<String, Object> unconvertedValues =
             (Map<String, Object>)request.getSession().getAttribute(getUnconvertedValuesSessionAttributeKey(docForm));
@@ -1038,7 +1038,7 @@ public class KraTransactionalDocumentActionBase extends KualiTransactionalDocume
         return businessObject;
     }
 
-    private DocumentService getKraDocumentService() {
+    protected DocumentService getKraDocumentService() {
         return (DocumentService) KraServiceLocator.getService("kraDocumentService"); 
     }
 
