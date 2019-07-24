@@ -15,25 +15,136 @@
  */
 package org.kuali.kra.protocol.onlinereview;
 
+import org.apache.ojb.broker.query.Criteria;
 import org.drools.core.util.StringUtils;
 import org.kuali.kra.infrastructure.KeyConstants;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
 import org.kuali.kra.lookup.KraLookupableHelperServiceImpl;
 import org.kuali.kra.protocol.onlinereview.lookup.ProtocolOnlineReviewLookupConstants;
 import org.kuali.rice.core.api.CoreApiServiceLocator;
+import org.kuali.rice.core.framework.persistence.jdbc.sql.SqlBuilder;
+import org.kuali.rice.core.framework.persistence.ojb.dao.PlatformAwareDaoBaseOjb;
 import org.kuali.rice.kns.lookup.HtmlData;
 import org.kuali.rice.kns.lookup.HtmlData.AnchorHtmlData;
 import org.kuali.rice.kns.service.DictionaryValidationService;
 import org.kuali.rice.kns.service.KNSServiceLocator;
+import org.kuali.rice.kns.web.struts.form.LookupForm;
 import org.kuali.rice.krad.bo.BusinessObject;
 import org.kuali.rice.krad.document.Document;
 import org.kuali.rice.krad.util.GlobalVariables;
 import org.kuali.rice.krad.util.KRADConstants;
 import org.kuali.rice.krad.util.UrlFactory;
 
+//import org.kuali.rice.core.framework.persistence.platform;
+//import org.kuali.rice.core.framework.persistence;
+
+
+///
+
+//import org.apache.commons.lang.StringUtils;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+//import org.apache.ojb.broker.query.*;
+//import org.kuali.kra.protocol.actions.ProtocolActionBase;
+//import org.kuali.kra.protocol.actions.submit.ProtocolSubmissionBase;
+//import org.kuali.kra.protocol.noteattachment.ProtocolAttachmentBase;
+//import org.kuali.kra.protocol.noteattachment.TypedAttachment;
+//import org.kuali.kra.protocol.personnel.ProtocolPersonBase;
+//import org.kuali.kra.protocol.personnel.ProtocolUnitBase;
+//import org.kuali.rice.core.framework.persistence.ojb.dao.PlatformAwareDaoBaseOjb;
+//import org.kuali.rice.kns.service.DataDictionaryService;
+//import org.kuali.rice.krad.bo.PersistableBusinessObject;
+//import org.kuali.rice.krad.dao.LookupDao;
+//import org.kuali.rice.krad.service.util.OjbCollectionAware;
+//import org.kuali.rice.krad.util.KRADConstants;
+//
+//import java.sql.Date;
+//import java.util.*;
+//import java.util.Map.Entry;
+
+///
+
+//import org.apache.commons.lang.StringUtils;
+//import org.kuali.rice.kew.api.KewApiConstants;
+//import org.kuali.rice.kns.lookup.HtmlData;
+//import org.kuali.rice.kns.lookup.HtmlData.AnchorHtmlData;
+//import org.kuali.rice.kns.lookup.KualiLookupableHelperServiceImpl;
+//import org.kuali.rice.kns.web.struts.form.LookupForm;
+//import org.kuali.rice.kns.web.ui.Field;
+//import org.kuali.rice.krad.bo.BusinessObject;
+//import org.kuali.rice.krad.document.Document;
+//import org.kuali.rice.krad.util.KRADConstants;
+//import org.kuali.rice.krad.util.ObjectUtils;
+//import org.kuali.rice.krad.util.UrlFactory;
+//
+//import java.util.*;
+//import java.util.Map.Entry;
+
+///
+//
+//import org.kuali.rice.core.framework.persistence.jdbc.sql;
+//import org.kuali.rice.core.framework.persistence.platform.DatabasePlatform;
+//
+//import org.kuali.rice.core.framework.persistence.jdbc.sql.getDbPlatform;
+
+
+import org.kuali.rice.core.framework.persistence.jdbc.sql.SqlBuilder;  // For getDbPlatform()
+
+import org.kuali.kra.irb.onlinereview.ProtocolOnlineReview;
+//import org.kuali.kra.irb.onlinereview.ProtocolOnlineReview;
+import org.kuali.kra.irb.actions.submit.ProtocolSubmission;
+//import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
+  import org.kuali.kra.irb.actions.submit.ProtocolSubmissionStatus;
+
+import org.springmodules.orm.ojb.support.PersistenceBrokerDaoSupport;
+import org.springmodules.orm.ojb.support.PersistenceBrokerDaoSupport;
+
+import org.kuali.kra.protocol.onlinereview.ProtocolOnlineReviewDao;
+
+import org.apache.ojb.broker.query.*;
+
+//import org.apache.ojb.broker.query.
+
+
+//////////
+
+import org.apache.ojb.broker.PersistenceBroker;
+import org.apache.ojb.broker.PersistenceBrokerException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.support.DaoSupport;
+import org.springmodules.orm.ojb.OjbFactoryUtils;
+import org.springmodules.orm.ojb.PersistenceBrokerTemplate;
+
+
+
+import org.kuali.rice.core.impl.persistence.dao.GenericDaoOjb;
+
+
+import org.kuali.kra.dao.KraLookupDao;
+
+
+import org.apache.ojb.broker.query.Criteria;
+import org.apache.ojb.broker.query.Query;
+import org.apache.ojb.broker.query.QueryFactory;
+import org.apache.ojb.broker.query.ReportQueryByCriteria;
+import org.kuali.kra.protocol.actions.submit.ProtocolSubmissionBase;
+import org.kuali.rice.core.framework.persistence.ojb.dao.PlatformAwareDaoBaseOjb;
+
+// I thought I'd get getPersistenceBrokerTemplate() from here??
+import org.springmodules.orm.ojb.support.PersistenceBrokerDaoSupport;
+
+import org.kuali.rice.core.framework.persistence.ojb.dao.PlatformAwareDaoBaseOjb;
+
+// ////
+
+
+
 import java.text.ParseException;
 import java.util.*;
 
 public abstract class ProtocolOnlineReviewLookupableHelperServiceImplBase extends KraLookupableHelperServiceImpl {
+
 
     /**
      * Comment for <code>serialVersionUID</code>
@@ -66,6 +177,28 @@ public abstract class ProtocolOnlineReviewLookupableHelperServiceImplBase extend
     protected String getKeyFieldName() {
         return "protocolOnlineReviewId";
     }
+
+
+    protected KraLookupDao kraLookupDao;
+
+    /**
+     * Set the KRA Lookup DAO.
+     * @param kraLookupDao
+     */
+    public void setKraLookupDao(KraLookupDao kraLookupDao) {
+        this.kraLookupDao = kraLookupDao;
+    }
+
+
+    /**
+     * Set the KRA Lookup DAO.
+     * @param kraLookupDao
+     */
+    public void setProtocolFinderDao(ProtocolFinderDao protocolFinderDao) {
+        this.protocolFinderDao = protocolFinderDao;
+    }
+
+
 
    /**
     * 
@@ -149,7 +282,16 @@ public abstract class ProtocolOnlineReviewLookupableHelperServiceImplBase extend
        fieldValues.remove(LOOKUP_PROTOCOL_ONLINE_REVIEW_STATUS_CODES);
 
        super.setBackLocationDocFormKey(fieldValues);
-       results = (List<ProtocolOnlineReviewBase>)super.getSearchResults(fieldValues);
+
+       if (((String)fieldValues.get("rangeLowerBoundKeyPrefix_dateDue")).isEmpty() &&
+               ((String)fieldValues.get("rangeLowerBoundKeyPrefix_dateRequested")).isEmpty()) {
+           results = (List<ProtocolOnlineReviewBase>)this.getCustomSearchResults(fieldValues);
+       } else {
+           results = (List<ProtocolOnlineReviewBase>)super.getSearchResults(fieldValues);
+       }
+
+
+//       results = (List<ProtocolOnlineReviewBase>)super.getSearchResults(fieldValues);
        return filterResults(results);
    }
 
@@ -200,5 +342,405 @@ public abstract class ProtocolOnlineReviewLookupableHelperServiceImplBase extend
         String href  = UrlFactory.parameterizeUrl("../" + getHtmlAction(), parameters);
         return new AnchorHtmlData(href, KRADConstants.DOC_HANDLER_METHOD, displayText);
     }
+
+
+
+
+
+
+    private List<ProtocolOnlineReviewBase> getCustomSearchResults(Map<String, String> fieldValues) {
+//
+//        Collection <ProtocolOnlineReview> searchResults = new ArrayList();
+//
+        List<ProtocolOnlineReviewBase> searchResults = new ArrayList();
+//
+//    private List<ProtocolOnlineReview> getCustomSearchResults(Map<String, String> fieldValues) {
+//        List<ProtocolOnlineReview> searchResults = new ArrayList();
+
+        Long matchingResultsCount = null;
+
+
+
+//        --- Base SQL for Existing OJB Criteria
+//        --- UPPER(protocolReviewer.personId) LIKE 115605455407, dateDue <= 2019-07-18, UPPER(protocolOnlineReviewStatusCode) LIKE S
+//        SELECT *
+//                FROM PROTOCOL_ONLN_RVWS
+//        WHERE UPPER(PROTOCOL_REVIEWER_FK) IN (SELECT Distinct PROTOCOL_REVIEWER_ID FROM "PROTOCOL_REVIEWERS" WHERE PERSON_ID='115605455407')
+//        AND DATE_DUE  <= '23-JUL-19'
+//        AND UPPER(PROTOCOL_ONLN_RVW_STATUS_CODE) LIKE (SELECT STATUS_CODE FROM PROTOCOL_ONLN_RVW_STATUS WHERE DESCRIPTION = 'SAVED')
+//        ORDER BY DATE_DUE DESC
+
+        Criteria criteria1 = new Criteria();
+        criteria1.addLike("UPPER(protocolReviewer.personId)", fieldValues.get("protocolReviewer.personId").toUpperCase());
+        if (!((String)fieldValues.get("dateDue")).isEmpty() &&
+                ((String)fieldValues.get("dateDue")).startsWith("<=")) {
+            criteria1.addLessOrEqualThanField("dateDue", fieldValues.get("dateDue"));
+//            criteria1.addOrderByDescending("dateDue");
+        }
+
+        if (!((String)fieldValues.get("dateRequested")).isEmpty() &&
+                ((String)fieldValues.get("dateRequested")).startsWith("<=")) {
+            criteria1.addLessOrEqualThanField("dateRequested", fieldValues.get("dateRequested"));
+//            criteria1.addOrderByDescending("dateRequested");
+        }
+
+        criteria1.addLike("UPPER(protocolOnlineReviewStatusCode)", fieldValues.get("protocolOnlineReviewStatusCode").toUpperCase());
+
+        ReportQueryByCriteria porQuery1;
+
+        // Above is basic currently existing OJB criteria
+
+        // Below Add filterresults criteria
+        Criteria criteria2 = criteria1; /// Make a copy of the base criteria for reuse
+
+
+//        ---- Filter Query 1 subquery
+//        SELECT Count(*)
+//        FROM PROTOCOL_ONLN_RVWS POR
+//        WHERE UPPER(PROTOCOL_REVIEWER_FK) IN (SELECT Distinct PROTOCOL_REVIEWER_ID FROM "PROTOCOL_REVIEWERS" WHERE PERSON_ID='115605455407')
+//        AND DATE_DUE  <= '23-JUL-19'
+//                -- AND UPPER(POR.PROTOCOL_ONLN_RVW_STATUS_CODE) LIKE (SELECT STATUS_CODE FROM PROTOCOL_ONLN_RVW_STATUS WHERE DESCRIPTION = 'SAVED')
+//                -- AND UPPER(POR.PROTOCOL_ONLN_RVW_STATUS_CODE) LIKE ProtocolOnlineReviewStatus.SAVED_STATUS_CD
+//        AND REVIEWER_APPROVED = 'Y'
+//        AND ADMIN_ACCEPTED = 'Y'
+//        AND PROTOCOL_ONLN_RVW_STATUS_CODE='F'-- ProtocolOnlineReviewStatus.FINAL_STATUS_CD
+//        AND ( SUBMISSION_ID_FK  IN ( SELECT SUBMISSION_ID FROM PROTOCOL_SUBMISSION PS WHERE SUBMISSION_STATUS_CODE IN (SELECT  DISTINCT SUBMISSION_STATUS_CODE FROM "KRAOWNER"."SUBMISSION_STATUS" WHERE DESCRIPTION IN ('Approved','Exemption Granted','Specific Minor Revisions Requested','Substantive Revisions Required','Returned To PI') ) )
+//        )
+//        ORDER BY DATE_DUE DESC
+//        /*
+//        COUNT(*)
+//        6357
+//        */
+
+
+//        ReportQueryByCriteria psQuery1A;
+//        psQuery1A = QueryFactory.newReportQuery(ProtocolSubmission.class, criteria1);
+
+        criteria1.addLike("UPPER(protocolOnlineReview.reviewerApproved)", "Y");
+        criteria1.addLike("UPPER(protocolOnlineReview.adminAccepted)", "Y");
+        criteria1.addLike("UPPER(protocolOnlineReview.protocolOnlineReviewStatusCode)", "F");
+//        criteria1.addLike("UPPER(protocolOnlineReview.protocolOnlineReviewStatusCode)", ProtocolOnlineReviewStatus.FINAL_STATUS_CD);
+
+//        public static final String PROTOCOL_SUBMISSION_SUB_QUERY="SELECT SUBMISSION_ID FROM PROTOCOL_SUBMISSION " +
+//                "WHERE SUBMISSION_STATUS_CODE IN (SELECT  DISTINCT SUBMISSION_STATUS_CODE FROM SUBMISSION_STATUS " +
+//                "WHERE DESCRIPTION IN ('Approved','Exemption Granted','Specific Minor Revisions Requested', " +
+//                "'Substantive Revisions Required','Returned To PI') )";
+
+        String PROTOCOL_SUBMISSION_SUB_QUERY="SELECT SUBMISSION_ID FROM PROTOCOL_SUBMISSION " +
+                "WHERE SUBMISSION_STATUS_CODE IN (SELECT  DISTINCT SUBMISSION_STATUS_CODE FROM SUBMISSION_STATUS " +
+                "WHERE DESCRIPTION IN ('Approved','Exemption Granted','Specific Minor Revisions Requested', " +
+                "'Substantive Revisions Required','Returned To PI') )";
+
+
+//        "select negotiation_id from (" +
+//                " select negotiation_id, NEGOTIATION_START_DATE, (case when NEGOTIATION_END_DATE IS NULL then SYSDATE else NEGOTIATION_END_DATE end) AS NEGOTIATION_END_DATE from negotiation )" +
+//                " where ";
+
+        /// Using example org.kuali.kra.negotiations.lookup.NegotiationDaoOjb#getNegotiationAgeCriteria
+        //create subquery for the associated object with the above criteria
+        StringBuffer protocolSubmissionSqlQuery = new StringBuffer(PROTOCOL_SUBMISSION_SUB_QUERY);
+
+        QueryBySQL ps1sqlSubQuery = QueryFactory.newQuery(ProtocolSubmission.class, protocolSubmissionSqlQuery.toString());
+
+        criteria1.addIn("SUBMISSION_ID_FK", ps1sqlSubQuery);
+//        criteria1.addIn(ProtocolOnlineReview.submissionIdFk, ps1sqlSubQuery);
+
+
+        porQuery1 = QueryFactory.newReportQuery(ProtocolOnlineReview.class, criteria1);
+
+
+//        //add orderBy NegotiationId to show the newest on top to query and DISTINCT = true to avoid duplicate results.
+//        QueryByCriteria query = QueryFactory.newQuery(ProtocolOnlineReview.class, searchCriteria, Boolean.TRUE);
+//        query.addOrderByDescending(NEGOTIATION_ID);
+//        matchingResultsCount = new Long(getPersistenceBrokerTemplate().getCount(query));
+
+
+        if (!((String)fieldValues.get("dateDue")).isEmpty() &&
+                ((String)fieldValues.get("dateDue")).startsWith("<=")) {
+//            criteria1.addLessOrEqualThanField("dateDue", fieldValues.get("dateDue"));
+            porQuery1.addOrderByDescending("dateDue");
+        }
+
+        if (!((String)fieldValues.get("dateRequested")).isEmpty() &&
+                ((String)fieldValues.get("dateRequested")).startsWith("<=")) {
+//            criteria1.addLessOrEqualThanField("dateRequested", fieldValues.get("dateRequested"));
+            porQuery1.addOrderByDescending("dateRequested");
+        }
+
+        searchResults = getPersistenceBrokerTemplate().getCollectionByQuery(porQuery1);
+
+
+//        kraLookupDao.
+
+
+
+
+        // Do Filter Query 2
+//        ---- Filter Query 2 subquery
+//        SELECT *
+//                FROM PROTOCOL_ONLN_RVWS
+//        WHERE UPPER(PROTOCOL_REVIEWER_FK) IN (SELECT Distinct PROTOCOL_REVIEWER_ID FROM "PROTOCOL_REVIEWERS" WHERE PERSON_ID='115605455407')
+//        AND DATE_DUE  <= '23-JUL-19'
+//        AND UPPER(PROTOCOL_ONLN_RVW_STATUS_CODE) LIKE (SELECT STATUS_CODE FROM PROTOCOL_ONLN_RVW_STATUS WHERE DESCRIPTION = 'SAVED')
+//                -- AND UPPER(POR.PROTOCOL_ONLN_RVW_STATUS_CODE) LIKE ProtocolOnlineReviewStatus.SAVED_STATUS_CD
+//        AND NOT(PROTOCOL_ONLN_RVW_STATUS_CODE='F')-- NOT(ProtocolOnlineReviewStatus.FINAL_STATUS_CD)
+//        AND ( SUBMISSION_ID_FK  IN ( SELECT SUBMISSION_ID FROM PROTOCOL_SUBMISSION PS WHERE SUBMISSION_STATUS_CODE IN (SELECT  DISTINCT SUBMISSION_STATUS_CODE FROM "KRAOWNER"."SUBMISSION_STATUS" WHERE DESCRIPTION IN ('In Agenda','Submitted to Committee')))
+//        )
+//        ORDER BY DATE_DUE DESC
+//        /*
+//        PROTOCOL_ONLN_RVW_ID	DOCUMENT_NUMBER	PROTOCOL_ID	SUBMISSION_ID_FK	PROTOCOL_REVIEWER_FK	PROTOCOL_ONLN_RVW_STATUS_CODE	REVIEW_DETERM_RECOM_CD	DATE_REQUESTED	DATE_DUE	UPDATE_TIMESTAMP	UPDATE_USER	VER_NBR	OBJ_ID	ACTIONS_PERFORMED	REVIEWER_APPROVED	ADMIN_ACCEPTED
+//        4749162	720915	4747383	4749159	4749161	S		27-JUN-19	09-JUL-19	01-JUL-19	jwinters1	0	7e1cb8b6-ddbb-4e05-b226-17af2a342051		N	N
+//        ...
+//        */
+
+
+
+        criteria2.addNotLike("UPPER(protocolOnlineReview.protocolOnlineReviewStatusCode)", "F");
+
+        String PROTOCOL_SUBMISSION_SUB_QUERY2="SELECT SUBMISSION_ID FROM PROTOCOL_SUBMISSION " +
+                "WHERE SUBMISSION_STATUS_CODE IN (SELECT  DISTINCT SUBMISSION_STATUS_CODE FROM SUBMISSION_STATUS " +
+                "WHERE DESCRIPTION IN ('In Agenda','Submitted to Committee') )";
+
+
+        StringBuffer protocolSubmissionSqlQuery2 = new StringBuffer(PROTOCOL_SUBMISSION_SUB_QUERY2);
+
+        QueryBySQL ps2sqlSubQuery = QueryFactory.newQuery(ProtocolSubmission.class, protocolSubmissionSqlQuery2.toString());
+
+        criteria2.addIn("SUBMISSION_ID_FK", ps2sqlSubQuery);
+
+        ReportQueryByCriteria porQuery2;
+        porQuery2 = QueryFactory.newReportQuery(ProtocolOnlineReview.class, criteria2);
+
+        if (!((String)fieldValues.get("dateDue")).isEmpty() &&
+                ((String)fieldValues.get("dateDue")).startsWith("<=")) {
+//            criteria2.addLessOrEqualThanField("dateDue", fieldValues.get("dateDue"));
+            porQuery2.addOrderByDescending("dateDue");
+        }
+
+        if (!((String)fieldValues.get("dateRequested")).isEmpty() &&
+                ((String)fieldValues.get("dateRequested")).startsWith("<=")) {
+//            criteria2.addLessOrEqualThanField("dateRequested", fieldValues.get("dateRequested"));
+            porQuery2.addOrderByDescending("dateRequested");
+        }
+
+        searchResults.addAll( getPersistenceBrokerTemplate().getCollectionByQuery(porQuery2));
+
+        return searchResults;
+
+
+//        ((ArrayList<ProtocolOnlineReview>) searchResults).addAll()
+
+//        return (List<ProtocolSubmissionBase>) getPersistenceBrokerTemplate().getCollectionByQuery(q);
+
+//
+//
+//        porQuery1
+//
+//
+//
+//
+//        ProtocolSubmission protocolSubmission =
+//
+//        ReportQueryByCriteria subQuery1A;
+//        Criteria subCriteria1A = new Criteria();
+//        subQuery1A = QueryFactory.newReportQuery(ProtocolSubmission.class, subCriteria1A);
+//        subCriteria1A.addLike(protocolSubmission.getSubmissionStatusCode());
+//
+//
+//        ReportQueryByCriteria pssQuery1B;
+//        pssQuery1B = QueryFactory.newReportQuery(ProtocolSubmissionStatus.class, criteria1);
+////        Criteria subCriteria1B = new Criteria();
+////        subCriteria1B.addLike(ProtocolSubmissionStatus. .getSubmissionStatusCode());
+////
+////
+//        List protocolSubmissionStatusList = new ArrayList<String>(
+//                Arrays.asList(ProtocolSubmissionStatus.APPROVED,
+//                        ProtocolSubmissionStatus.EXEMPT,
+//                        ProtocolSubmissionStatus.SPECIFIC_MINOR_REVISIONS_REQUIRED,
+//                        ProtocolSubmissionStatus.SUBSTANTIVE_REVISIONS_REQUIRED,
+//                        ProtocolSubmissionStatus.RETURNED_TO_PI));
+////        List protocolSubmissionStatusList = new ArrayList<String>(Arrays.asList("Approved","Exemption Granted","Specific Minor Revisions Requested","Substantive Revisions Required","Returned To PI"));
+////        protocolSubmissionStatusList = ("Approved","Exemption Granted","Specific Minor Revisions Requested","Substantive Revisions Required","Returned To PI");
+//        subCriteria1A.addColumnIn("SUBMISSION_STATUS_CODE", protocolSubmissionStatusList);
+//
+//        Criteria subCriteria1B = new Criteria();
+//        subCriteria1B.addLike(ProtocolSubmissionStatusC .getSubmissionStatusCode());
+//
+//
+//        criteria1.addColumnIn("SUBMISSION_ID_FK",(Collection) subCriteria1A);
+//
+//        Criteria subCriteria1B = new Criteria();
+//
+//
+////
+////        broker.getCollectionByQuery(porQuery);
+//
+//        Collection results = broker.getCollectionByQuery(porQuery);
+
+
+
+
+        /// !!! Keep Above Below Scratch
+//
+//
+//        org.kuali.rice.core.framework.persistence.platform..getUpperCaseFunction()
+//        fieldValues.get("protocolReviewer.personId")
+//
+//
+//        org.kuali.rice.core.framework.persistence.jdbc.sql.SqlBuilder.getDbPlatform()
+//                PlatformAwareDaoBaseOjb.getDbPlatform()
+//
+//
+//                SqlBuilder.getDbPlatform()
+//
+//        SqlBuilder.getDbPlatform()
+//
+//        // need to use upper case
+//        String propertyName = getDbPlatform().getUpperCaseFunction() + "(" + fieldValues.get("protocolReviewer.personId") + ")";
+//
+//        String propertyName = "UPPER(" + fieldValues.get("protocolReviewer.personId") + ")";
+//
+//
+//        criteria.addLike(propertyName, nameValue.toUpperCase());
+//
+//
+//        criteria.addLike("UPPER(protocolReviewer.personId)", fieldValues.get("protocolReviewer.personId").toUpperCase()); /// !!!
+//
+//
+//
+//
+//
+//        fieldValues.get("dateDue")
+//
+//        fieldValues.get("protocolOnlineReviewStatusCode")
+//
+//        fieldValues.get("protocolReviewer.personId")
+
+
+
+    }
+
+
+
+
+
+
+
+//    /**
+//     * To force to it to show action links, such as 'edit' if it is not 'lookup' to search of return value.
+////     * @see org.kuali.core.lookup.AbstractLookupableHelperServiceImpl#performLookup(org.kuali.core.web.struts.form.LookupForm, java.util.Collection, boolean)
+//     */
+    @Override
+    public Collection performLookup(LookupForm lookupForm, Collection resultTable, boolean bounded) {
+        Map lookupFormFields = lookupForm.getFieldsForLookup();
+
+//        Map<String, String> protocolOnlineReviewLookupFields = buildCriteriaForProtocolOnlineReviewLookup(lookupFormFields);
+//
+//
+//        lookupForm.setFieldsForLookup(protocolOnlineReviewLookupFields);
+
+//        if (!lookupForm.isHideReturnLink()) {
+//            lookupForm.setSuppressActions(true);
+//        } else {
+//            lookupForm.setShowMaintenanceLinks(true);
+//        }
+        return super.performLookup(lookupForm, resultTable, bounded);
+    }
+
+
+
+
+
+//
+//    /**
+//     * Pulls fields which can go directly to lookup from the given lookupFormFields and turns them into a Map of only those fields which should be included in the lookup
+//     *
+//     * @param lookupFormFields the fields directly from the lookup form to tweak into the fields the lookup service is going to want to use
+//     * @return the fields as the lookup service will positively react to them
+//     */
+//    protected Map<String, String> buildCriteriaForProtocolOnlineReviewLookup(Map lookupFormFields) {
+//        Map<String, String> lookupFields = new HashMap<String, String>();
+//
+//
+//
+//
+//
+//        String lowerBoundDateDue = "";
+////        if (!(lookupFormFields.get(PROTOCOL_REVIEW_DUE_DATE)).isEmpty()) {
+////            fieldValues.put(OBJ_PROTOCOL_REVIEW_DUE_DATE, fieldValues.get(PROTOCOL_REVIEW_DUE_DATE));
+//        if (!(lookupFormFields.get("dateDue")).isEmpty()) {
+//            lowerBoundDateDue = (String) lookupFormFields.remove(lookupFormFields.get("dateDue"));
+//        }
+//
+//
+//        String upperBoundDateDue = "";
+////        if (!(lookupFormFields.get(PROTOCOL_REVIEW_DUE_DATE)).isEmpty()) {
+////            fieldValues.put(OBJ_PROTOCOL_REVIEW_DUE_DATE, fieldValues.get(PROTOCOL_REVIEW_DUE_DATE));
+//        if (!(lookupFormFields.get("dateDue")).isEmpty()) {
+//            upperBoundDateDue = (String) lookupFormFields.remove(lookupFormFields.get("dateDue"));
+//        }
+//
+////        final String lowerBoundDateDue = (String) lookupFormFields.remove(lookupFormFields.get("dateDue").  ArPropertyConstants.ContractsGrantsAgingReportFields.INVOICE_DATE_FROM);
+//
+//
+////        if (!StringUtils.isEmpty(fieldValues.get(PROTOCOL_REVIEW_DUE_DATE))) {
+////            fieldValues.put(OBJ_PROTOCOL_REVIEW_DUE_DATE, fieldValues.get(PROTOCOL_REVIEW_DUE_DATE));
+////        }
+//
+//
+////        final String upperBoundDateDue = (String) lookupFormFields.remove(ArPropertyConstants.ContractsGrantsAgingReportFields.INVOICE_DATE_TO);
+////
+//
+////        final String invoiceDateCriteria = getContractsGrantsReportHelperService().fixDateCriteria(lowerBoundInvoiceDate, upperBoundInvoiceDate, true);
+//
+//        final String invoiceDateCriteria = getContractsGrantsReportHelperService().fixDateCriteria(lowerBoundInvoiceDate, upperBoundInvoiceDate, true);
+//
+//
+//        if (!StringUtils.isBlank(invoiceDateCriteria)) {
+//            lookupFields.put(KFSPropertyConstants.DOCUMENT_HEADER + "." + KFSPropertyConstants.WORKFLOW_CREATE_DATE, invoiceDateCriteria);
+//        }
+//
+//        final String invoiceAmount = (String) lookupFormFields.remove(ArPropertyConstants.TransmitContractsAndGrantsInvoicesLookupFields.INVOICE_AMOUNT);
+//        if (!StringUtils.isBlank(invoiceAmount)) {
+//            lookupFields.put(KFSPropertyConstants.DOCUMENT_HEADER + "." + KFSPropertyConstants.FINANCIAL_DOCUMENT_TOTAL_AMOUNT, invoiceAmount);
+//        }
+//
+//        final String customerNumber = (String) lookupFormFields.remove(ArPropertyConstants.CustomerFields.CUSTOMER_NUMBER);
+//        if (!StringUtils.isBlank(customerNumber)) {
+//            lookupFields.put(ArPropertyConstants.ACCOUNTS_RECEIVABLE_DOCUMENT_HEADER + "." + ArPropertyConstants.CustomerFields.CUSTOMER_NUMBER, customerNumber);
+//        }
+//
+//        final String invoiceType = (String) lookupFormFields.remove(ArPropertyConstants.INVOICE_TYPE);
+//        if (!StringUtils.isBlank(invoiceType)) {
+//            lookupFields.put(KFSPropertyConstants.DOCUMENT_HEADER + "." + KFSPropertyConstants.WORKFLOW_DOCUMENT_TYPE_NAME, invoiceType);
+//        }
+//
+//        final String upperBoundInvoiceDueDate = (String) lookupFormFields.remove(ArPropertyConstants.CustomerInvoiceDocumentFields.INVOICE_DUE_DATE);
+//        final String lowerBoundInvoiceDueDate = (String) lookupFormFields.remove(KRADConstants.LOOKUP_RANGE_LOWER_BOUND_PROPERTY_PREFIX + ArPropertyConstants.CustomerInvoiceDocumentFields.INVOICE_DUE_DATE);
+//        final String invoiceDueDateCriteria = getContractsGrantsReportHelperService().fixDateCriteria(lowerBoundInvoiceDueDate, upperBoundInvoiceDueDate, false);
+//        if (!StringUtils.isBlank(invoiceDueDateCriteria)) {
+//            lookupFields.put(ArPropertyConstants.CustomerInvoiceDocumentFields.INVOICE_DUE_DATE, invoiceDueDateCriteria);
+//        }
+//
+//        final String proposalNumber = (String) lookupFormFields.remove(KFSPropertyConstants.PROPOSAL_NUMBER);
+//        if (!StringUtils.isBlank(proposalNumber)) {
+//            lookupFields.put(ArPropertyConstants.ContractsGrantsInvoiceDocumentFields.PROPOSAL_NUMBER, proposalNumber);
+//        }
+//
+//        final String documentNumber = (String) lookupFormFields.remove(KFSPropertyConstants.DOCUMENT_NUMBER);
+//        if (!StringUtils.isBlank(documentNumber)) {
+//            lookupFields.put(KFSPropertyConstants.DOCUMENT_NUMBER, documentNumber);
+//        }
+//
+//        return lookupFields;
+//    }
+//
+
+
+
+
+
+
+
 
 }

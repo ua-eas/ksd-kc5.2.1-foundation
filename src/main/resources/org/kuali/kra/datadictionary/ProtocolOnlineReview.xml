@@ -595,5 +595,7 @@
 				<bean p:attributeName="protocolOnlineReviewStatus.description" parent="FieldDefinition"/>
 			</list>
 		</property>
+		<!--  <property name="resultSetLimit" value="10000" />  -->
+		<property name="resultSetLimit" value="200" />
 	</bean>
 </beans>
