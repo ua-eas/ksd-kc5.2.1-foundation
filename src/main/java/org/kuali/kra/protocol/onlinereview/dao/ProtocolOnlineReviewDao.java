@@ -1,5 +1,6 @@
-package org.kuali.kra.protocol.onlinereview;
+package org.kuali.kra.protocol.onlinereview.dao;
 
+import org.apache.ojb.broker.query.ReportQueryByCriteria;
 import org.kuali.kra.protocol.onlinereview.ProtocolOnlineReviewBase;
 import org.kuali.kra.protocol.noteattachment.ProtocolAttachmentBase;
 import org.kuali.kra.protocol.noteattachment.TypedAttachment;
@@ -8,9 +9,12 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-public interface ProtocolOnlineReviewDao<GenericProtocol extends ProtocolOnlineReviewBase>{
-    List<GenericProtocol> getProtocolOnlineReviews(Map<String,String> fieldValues);
+public interface ProtocolOnlineReviewDao<GenericProtocolOnlineReview extends ProtocolOnlineReviewBase>{
+    List<GenericProtocolOnlineReview> getProtocolOnlineReviews(Map<String,String> fieldValues);
 
+    List<ProtocolOnlineReviewBase> getCollectionByQuery(ReportQueryByCriteria query);
+
+    List<ProtocolOnlineReviewBase> getProtocolOnlineReviewsByQuery(ReportQueryByCriteria query);
 }
 
 //public class ProtocolOnlineReviewDao {
