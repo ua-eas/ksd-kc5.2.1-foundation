@@ -2014,15 +2014,11 @@ module of int tests -->
 
     <repositories>
         <repository>
-            <id>ua.artifactory</id>
-            <name>UofA Repository Manager</name>
-            <url>https://research-toolkit.uaccess-aws.arizona.edu/artifactory/repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+           <id>ksd-external-artifacts</id>
+           <name>KSD External Artifacts</name>
+           <url>https://kfs.ua-uits-kuali-nonprod.arizona.edu/nexus/content/repositories/ksd-external-artifacts/</url>
+           <releases><enabled>true</enabled></releases>
+           <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <repository>
             <id>kuali.nexus</id>
