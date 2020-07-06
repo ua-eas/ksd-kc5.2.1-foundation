@@ -416,7 +416,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc7</artifactId>
+                        <artifactId>ojdbc8</artifactId>
                         <version>${oracle.version}</version>
                         <scope>runtime</scope>
                     </dependency>
@@ -439,7 +439,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc7</artifactId>
+                        <artifactId>ojdbc8</artifactId>
                         <version>${oracle.version}</version>
                         <scope>runtime</scope>
                     </dependency>
@@ -485,7 +485,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc7</artifactId>
+                        <artifactId>ojdbc8</artifactId>
                         <version>${oracle.version}</version>
                         <scope>runtime</scope>
                     </dependency>
@@ -554,7 +554,7 @@
 
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
+            <artifactId>ojdbc8</artifactId>
             <version>${oracle.version}</version>
             <!-- should be provided once embedded jetty is figured out -->
             <scope>test</scope>
@@ -1258,6 +1258,10 @@ module of int tests -->
                     <artifactId>ojdbc7</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc8</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>htmlunit</groupId>
                     <artifactId>htmlunit</artifactId>
                 </exclusion>
@@ -1673,7 +1677,7 @@ module of int tests -->
                         <dependencies>
                             <dependency>
                                 <groupId>com.oracle</groupId>
-                                <artifactId>ojdbc7</artifactId>
+                                <artifactId>ojdbc8</artifactId>
                                 <version>${oracle.version}</version>
                                 <scope>runtime</scope>
                             </dependency>
@@ -1720,7 +1724,7 @@ module of int tests -->
                         <dependencies>
                             <dependency>
                                 <groupId>com.oracle</groupId>
-                                <artifactId>ojdbc7</artifactId>
+                                <artifactId>ojdbc8</artifactId>
                                 <version>${oracle.version}</version>
                                 <scope>runtime</scope>
                             </dependency>
@@ -1745,7 +1749,7 @@ module of int tests -->
                         <dependencies>
                             <dependency>
                                 <groupId>com.oracle</groupId>
-                                <artifactId>ojdbc7</artifactId>
+                                <artifactId>ojdbc8</artifactId>
                                 <version>${oracle.version}</version>
                                 <scope>runtime</scope>
                             </dependency>
@@ -2146,7 +2150,7 @@ module of int tests -->
         <mail.version>1.4.4</mail.version>
         <mysql.version>5.1.16</mysql.version>
         <opencsv.version>1.8</opencsv.version>
-        <oracle.version>12.1.0.2</oracle.version>
+        <oracle.version>19.0.0.0</oracle.version>
         <org.eclipse.birt.runtime.version>3.7.1</org.eclipse.birt.runtime.version>
         <pdfbox.version>1.7.1</pdfbox.version>
         <phs398modularbudget-1.2-gg.version>1.0.5</phs398modularbudget-1.2-gg.version>
